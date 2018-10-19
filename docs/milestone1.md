@@ -187,109 +187,116 @@ This project will be distributed under the GNU GPLv3 license to allow free “as
 
 
 ## Implementation
-As for implementation of the forward mode of automatic differentiation, there are 5 steps to consider:
 
-	1. The user generates the initial variables.
-	2. The user generates the goal function.
-	3. The program constructs the computational graph according to the goal function.
-	4. The program completes the computations in the computational graph.
-	5. The program returns the final result to the user's goal function.
+The purpose of this library (AutoDiff) is to perform automatic differentation on
+user defined functions, where the domain and codomain may be single- or
+mutildimensional.  At a high level, AutoDiff will serve as a partial replacement
+for NumPy in the sense that rather than defining functions using NumPy methods
+such as *sin* and *cos*, the user will use the AutoDiff methods *sin* and *cos* that
+perform the same evaluation but also perform additional computation in the form of
+the derivative (i.e., thus implementing the forward mode of automatic differentiation).
 
-To construct the computational graph, the core data structures should clearly represent all the nodes and edges included in the graph.
-So, we have a superclass Node, which can describe all kinds of nodes included in the graph. For the superclass Node, there are 3 subclasses: variable, constant, complex (not basic variables or constants) Node.
-For each Node, we have previous Nodes (inputs), operator, constant and expression as its attributes. Previous Nodes are the Nodes who have edges pointing to the Node. Operator is the operation to get the Node if the Node is not the initial variable itself. The attribute 'constant' will denote whether this node is a constant.
+To achieve this goal, the AutoDiff library will implement the following
+abstract ideas:
+  1. Keeping track of the value and derivative of user defined expressions.
+  2. Allowing users to be as expressive as they would like by providing our own
+    versions of binary and unary opertors.
+
+With these goals in mind, the AutoDiff implementation will rely on two modules
+**Nodes** and **Operators** and will allow user interface through the AutoDiff
+class which serves as a driver.
+
+## Nodes
+The **Nodes** module will contain a *Node* superclass with the following basic design;
 
 ```python
 class Node():
-	def __init__(self):
-		self.inputs = []
-		self.operator = None
-		self.constant = False
-		self.expression = ''
+    def __init__(self, val, der = 1):
+        self._val = val
+        self._der = der
 
-class Variable(Node):
-	def __init__(self, name = 'x', val):
-		self.inputs = []
-		self.operator = PlaceHolder
-		self.constant = False
-		self.expression = name
-		self.value = val
+    def eval(self, new_val = self._val):
+        '''
+        When implemented by subclasses, this function will both
+        update the self._val attribute of the Node type and will
+        modify the derivative accordingly
+        '''
+        raise NotImplementedError
 
-class Constant(Node):
-	def __init__(self, number):
-		self.inputs = []
-		self.operator = PlaceHolder
-		self.constant = True
-		self.expression = str(value)
-		self.value = number
+    def __add__(self, other):
+        raise NotImplementedError
 
-class Complex(Node):
-	def __init__(self, op, inputs, func):
-		self.inputs = inputs
-		self.operator = op
-		self.constant = False
-		self.expression = func
+    def __radd__(self, other):
+        raise NotImplementedError
+
+    def __mul__(self, other):
+        raise NotImplementedError
+
+    def __rmul__(self, other):
+        raise NotImplementedError
+
+    ... # Additional operator overloads
 ```
 
-After the class node is created, the user can generate initial variables. They may do this by:
+Essentially, the role of the *Node* class (which in abstract terms is meant to
+represent a node in the computational graph underlying automatic differentiation)
+is to serve as an interface for the two other classes in the **Nodes** package:
+ *Scalar* and *Vector*.  Each of these subclasses will implement the required
+ operator overloading as necessary for scalar and vector functions respectively
+ This logic is separated into two separate classes to provide increased organization
+ for higher dimensional functions and to allow class methods to use assumptions of
+ specific properties of scalars and vectors to reduce implementation complexity.
 
-```python
-x1 = ad.Variable('x1',2)
-x2 = ad.Variable('x2',3)
+ One key difference between the *Scalar* class and the *Vector* class is that the
+ *Scalar* class will have a *gradient* atrribute in its constructor (which can be
+ implemented using a list or dictionary) and the *Vector* class will haev a *jacobian*
+ attribute in its constructor (which can be implementd using a two-dimensional
+list or two-dimensional dictioary).
+
+## AutoDiff Driver
+
+The AutoDiff class will function as a driver, allowing the user to initialize 
+variables for use in constructing arbitray functions.  Because the *Node* class
+functions only as an interface for the *Scalar* and *Vector* classes, we do not
+want users to
+
+Essentially the AutoDiff class will be used for user initialization of Node objects.
+We do not want the user instantiating instances of Node directly, so we will
+use AutoDiff as an interface that allows users to specify how many Scalars
+and Vectors they need (as well as optionally some initialization values)
+and return to the users exactly what they requested.  For example:
+
+```Python
+import AutoDiff as ad
+
+x, y, z = Autodiff(scalars = 3, values = [1,2,3])
 ```
 
-Then the user wants to generate the goal function, which needs to load elementary functions such as $sin, exp, add$. We will create another class Operator to help the user with loading the operators/elementary functions.
-Operator is a superclass, and we will create subclasses which include all categories of operators/elementary functions which are important. (We may overload some basic operations.) We will also consider the problems of vector inputs when implementing the subclasses. Also there is a subclass with no computational functions, which can be given to the initial variables since there are no edges pointing to them.
-For each Operator, it will return a new Node class which includes the previous nodes and itself as the operator attribute. We have methods of getting values and getting derivatives for Operator classes, which can be called by giving previous nodes as inputs. For different operators/elementary functions subclasses, there will be different restrictions. Also, we will rely on numpy to get the value of the calculation results of these operations.
+In this example, the user has initialized three Scalar objects with initial
+values 1, 2, 3 respectively.
 
-```python
-class Operator():
-	def __call__(self, inputs = []):
-		next_node = Node()
-		next_node.inputs = inputs
-		next_node.operator = self
-		return next_node
+## Operators
 
-	def get_value(self, node, val):
-		raise NotImplementedError
+The operators module will consist of two classes Unary and Binary.  Essentially
+these classes contain class methods that will use numpy operators such as log and sin to perform computation, however, our class methods will be designed to opeate on
+and to return Node type objects.
 
-	def get_gradient(self, node, val):
-		raise NotImplementedError
+The intended use case is as follows:
+
+```Python
+from AutoDiff.Operators import Unary as un
+from AutoDiff.Operators import Binary as bin
+
+z = bin.sin(x + y)
+
 ```
-
-Then the user can construct the goal function by calling the Node classes and the Operator classes. For example:
-
-```python
-y = ad.sin(x1+x2)
-```
+In this example, x and y are already of Node type (see AutoDiff Driver section
+for initialization details) and z is constructed by using our library's sin
+function.  Z is Scalar or vector type which has an appropriate value and derivative.
 
 
-![](images/classes.png)
-
-Now that we have the goal function, we need to construct the whole computational graph and get the right order to do the calculations. To do this, we use a binary tree data structure to store the goal function. We just read the user's inputs from right to left, but every time when we encouter a new object (Node or Operator), we will put them in a binary tree. For every operator, it will be compared to the root node of the current binary tree. If its rank is higher than that of the root node, then it becomes the right child of the root node, and the original right tree of the root node will be the operator's right tree. If its rank is not higher that of the root node, then it becomes the root node, the original tree will be the operator's left tree. For every Node object, we just put it into the right child of the right tree.
 
 
-![](images/binary_tree.png)
+## External Depencies
 
-To construct the computational graph, we create a new class Graph, and it should be called when users want to get values or derivatives of a function (it may be regarded as a Complex object in our library).
-
-```python
-class Graph():
-	def __init__(self, func):
-		self.func = func
-		[The process of building up the binary tree, the first node of the tree will be an attribute of the Graph, it will also keep a list of Variables, Complexes in the func as an attribute of the Graph]
-	def get_val_gradient(self):
-		[It will Preorder Trasversal the bianry tree and set up a stack to store the visited but not yet calculated Nodes and Operators; For every Operator, it will call get_value to get the value of the new Node, and it will call get_gradient to get partial differentials of every Variable or Complex in the list of the Graph; It will return a dictionary of value and the partial differentials of every Variable or Complex included in the function]
-```
-
-When Graph.get\_val\_gradient() is called, we use PreorderTraversal to visit the whole binary tree to complete the calculation. We will use a stack to store the nodes. Every time when we press a new node into the stack, we will try to see if there are enough inputs to feed the first Operator in the stack to return a new Node. Every time when a new Node is returned by the operator, we will put the new Node into the stack. When all the nodes in the binary tree are visited and there is only one Node (the Complex Node that we want to evaluate) in the stack, we can get the values/derivatives of the goal function.
-![](images/calculating_process.png)
-
-And the user will just do the following things to get value and gradients of the goal function:
-
-```python
-y_graph = Graph(y)
-y_dict = y_graph.get_val_gradient()
-y_val = y_dict['value']
-dy/dx1 = y_dict['x1']
-```
+This project aims to restrict dependencies on third-party libraries to the necessary min- imum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
