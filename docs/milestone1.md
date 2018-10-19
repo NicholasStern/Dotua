@@ -220,6 +220,8 @@ class Node():
         When implemented by subclasses, this function will both
         update the self._val attribute of the Node type and will
         modify the derivative accordingly
+
+        Returns self._val, self.der 
         '''
         raise NotImplementedError
 
@@ -255,46 +257,92 @@ list or two-dimensional dictioary).
 
 ## AutoDiff Driver
 
-The AutoDiff class will function as a driver, allowing the user to initialize 
+The AutoDiff class will function as a driver, allowing the user to initialize
 variables for use in constructing arbitray functions.  Because the *Node* class
 functions only as an interface for the *Scalar* and *Vector* classes, we do not
-want users to
-
-Essentially the AutoDiff class will be used for user initialization of Node objects.
-We do not want the user instantiating instances of Node directly, so we will
-use AutoDiff as an interface that allows users to specify how many Scalars
-and Vectors they need (as well as optionally some initialization values)
-and return to the users exactly what they requested.  For example:
+want users to instantiate objects of the *Node* class directly.  Thus, we will
+define the *AutoDiff* class in the following way to allow users only to
+initialize *Scalar* and *Vector* variables:
 
 ```Python
-import AutoDiff as ad
+from Nodes import Scalar
+from Nodes import Vector
 
-x, y, z = Autodiff(scalars = 3, values = [1,2,3])
+class AutoDiff():
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def create_scalar(self, num = 1, vals = [0]:
+        scalars = []
+        for i in range(num):
+            scalars[i] = Scalar(val[i])
+        return scalars
+
+    @staticmethod
+    def create_vector(self, num, vals, ders):
+        '''
+        The idea is similar to create_scalar.
+        This will allow the user to create vectors and specify initial
+        values for the elements of the vectors.
+        '''
+        pass
 ```
 
-In this example, the user has initialized three Scalar objects with initial
-values 1, 2, 3 respectively.
+Using the *create_scalar* and *create_vector* methods, users will be able to
+initialize variables for use in constructing arbitrary functions.  Additionally,
+users are able to specify initial values for these variables.  Creating variables
+in this way will ensure that users are able to use the AutoDiff defined
+operators to both evaluate functions and compute their derivatives.
 
 ## Operators
 
-The operators module will consist of two classes Unary and Binary.  Essentially
-these classes contain class methods that will use numpy operators such as log and sin to perform computation, however, our class methods will be designed to opeate on
-and to return Node type objects.
-
-The intended use case is as follows:
+The **Operators** module will consist of a single class *Operator*.
+The purpose of this class is to define static methods for elementary mathematical
+functions and operators (specifically those that cannot be overloaded in the
+*Scalar* and *Vector* classes) that can be called by users in constructing arbitrary functions.  The *Operator* class will import the Nodes module in order to
+return new *Scalar* or *Vector* variables as appropriate.  The design of the
+*Operator* class will be as follows:
 
 ```Python
-from AutoDiff.Operators import Unary as un
-from AutoDiff.Operators import Binary as bin
+from .. import Nodes as nd
 
-z = bin.sin(x + y)
+class Operator():
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def sin(self, x):
+        pass
+
+    @staticmethod
+    def cos(self, x):
+        pass
+    ...
+```
+
+In order to facilitate the usage of the AutoDiff library for users of NumPy, we
+will ensure that the signatures of the methods we implement correspond to the
+NumPy equivalents.
+
+## Example Usage
+
+Here is an example usage of our libary where the user wants to perform
+automatic differentation on the function
+<img src="http://latex.codecogs.com/gif.latex?1+sin(x + y)" border="0" />:
+
+```Python
+import AutoDiff.AutoDiff as ad
+from AutoDiff.Operators import operator as op
+
+# Create variables x, y
+x, y = ad.create_scalar(2, [1,1])
+z = op.sin(x + y)
+
+print(z.eval)
+
 
 ```
-In this example, x and y are already of Node type (see AutoDiff Driver section
-for initialization details) and z is constructed by using our library's sin
-function.  Z is Scalar or vector type which has an appropriate value and derivative.
-
-
 
 
 ## External Depencies
