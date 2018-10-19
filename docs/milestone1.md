@@ -191,105 +191,57 @@ As for implementation of the forward mode of automatic differentiation, there ar
 
 	1. The user generates the initial variables.
 	2. The user generates the goal function.
-	3. The program constructs the computational graph according to the goal function.
-	4. The program completes the computations in the computational graph.
+	3. The user asks for value or derivative of the goal function.
+	4. The goal function will call the overloaded operation methods to generate variables and get the values and the derivatives iteratively.
 	5. The program returns the final result to the user's goal function.
 
 To construct the computational graph, the core data structures should clearly represent all the nodes and edges included in the graph.
-So, we have a superclass Node, which can describe all kinds of nodes included in the graph. For the superclass Node, there are 3 subclasses: variable, constant, complex (not basic variables or constants) Node.
-For each Node, we have previous Nodes (inputs), operator, constant and expression as its attributes. Previous Nodes are the Nodes who have edges pointing to the Node. Operator is the operation to get the Node if the Node is not the initial variable itself. The attribute 'constant' will denote whether this node is a constant.
-
+So, we have a superclass Node, which can describe all kinds of nodes included in the computational graph. For the superclass Node, there are 2 subclasses: Variable and Vectorvariable. Variable only deals with scalar functions of scalar values while Vectorvariable deals with scalar functions of vectors. If the user wants to further deal with vector functions of scalar values/vectors, they can just create a vector of scalar functions of scalar values/vectors.
+For each Variable, we have value, derivative and inputs (previous Nodes) as its attributes. Previous Nodes are the Nodes who have edges pointing to the Node. 
+For each Vectorvariable, we have value, jacobi matrix and inputs (previous Nodes) as its attributes.
 ```python
 class Node():
-	def __init__(self):
+	def __init__(self, value, derivative = 1):
+		self.val = value
+		self.der = [derivative]
 		self.inputs = []
-		self.operator = None
-		self.constant = False
-		self.expression = ''
 
 class Variable(Node):
-	def __init__(self, name = 'x', val):
-		self.inputs = []
-		self.operator = PlaceHolder
-		self.constant = False
-		self.expression = name
-		self.value = val
 
-class Constant(Node):
-	def __init__(self, number):
+class Vectorvariable(Node):
+	def __init__(self, value, jacobi = False):
+		self.val = value
+		if not jacobi:
+			self.jacobi = [np.eye(len(val))]
+		else:
+			self.jacobi = jacobi
 		self.inputs = []
-		self.operator = PlaceHolder
-		self.constant = True
-		self.expression = str(value)
-		self.value = number
-
-class Complex(Node):
-	def __init__(self, op, inputs, func):
-		self.inputs = inputs
-		self.operator = op
-		self.constant = False
-		self.expression = func
 ```
 
 After the class node is created, the user can generate initial variables. They may do this by:
 
 ```python
-x1 = ad.Variable('x1',2)
-x2 = ad.Variable('x2',3)
+x1 = ad.Variable(2)
+x2 = ad.Variable(3)
 ```
 
-Then the user wants to generate the goal function, which needs to load elementary functions such as $sin, exp, add$. We will create another class Operator to help the user with loading the operators/elementary functions.
-Operator is a superclass, and we will create subclasses which include all categories of operators/elementary functions which are important. (We may overload some basic operations.) We will also consider the problems of vector inputs when implementing the subclasses. Also there is a subclass with no computational functions, which can be given to the initial variables since there are no edges pointing to them.
-For each Operator, it will return a new Node class which includes the previous nodes and itself as the operator attribute. We have methods of getting values and getting derivatives for Operator classes, which can be called by giving previous nodes as inputs. For different operators/elementary functions subclasses, there will be different restrictions. Also, we will rely on numpy to get the value of the calculation results of these operations.
+Then the user wants to generate the goal function, which needs to load elementary functions such as $sin, exp$ and basic operators such as '+'. For the simple operators, we will overload them in the class Variable and Vectorvariable separately. For elementary functions, we will implement separate methods for each elementary function in the module, and we will define how they will process both Varaible inputs and Vectorvariable inputs.
+For each method of operation (basic operations or elementary functions), it will return a new Node class which includes value, derivative/jacobi and previous Nodes. The attribute derivative/jacobi of Node is a list (it is more like a gradient), which will include partial differentials of all the initial variables the user wants to be differentiated in the goal function. 
+And different opperation methods will have different restrictions. We will rely on numpy to get the calculation results of these operation methods.
 
-```python
-class Operator():
-	def __call__(self, inputs = []):
-		next_node = Node()
-		next_node.inputs = inputs
-		next_node.operator = self
-		return next_node
-
-	def get_value(self, node, val):
-		raise NotImplementedError
-
-	def get_gradient(self, node, val):
-		raise NotImplementedError
-```
-
-Then the user can construct the goal function by calling the Node classes and the Operator classes. For example:
+Then the user can construct the goal function by calling the Node classes and the operation methods in our module. For example:
 
 ```python
 y = ad.sin(x1+x2)
 ```
 
 
-![](images/classes.png)
-
-Now that we have the goal function, we need to construct the whole computational graph and get the right order to do the calculations. To do this, we use a binary tree data structure to store the goal function. We just read the user's inputs from right to left, but every time when we encouter a new object (Node or Operator), we will put them in a binary tree. For every operator, it will be compared to the root node of the current binary tree. If its rank is higher than that of the root node, then it becomes the right child of the root node, and the original right tree of the root node will be the operator's right tree. If its rank is not higher that of the root node, then it becomes the root node, the original tree will be the operator's left tree. For every Node object, we just put it into the right child of the right tree.
-
-
-![](images/binary_tree.png)
-
-To construct the computational graph, we create a new class Graph, and it should be called when users want to get values or derivatives of a function (it may be regarded as a Complex object in our library).
-
-```python
-class Graph():
-	def __init__(self, func):
-		self.func = func
-		[The process of building up the binary tree, the first node of the tree will be an attribute of the Graph, it will also keep a list of Variables, Complexes in the func as an attribute of the Graph]
-	def get_val_gradient(self):
-		[It will Preorder Trasversal the bianry tree and set up a stack to store the visited but not yet calculated Nodes and Operators; For every Operator, it will call get_value to get the value of the new Node, and it will call get_gradient to get partial differentials of every Variable or Complex in the list of the Graph; It will return a dictionary of value and the partial differentials of every Variable or Complex included in the function]
-```
-
-When Graph.get\_val\_gradient() is called, we use PreorderTraversal to visit the whole binary tree to complete the calculation. We will use a stack to store the nodes. Every time when we press a new node into the stack, we will try to see if there are enough inputs to feed the first Operator in the stack to return a new Node. Every time when a new Node is returned by the operator, we will put the new Node into the stack. When all the nodes in the binary tree are visited and there is only one Node (the Complex Node that we want to evaluate) in the stack, we can get the values/derivatives of the goal function.
-![](images/calculating_process.png)
+![](images/classes_methods.png)
 
 And the user will just do the following things to get value and gradients of the goal function:
 
 ```python
-y_graph = Graph(y)
-y_dict = y_graph.get_val_gradient()
-y_val = y_dict['value']
-dy/dx1 = y_dict['x1']
+y_val = y.val 
+dy/dx1 = y.der[0]
+dy/dx2 = y.der[1]
 ```
