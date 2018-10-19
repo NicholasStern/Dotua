@@ -187,7 +187,7 @@ This project will be distributed under the GNU GPLv3 license to allow free “as
 
 The purpose of this library (AutoDiff) is to perform automatic differentation on
 user defined functions, where the domain and codomain may be single- or
-mutildimensional.  At a high level, AutoDiff will serve as a partial replacement
+multi-dimensional.  At a high level, AutoDiff will serve as a partial replacement
 for NumPy in the sense that rather than defining functions using NumPy methods
 such as *sin* and *cos*, the user will use the AutoDiff methods *sin* and *cos* that
 perform the same evaluation but also perform additional computation in the form of
@@ -218,7 +218,7 @@ class Node():
         update the self._val attribute of the Node type and will
         modify the derivative accordingly
 
-        Returns self._val, self.der
+        Returns (self._val, self._der)
         '''
         raise NotImplementedError
 
@@ -238,24 +238,22 @@ class Node():
 ```
 
 Essentially, the role of the *Node* class (which in abstract terms is meant to
-represent a node in the computational graph underlying automatic differentiation)
-is to serve as an interface for the two other classes in the **Nodes** package:
- *Scalar* and *Vector*.  Each of these subclasses will implement the required
- operator overloading as necessary for scalar and vector functions respectively
+represent a node in the computational graph underlying the automatic differentiation
+of the user defined expression) is to serve as an interface for the two other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses will implement the required operator overloading as necessary for scalar and vector functions respectively.
  This logic is separated into two separate classes to provide increased organization
  for higher dimensional functions and to allow class methods to use assumptions of
  specific properties of scalars and vectors to reduce implementation complexity.
 
  One key difference between the *Scalar* class and the *Vector* class is that the
- *Scalar* class will have a *gradient* atrribute in its constructor (which can be
- implemented using a list or dictionary) and the *Vector* class will haev a *jacobian*
- attribute in its constructor (which can be implementd using a two-dimensional
+ *Scalar* class will have a *gradient* class atribute (which can be
+ implemented using a list or dictionary) and the *Vector* class will have a *jacobian*
+ class attribute (which can be implementd using a two-dimensional
 list or two-dimensional dictioary).
 
 ## AutoDiff Driver
 
 The AutoDiff class will function as a driver, allowing the user to initialize
-variables for use in constructing arbitray functions.  Because the *Node* class
+variables for the sake of constructing arbitray functions.  Because the *Node* class
 functions only as an interface for the *Scalar* and *Vector* classes, we do not
 want users to instantiate objects of the *Node* class directly.  Thus, we will
 define the *AutoDiff* class in the following way to allow users only to
@@ -270,14 +268,16 @@ class AutoDiff():
         pass
 
     @staticmethod
-    def create_scalar(self, num = 1, vals = [0]:
-        scalars = []
-        for i in range(num):
-            scalars[i] = Scalar(val[i])
-        return scalars
+    def create_scalar(self, num = 1, vals = [0]):
+        '''
+        Returns a list of Scalar variables to the user,
+        with the values initialized to the user defined values or all 0
+        by default
+        '''
+        pass
 
     @staticmethod
-    def create_vector(self, num, vals, ders):
+    def create_vector(self, num, vals):
         '''
         The idea is similar to create_scalar.
         This will allow the user to create vectors and specify initial
@@ -326,19 +326,22 @@ NumPy equivalents.
 
 Here is an example usage of our libary where the user wants to perform
 automatic differentation on the function
-<img src="http://latex.codecogs.com/gif.latex?1+sin(x + y)" border="0" />:
+<img src="http://latex.codecogs.com/gif.latex?sin(x + y)" border="0" />:
+at <img src="http://latex.codecogs.com/gif.latex?x == y == 1" border="0" />:
 
 ```Python
 import AutoDiff.AutoDiff as ad
 from AutoDiff.Operators import operator as op
+from AutoDiff.Nodes import Scalar
+from AutoDiff.Nodes import Vector
 
 # Create variables x, y
 x, y = ad.create_scalar(2, [1,1])
 z = op.sin(x + y)
 
-print(z.eval)
+print(z.eval())
 ```
 
 ## External Depencies
 
-This project aims to restrict dependencies on third-party libraries to the necessary min- imum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
+This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
