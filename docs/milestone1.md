@@ -221,7 +221,7 @@ class Node():
         update the self._val attribute of the Node type and will
         modify the derivative accordingly
 
-        Returns self._val, self.der 
+        Returns self._val, self.der
         '''
         raise NotImplementedError
 
@@ -340,10 +340,7 @@ x, y = ad.create_scalar(2, [1,1])
 z = op.sin(x + y)
 
 print(z.eval)
-
-
 ```
-
 
 ## External Depencies
 
