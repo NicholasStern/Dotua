@@ -113,7 +113,6 @@ result.der # The derivative of the function
 
 ### Directory Structure
 
-#### Overview
 Our project will adhere to the directory structure outlined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html). At a high level (with exact names subject to change), the project will have the following structure:
 
 ```python
@@ -125,14 +124,12 @@ autodiff/
         nodes/
             __init__.py
             node.py
-            variable.py
-            constant.py
+            scalar.py
+            vector.py
             complex.py
-            ...
         operators/
             __init__.py
             operator.py
-            ...
         tests/
             __init__.py
             ...
@@ -140,38 +137,38 @@ autodiff/
     LICENSE
     MANIFEST.in
     README.md
+    requirements.txt
     setup.py
     .gitignore
 ```
 
+### Modules
+
 #### examples/
-The examples sub-directory will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema, both of which use the AutoDiff driver defined in the top-level project directory ().
+The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema.
 
 #### nodes/
-The nodes sub-directory will contain the Node superclass and associated subclasses.
-Other packages will not import and the use the Node class directly, instead
-they will work directly with the children such as Variable and Complex.
+The **Nodes** module will contain the *Node* superclass and associated subclasses
+(i.e., *Vector* and *Scalar*).  Other packages and users will not use the
+*Node* class directly, instead they will work with its children through the
+*AutoDiff* driver.
 
 #### operators/
-The operators sub-directors will contain the Operator superclass and associated subclasses.
+The **Operators** module will contain the *Operator* class which will be
+imported by users directly.
 
 #### tests/
-The tests sub-directory will contain the project’s testing suite and will be formatted according to the pytest requirements for automatic test discovery.
-
-### External Dependencies
-
-#### Overview
-This project aims to restrict dependencies on third-party libraries to the necessary min- imum. Thus, the application will be restricted to using numpy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
+The **Tests** module will contain the project’s testing suite and will be formatted according to the pytest requirements for automatic test discovery.
 
 ### Testing
 
 #### Overview
 The majority of the testing in this project’s test suite will consist of unit testing. The aim is verifying the correctness of the application with thorough unit testing of all simple usages of the forward mode of automatic differentiation. Essentially, this will involve validating that our application produces correct calculations for all elementary functions. Additionally, a range of more complex unit testing will cover advanced scenarios such as functions with multidimensional domains and codomains as well as functions which created complexity via composition of elementary functions.
 
-Additionally, the test suite will contain benchmarking and performance tests to demon- strate the scalability and limitations of the application.
+Additionally, the test suite will contain benchmarking and performance tests to demonstrate the scalability and limitations of the application.
 
 #### Test Automation
-In this project we will use continuous integration testing through Travis CI to perform automated, machine independent testing. Additionally, we will use Coveralls to validate the high code coverage of our testing suite.
+In this project we will use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we will use **Coveralls** to validate the high code coverage of our testing suite (goal: 98-100%).
 We will embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
 
 #### User Verification
