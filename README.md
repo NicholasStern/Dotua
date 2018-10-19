@@ -1,5 +1,6 @@
 # README
 
+## Group Number: 17
 ## Group Members: Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein
 
 <!-- Badges -->
