@@ -126,7 +126,6 @@ autodiff/
             node.py
             scalar.py
             vector.py
-            complex.py
         operators/
             __init__.py
             operator.py
