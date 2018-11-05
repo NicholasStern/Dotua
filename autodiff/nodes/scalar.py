@@ -1,7 +1,7 @@
-from node import Node
+import nodes.node as node
 
 
-class Scalar(Node):
+class Scalar(node.Node):
     def __init__(self):
         pass
 
