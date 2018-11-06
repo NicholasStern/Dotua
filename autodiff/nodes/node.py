@@ -2,6 +2,8 @@
 This class will serve as an abstract interface for the @Scalar and @Vector
 classes.
 '''
+
+
 class Node():
     def __init__(self):
         pass

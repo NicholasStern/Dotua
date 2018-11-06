@@ -1,18 +1,26 @@
 from nodes import scalar
 from nodes import vector
 
+
 class AutoDiff():
     def __init__(self):
         pass
 
     @staticmethod
-    def create_scalar(self, num = 1, vals = [0]):
+    def create_scalar(self, num=1, vals=[0]):
         '''
         Returns a list of Scalar variables to the user,
         with the values initialized to the user defined values or all 0
         by default
         '''
-        pass
+
+        vars = [None]*num
+        for i in range(num):
+            try:
+                vars[i] = scalar.Scalar(vals[i])
+            except IndexError:
+                vars[i] = scalar.Scalar()
+        return vars
 
     @staticmethod
     def create_vector(self, num, vals):
