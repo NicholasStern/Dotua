@@ -1,5 +1,5 @@
 import numpy as np
-from scalar import Scalar
+from ..nodes.scaler import Scalar
 
 class Operator:
 
