@@ -1,7 +1,7 @@
-import nodes.node as node
+from .node import Node
 
 
-class Vector(node.Node):
+class Vector(Node):
     def __init__(self):
         pass
 

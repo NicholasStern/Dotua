@@ -1,13 +1,11 @@
-from nodes import scalar
-from nodes import vector
-
+import autodiff.nodes.scalar as scalar
 
 class AutoDiff():
     def __init__(self):
         pass
 
     @staticmethod
-    def create_scalar(self, num=1, vals=[0]):
+    def create_scalar(num=1, vals=[0]):
         '''
         Returns a list of Scalar variables to the user,
         with the values initialized to the user defined values or all 0
@@ -23,7 +21,7 @@ class AutoDiff():
         return vars
 
     @staticmethod
-    def create_vector(self, num, vals):
+    def create_vector(num, vals):
         '''
         The idea is similar to create_scalar.
         This will allow the user to create vectors and specify initial
