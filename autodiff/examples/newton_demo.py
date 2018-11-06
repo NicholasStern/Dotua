@@ -30,4 +30,3 @@ def NewtonsMethod(func, x0=0, tol=1e-10,maxiters=100):
         xn = xn + x_next
 
         return(xn)
-  
