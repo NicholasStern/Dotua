@@ -11,8 +11,10 @@ class Operator:
     Example Usage
     -------------
 
-        >>> from operator import Operator as op
-        >>> y = op.sin(x)
+        $ import autodiff as ad
+        $ x = ad.create_scalar(0)
+        $ from autodiff.operators import Operator as op
+        $ y = op.sin(x)
 
     """
     def __init__(self):
