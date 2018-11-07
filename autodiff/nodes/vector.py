@@ -1,18 +1,28 @@
+<<<<<<< HEAD
 from node import Node
 from element import Element
 from util import Counter
 import numpy as np
+=======
+from .node import Node
+>>>>>>> b54520e4681fb524d8b8e4e9df3ff1379b4c85f5
 
 class Vector(Node):
 	def __init__(self, val, der = 1):
 		""" Returns a Vector variable with user defined value and derivative
 
+<<<<<<< HEAD
 		INPUTS
 		=======
 		val: float, compulsory
 			Value of the Vector variable
 		der: float, optional, default value is 1
 			Derivative of the Vector variable/function of a variable
+=======
+class Vector(Node):
+    def __init__(self):
+        pass
+>>>>>>> b54520e4681fb524d8b8e4e9df3ff1379b4c85f5
 
 		RETURNS
 		========
