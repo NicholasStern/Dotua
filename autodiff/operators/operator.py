@@ -22,49 +22,96 @@ class Operator:
 
     @staticmethod
     def sin(x):
-        return Scalar(np.sin(x.val), np.cos(x.val)*x.der)
+        try:
+            return Scalar(np.sin(x._val), np.cos(x._val)*x._der)
+        except AttributeError:
+            return np.sin(x)
 
     @staticmethod
     def cos(x):
-        return Scalar(np.cos(x.val), -np.sin(x.val)*x.der)
+        try:
+            return Scalar(np.cos(x._val), -np.sin(x._val)*x._der)
+        except AttributeError:
+            return np.cos(x)
 
     @staticmethod
     def tan(x):
-        return Scalar(np.tan(x.val), np.arccos(x.val)**2*x.der)
+        try:
+            return Scalar(np.tan(x._val), np.arccos(x._val)**2*x._der)
+        except AttributeError:
+            return np.tan(x)
 
     @staticmethod
     def arcsin(x):
-        return Scalar(np.arcsin(x.val), -np.arcsin(x.val)*np.arctan(x.val)*x.der)
+        try:
+            return Scalar(np.arcsin(x._val), -np.arcsin(x._val)*np.arctan(
+                x._val)*x._der)
+        except AttributeError:
+            return np.arcsin(x)
 
     @staticmethod
     def arccos(x):
-        return Scalar(np.arccos(x.val), np.arccos(x.val)*np.tan(x.val)*x.der)
+        try:
+            return Scalar(np.arccos(x._val), np.arccos(x._val)*np.tan(
+                x._val)*x._der)
+        except AttributeError:
+            return np.arccos(x)
 
     @staticmethod
     def arctan(x):
-        return Scalar(np.arctan(x.val), -np.arcsin(x.val)**2*x.der)
+        try:
+            return Scalar(np.arctan(x._val), -np.arcsin(x._val)**2*x._der)
+        except AttributeError:
+            return np.arctan(x)
 
     @staticmethod
     def sinh(x):
-        return Scalar(np.sinh(x.val), np.cosh(x.val)*x.der)
+        try:
+            return Scalar(np.sinh(x._val), np.cosh(x._val)*x._der)
+        except AttributeError:
+            return np.sinh(x)
 
     @staticmethod
     def cosh(x):
-        return Scalar(np.cosh(x.val), np.sinh(x.val)*x.der)
+        try:
+            return Scalar(np.cosh(x._val), np.sinh(x._val)*x._der)
+        except AttributeError:
+            return np.cosh(x)
 
     @staticmethod
     def tanh(x):
-        return Scalar(np.tanh(x.val), (1-np.tanh(x.val)**2)*x.der)
+        try:
+            return Scalar(np.tanh(x._val), (1-np.tanh(x._val)**2)*x._der)
+        except AttributeError:
+            return np.tanh(x)
 
     @staticmethod
     def arcsinh(x):
-        return Scalar(np.arcsinh(x.val), -np.arcsinh(x.val)*np.arctanh(x.val)*x.der)
+        try:
+            return Scalar(np.arcsinh(x._val), -np.arcsinh(x._val)*np.arctanh(
+                x._val)*x._der)
+        except AttributeError:
+            return np.arcsinh(x)
 
     @staticmethod
     def arccosh(x):
-        return Scalar(np.arccosh(x.val), -np.arccosh(x.val)*np.tanh(x.val)*x.der)
+        try:
+            return Scalar(np.arccosh(x._val), -np.arccosh(x._val)*np.tanh(
+                x._val)*x._der)
+        except AttributeError:
+            return np.arccosh(x)
 
     @staticmethod
     def arctanh(x):
-        return Scalar(np.arctanh(x.val), (1-np.arctanh(x.val)**2)*x.der)
+        try:
+            return Scalar(np.arctanh(x._val), (1-np.arctanh(x._val)**2)*x._der)
+        except AttributeError:
+            return np.arctanh(x)
+
+    @staticmethod
+    def exp(x):
+        try:
+            return Scalar(np.exp(x._val), (np.exp(x._val)*x._der)
+        except AttributeError:
+            return np.exp(x)
 
