@@ -1,32 +1,43 @@
-'''
-Demonstration of Newton's Method using our AutoDiff library
-'''
-
-def NewtonsMethod(func, x0=0, tol=1e-10,maxiters=100):
+def NewtonsMethod(func, x0, tol=1e-5,maxiters=100):
     '''
-    Takes in a function, an initial guess (x0), an error tolerance,
-    and a maximum number of itterations.
-
-    Computes roots of 'func' through itterative guesses until change is below below tolerance (tol)
-
+    Computes the roots of func through iterative guesses until change is below tolerance.
+    
+    Takes in a function (func), an initial guess (x0), an error tolerance (tol), and a maximum number of iterations (maxiters).
+    
     func must be composed of 'AutoDiff.Operators' structures.
+    
+    Example Usage
+    -------------
+    
+        $ import autodiff as ad
+        $ x = ad.create_scalar(0)
+        $ from autodiff.operators import Operator as op
+        $ func = op.sin(x)
+        $ NewtonsMethod(y,0)
+        
+        >>> 1
 
     '''
     xn = x0
 
     for i in range(maxiters):
+        
         #Calculate y at this step.
-        y = func.eval(xn)[0]
+        y = f(xn)
+        ##y = func.eval(xn)[0]
         #Calculate derivative at this step
-        dy_dx = func.eval(xn)[1]
+        dy_dx = df(xn)
+        ##dy_dx = func.eval(xn)[1]
 
         #If y reaches tolerance, stop
         if abs(y) < tol:
+            return(xn)
             break
-
-        #Compute Newton Step
-        x_next = y / dy_dx
-        #Update X
-        xn = xn + x_next
-
-        return(xn)
+        
+        else:
+            #Compute Newton Step
+            x_next = y / dy_dx
+            #Update X
+            xn = xn + x_next
+            
+            return(xn)
