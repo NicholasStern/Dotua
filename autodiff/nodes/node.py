@@ -8,6 +8,25 @@ class Node():
     def __init__(self):
         pass
 
+    def eval(self):
+        '''
+        When implemented by subclasses, this function will both
+        update the self._val attribute of the Node type and will
+        modify the derivative accordingly
+
+        Returns (self._val, self._der)
+        '''
+        raise NotImplementedError
+
+    def get_partial(self, var):
+        '''
+        When implemented by subclasses, this function returns the derivative
+        of the node with respect to @var
+
+        Returns (self._val, self._der)
+        '''
+        raise NotImplementedError
+
     def __add__(self, other):
         raise NotImplemented
 
