@@ -77,8 +77,10 @@ def test_arcsinh():
     assert op.arcsinh(y) == np.arcsinh(y)
 
 def test_arccosh():
+    x = Scalar(2, der=2)  # Autodiff obj w/ derivative of 2
+    y = 2
     # Autodiff Obj
-    assert np.arccosh(x._val) == op.arccosh(x)._val and -np.arccosh(x._val)\
+    assert np.arccosh(x._val) == op.arccosh(x)._val and -x._der*np.arccosh(x._val)\
            *np.tanh(x._val) == op.arccosh(x)._der
     # Constant
     assert op.arccosh(y) == np.arccosh(y)

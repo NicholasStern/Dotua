@@ -111,7 +111,7 @@ class Operator:
     @staticmethod
     def exp(x):
         try:
-            return Scalar(np.exp(x._val), (np.exp(x._val)*x._der)
+            return Scalar(np.exp(x._val), np.exp(x._val)*x._der)
         except AttributeError:
             return np.exp(x)
 
