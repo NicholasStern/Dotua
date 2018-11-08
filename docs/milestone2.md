@@ -111,6 +111,7 @@ autodiff/
     autodiff/
         examples/
             __init__.py
+            newton_demo.py
             ...
         nodes/
             __init__.py
@@ -122,6 +123,11 @@ autodiff/
             operator.py
         tests/
             __init__.py
+            test_initializer.py
+            test_newton.py
+            test_opertor.py
+            test_scalar.py
+            test_vector.py
             ...
         autodiff.py  # driver for centralizing operator and node usage
     LICENSE
