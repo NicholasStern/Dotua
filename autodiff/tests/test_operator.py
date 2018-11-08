@@ -3,9 +3,7 @@ from ..operators.operator import Operator as op
 from ..autodiff import AutoDiff as ad
 import numpy as np
 
-scalars = ad.create_scalar([0, 1], num=2)  # Autodiff obj w/ derivative of 2
-x = scalars[0]
-z = scalars[1]
+x, z = tuple(ad.create_scalar([0, 1]))
 y = 0
 
 
@@ -120,7 +118,7 @@ def test_arcsinh():
 
 
 def test_arccosh():
-    x = ad.create_scalar(1, num=1)[0]  # Autodiff obj w/ derivative of 2
+    x = ad.create_scalar(1)
     y = 2
     # Autodiff Obj
     achx = op.arccosh(x)

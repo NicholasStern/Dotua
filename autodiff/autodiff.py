@@ -19,8 +19,7 @@ class AutoDiff():
             # Initialize the jacobians
             for var in scalars:
                 var.init_jacobian(scalars)
-
-            return vars
+            return scalars
         except TypeError:
             scalar = Scalar(vals)
             scalar.init_jacobian([scalar])
