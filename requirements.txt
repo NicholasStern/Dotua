@@ -1,0 +1,7 @@
+Please install numpy to run our library
+
+To install numpy, you may use command:
+
+pip install numpy
+
+
