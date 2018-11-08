@@ -23,12 +23,6 @@ class Vector(Node):
 			- two or fewer inputs
 		POST:
 			returns a Vector class instance with value = val and derivative = der
-
-		EXAMPLES
-		=========
-		>>> x = Vector([2], 1)
-		>>> x.eval() == (2, [1])
-		True
 		"""
 		self._val = np.array(val)
 		self._jacobian = der * np.eye(len(val))
@@ -47,13 +41,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> (x+y).eval() == (3, [1,1])
-		True
 		"""
 		try:
 			value = self._val + other._val # If other is a constant, then there will be an attribute error
@@ -130,13 +117,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> (x+y).eval() == (3, [1,1])
-		True
 		"""
 		return self + other
 
@@ -151,13 +131,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> (x-y).eval() == (-1, [1,-1])
-		True
 		"""
 		try:
 			value = self._val - other._val # If other is a constant, then there will be an attribute error
@@ -233,13 +206,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> >>> (x-y).eval() == (-1, [1,-1])
-		True
 		"""
 		return self.__neg__() + other
 
@@ -254,13 +220,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> (x * y).eval() == (2,[2,1])
-		True
 		"""
 		try:
 			val_other = other._val # If other is a constant, then there will be an attribute error
@@ -341,13 +300,6 @@ class Vector(Node):
 		RETURNS
 		========
 		Vector class instance 
-
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([2],1)
-		>>> (x * y).eval() == (2,[2,1])
-		True
 		"""
 		return self * other
 
@@ -363,11 +315,6 @@ class Vector(Node):
 		========
 		Vector class instance 
 
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> (x / 2).eval() == (0.5, [0.5])
-		True
 		"""
 		try:
 			val_other = other._val
@@ -466,11 +413,6 @@ class Vector(Node):
 		========
 		Vector class instance 
 
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> (2 / x).eval() == (2, [-1])
-		True
 		"""
 		try:
 			val_other = other._val
@@ -568,11 +510,6 @@ class Vector(Node):
 		========
 		Vector class instance 
 
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> (- x).eval() == (-1,[-1])
-		True
 		"""
 		value = - self._val
 		derivative = - self._jacobian
@@ -606,13 +543,6 @@ class Vector(Node):
 		POST:
 			- returns a float derivative
 
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> y = Vector([3],1)
-		>>> f = 2 * x + x * y
-		>>> f.getDerivative(x) == 5
-		True
 		"""
 		return self._dict[x]
 
@@ -627,11 +557,6 @@ class Vector(Node):
 		========
 		description about the Sclar variable class instance: string
 
-		EXAMPLES
-		=========
-		>>> x = Vector([1],1)
-		>>> print(x)
-		'Vector variable with value [1]'
 		"""
 		representation = 'Vector variable with value {}'.format(self._val)
 		return representation
