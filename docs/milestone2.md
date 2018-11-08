@@ -82,7 +82,7 @@ $ pip install -r requirements.txt
 In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
 
 ```py
-Import autodiff.AutoDiff as ad
+import autodiff.AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
