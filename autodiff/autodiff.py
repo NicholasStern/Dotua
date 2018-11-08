@@ -1,11 +1,8 @@
-import autodiff.nodes.scalar as scalar
-import autodiff.nodes.vector as vector
+from autodiff.nodes.scalar import Scalar
+from autodiff.nodes.vector import Vector
 
 
 class AutoDiff():
-    def __init__(self):
-        pass
-
     @staticmethod
     def create_scalar(vals):
         '''
@@ -14,17 +11,20 @@ class AutoDiff():
         by default
         '''
 
-        vars = [None] * 
-        for i in range(num):
-            try:
-                vars[i] = scalar.Scalar(vals[i])
-            except TypeError:
-                vars[i] = scalar.Scalar(vals)
+        try:
+            scalars = [None] * len(vals)
+            for i in range(len(vals)):
+                scalars[i] = Scalar(vals[i])
 
-        # Initials the jacobians for the scalars
-        for var in vars:
-            var.init_jacobian(vars)
-        return vars
+            # Initialize the jacobians
+            for var in scalars:
+                var.init_jacobian(scalars)
+
+            return vars
+        except TypeError:
+            scalar = Scalar(vals)
+            scalar.init_jacobian([scalar])
+            return scalar
 
     @staticmethod
     def create_vector(vals, num=1):
@@ -44,7 +44,7 @@ class AutoDiff():
         =====
         PRE:
             - the length of vals sould be num
-        POST: 
+        POST:
             returns a list of vector variables with value defined in vals
         '''
         if(num > len(vals)):
@@ -56,7 +56,7 @@ class AutoDiff():
         vars = [None] * num
         for i in range(num):
             try:
-                vars[i] = vector.Vector(vals[i])
+                vars[i] = Vector(vals[i])
             except Exception:
-                vars[i] = vector.Vector([0])
+                vars[i] = Vector([0])
         return vars
