@@ -1,3 +1,4 @@
+import numpy as np
 from ..nodes.vector import Vector
 
 '''
@@ -12,6 +13,7 @@ f_2 = x[0] - 3 - x[1] - x[1]
 f_3 = 1 + x[1] - x[0] * x[1] - x[0] - 3
 f_4 = 3 / x[0] + (x[0] * x[1]) / 2 - 4 * x[1]
 f_5 = x[0] ** 3 + x[1] / x[0]
+f_6 =  2 ** x[1]
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
@@ -27,6 +29,9 @@ def test_devide():
 
 def test_pow():
 	assert(f_5.eval() == (3, [1,1]))
+
+def test_rpow():
+	assert(f_6.eval() == (4, [0,4*np.log(2)]))
 
 # Define a vector function and get a jacobian of the vector function to vector
 

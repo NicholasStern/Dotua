@@ -1,6 +1,7 @@
 import numpy as np
 from .node import Node
 
+
 class Vector(Node):
 	def __init__(self, val, der = 1):
 		""" Returns a Vector variable with user defined value and derivative
@@ -680,7 +681,19 @@ class Element():
 			return Element(self._val ** val_other, val_other * self._val ** (val_other - 1) * self._der, self._vector)
 		else:
 			if self._vector == other._vector:
-				return Element(self._val ** val_other, self._val ** val_other * (1/self._val * self._der * val_other + np.log(self._val) * other._der), self._vector)
+				return Element(self._val ** val_other, self._val ** val_other * (val_other / self._val * self._der + np.log(self._val) * other._der), self._vector)
+			else:
+				print("Elements from different vectors are not allowed to go together")
+
+	def __rpow__(self, other):
+		try:
+			val_other = other._val
+		except AttributeError:
+			val_other  = other
+			return Element(val_other ** self._val, val_other ** self._val * np.log(val_other) * self._der, self._vector)
+		else:
+			if self._vector == other._vector:
+				return other.__pow__(self)
 			else:
 				print("Elements from different vectors are not allowed to go together")
 
