@@ -30,6 +30,6 @@ def NewtonsMethod(func, x0, tol=1e-15, maxiters=1000):
             x_next = y / dy_dx
 
             # Update X
-            xn = xn + x_next
+            xn = xn - x_next
 
     return xn._val
