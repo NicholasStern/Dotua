@@ -10,6 +10,9 @@ __pycache__/
 # Pycharm byproducts
 .idea/
 
+# Apply byproducts
+.DS_Store
+
 # C extensions
 *.so
 
