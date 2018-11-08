@@ -368,3 +368,10 @@ print(z.eval())
 ## External Depencies
 
 This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
+
+
+## Future Plans
+
+https://arxiv.org/abs/1502.05767
+
+[TBD by ZW]
