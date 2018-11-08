@@ -167,6 +167,15 @@ Additionally, the test suite will contain benchmarking and performance tests to 
 In this project we will use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we will use **Coveralls** to validate the high code coverage of our testing suite (goal: 98-100%).
 We will embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
 
+#### Installation
+To install our package, you can download the whole project from our github organization. You will get a folder named 'cs207-FinalProject-master' once you download the zip file. You can go into the folder to start your own script and use our library now. You can find 'driver.py' here, which is actually a use case and you may follow that to build up your own functions. It is worth noting that you have to put your script out of the 'autodiff' folder to import classes and functions from our package. When your script and the 'autodiff' folder is at the same level in the directory tree, you can use these sentences to import from ourt package:
+
+```
+python
+from autodiff.autodiff import AutoDiff as ad
+from autodiff.operators.operator import Operator as op
+```
+
 #### User Verification
 We plan on including all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
 
