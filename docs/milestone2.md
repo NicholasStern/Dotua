@@ -63,7 +63,7 @@ To recap: automatic differentiation is an algorithmic means of computing complic
 ## How to Use AutoDiff
 
 ### How to Install
-The way to install our package is to clone the git repository using the following command line argument:
+To install our package, clone the git repository using the following command line argument:
 
 ```bash
 $ git clone https://github.com/VV-NS-CY-ZW-CS-207-Organization/cs207-FinalProject.git
