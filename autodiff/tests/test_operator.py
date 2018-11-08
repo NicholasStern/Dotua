@@ -1,9 +1,11 @@
 # This file serves to test the operator.py module
 from ..operators.operator import Operator as op
-from ..nodes.scalar import Scalar
+from ..autodiff import AutoDiff as ad
 import numpy as np
 
-x = Scalar(0, der=2)  # Autodiff obj w/ derivative of 2
+scalars = ad.create_scalar([0, 1], num=2)  # Autodiff obj w/ derivative of 2
+x = scalars[0]
+z = scalars[1]
 y = 0
 
 def test_sin():
@@ -77,7 +79,7 @@ def test_arcsinh():
     assert op.arcsinh(y) == np.arcsinh(y)
 
 def test_arccosh():
-    x = Scalar(2, der=2)  # Autodiff obj w/ derivative of 2
+    x = ad.create_scalar(1, num=1)[0]  # Autodiff obj w/ derivative of 2
     y = 2
     # Autodiff Obj
     assert np.arccosh(x._val) == op.arccosh(x)._val and -x._der*np.arccosh(x._val)\
@@ -97,3 +99,11 @@ def test_exp():
     assert np.exp(x._val) == op.exp(x)._val and x._der*np.exp(x._val) == op.exp(x)._der
     # Constant
     assert op.exp(y) == np.exp(y)
+
+def test_add():
+    res = op.sin(x) + op.sin(z)
+    print('res: ', res)
+    print('res._val: ', res._val)
+    print(np.sin(x._val) + np.sin(z._val))
+
+    assert np.sin(x._val) + np.sin(z._val) == res._val

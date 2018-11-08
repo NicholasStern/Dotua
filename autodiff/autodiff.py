@@ -17,8 +17,8 @@ class AutoDiff():
         for i in range(num):
             try:
                 vars[i] = scalar.Scalar(vals[i])
-            except IndexError:
-                vars[i] = scalar.Scalar()
+            except TypeError:
+                vars[i] = scalar.Scalar(vals)
 
         # Initials the jacobians for the scalars
         for var in vars:
