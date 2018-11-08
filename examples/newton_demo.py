@@ -1,4 +1,4 @@
-def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
+def NewtonsMethod(func, x0, tol=1e-15, maxiters=1000):
     '''
     Computes the roots of func through iterative guesses until change is below tolerance.
 
@@ -22,7 +22,7 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
 
         # If y reaches tolerance, stop
         if abs(y) < tol:
-            return xn
+            return xn._val
             break
 
         else:
@@ -32,4 +32,4 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
             # Update X
             xn = xn + x_next
 
-        return xn
+    return xn._val
