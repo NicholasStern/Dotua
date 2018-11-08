@@ -325,7 +325,7 @@ class Vector(Node):
 				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
-			if(0 not in val_other):
+			if(val_other != 0):
 				value = self._val / val_other
 			else:
 				print('Divisor could not be 0')
@@ -343,6 +343,7 @@ class Vector(Node):
 				new._dict = derivative
 				return new
 		else:
+			value = self._val / other._val
 			try:
 				dict_self = self._dict
 			except AttributeError:
@@ -423,7 +424,7 @@ class Vector(Node):
 				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
-			if(self._val != 0):
+			if(0 not in self._val):
 				value = val_other / self._val
 			else:
 				print('Divisor could not be 0')
@@ -562,6 +563,9 @@ class Vector(Node):
 		representation = 'Vector variable with value {}'.format(self._val)
 		return representation
 
+	def eval(self):
+		return list(self._val)
+
 class Element():
 	def __init__(self, val, der, vector):
 		self._val = val
@@ -660,7 +664,7 @@ class Element():
 				print("Divisor could not be 0")
 		else:
 			if self._vector == other._vector:
-				if(self._val != 0):
+				if(0 not in self._val):
 					value = val_other / self._val
 					return Element(value, other._der / self._val - val_other * self._der / (self._val * self._val), self._vector)
 				else:
