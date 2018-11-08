@@ -1,6 +1,5 @@
 import numpy as np
-#from .node import Node
-from node import Node
+from .node import Node
 
 
 class Vector(Node):
