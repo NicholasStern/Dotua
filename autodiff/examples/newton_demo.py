@@ -12,7 +12,7 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
     Example usage:
     '''
     #from ..nodes.scalar import Scalar
-    xn = ad.create_scalar(vals=[0])[0]
+    xn = ad.create_scalar(vals=[0])
 
     for i in range(maxiters):
 
