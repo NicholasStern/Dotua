@@ -26,8 +26,9 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> Vector([2], 1)
-		Vector variable with value 2
+		>>> x = Vector([2], 1)
+		>>> x.eval() == (2, [1])
+		True
 		"""
 		self._val = np.array(val)
 		self._jacobian = der * np.eye(len(val))
@@ -51,8 +52,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x+y
-		Vector variable with value 3
+		>>> (x+y).eval() == (3, [1,1])
+		True
 		"""
 		try:
 			value = self._val + other._val # If other is a constant, then there will be an attribute error
@@ -134,8 +135,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x+y
-		Vector variable with value 3
+		>>> (x+y).eval() == (3, [1,1])
+		True
 		"""
 		return self + other
 
@@ -155,8 +156,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x-y
-		Vector variable with value -1
+		>>> (x-y).eval() == (-1, [1,-1])
+		True
 		"""
 		try:
 			value = self._val - other._val # If other is a constant, then there will be an attribute error
@@ -237,8 +238,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x-y
-		Vector variable with value -1
+		>>> >>> (x-y).eval() == (-1, [1,-1])
+		True
 		"""
 		return self.__neg__() + other
 
@@ -258,8 +259,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x * y
-		Vector variable with value 2
+		>>> (x * y).eval() == (2,[2,1])
+		True
 		"""
 		try:
 			val_other = other._val # If other is a constant, then there will be an attribute error
@@ -345,8 +346,8 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> y = Vector([2],1)
-		>>> x * y
-		Vector variable with value 2
+		>>> (x * y).eval() == (2,[2,1])
+		True
 		"""
 		return self * other
 
@@ -365,8 +366,8 @@ class Vector(Node):
 		EXAMPLES
 		=========
 		>>> x = Vector([1],1)
-		>>> x / 2
-		Vector variable with value 0.5
+		>>> (x / 2).eval() == (0.5, [0.5])
+		True
 		"""
 		try:
 			val_other = other._val
@@ -468,8 +469,8 @@ class Vector(Node):
 		EXAMPLES
 		=========
 		>>> x = Vector([1],1)
-		>>> 2 / x
-		Vector variable with value 2
+		>>> (2 / x).eval() == (2, [-1])
+		True
 		"""
 		try:
 			val_other = other._val
@@ -570,8 +571,8 @@ class Vector(Node):
 		EXAMPLES
 		=========
 		>>> x = Vector([1],1)
-		>>> - x
-		Vector variable with value -1
+		>>> (- x).eval() == (-1,[-1])
+		True
 		"""
 		value = - self._val
 		derivative = - self._jacobian
@@ -610,8 +611,8 @@ class Vector(Node):
 		>>> x = Vector([1],1)
 		>>> y = Vector([3],1)
 		>>> f = 2 * x + x * y
-		>>> f.getDerivative(x)
-		5
+		>>> f.getDerivative(x) == 5
+		True
 		"""
 		return self._dict[x]
 
@@ -630,7 +631,7 @@ class Vector(Node):
 		=========
 		>>> x = Vector([1],1)
 		>>> print(x)
-		'Vector variable with value 1'
+		'Vector variable with value [1]'
 		"""
 		representation = 'Vector variable with value {}'.format(self._val)
 		return representation
