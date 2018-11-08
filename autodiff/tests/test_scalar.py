@@ -13,11 +13,15 @@ for var in vars:
 # Define functions of the scalar objects
 f_1 = x_1 + x_2
 f_2 = x_2 + x_1
+
 f_3 = x_1 - x_2
 f_4 = x_2 - x_1
+
 f_5 = x_1 * x_2
 f_6 = x_2 * x_1
 
+f_7 = x_1 / x_2
+f_8 = x_2 / x_1
 
 def test_jacobian():
     # Test jacobians of scalar primitives
@@ -58,6 +62,10 @@ def test_multiply():
 
     # Directly check commutativity
     assert(f_5.eval() == f_6.eval())
+
+def test_divide():
+    assert(f_7.eval() == (5/8, 1))
+
 
 
 

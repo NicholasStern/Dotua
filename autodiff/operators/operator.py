@@ -141,4 +141,3 @@ class Operator:
             return Scalar(np.exp(x._val), np.exp(x._val)*x._der, jacobian)
         except AttributeError:
             return np.exp(x)
-

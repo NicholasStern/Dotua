@@ -14,7 +14,7 @@ class Scalar(Node):
         users requested variables
         '''
         self._universe = nodes
-        self._jacobian = {node: (id(self) == id(node)) for node in nodes}
+        self._jacobian = {node: int(id(self) == id(node)) for node in nodes}
         print(self._jacobian)
 
     def eval(self):
@@ -50,26 +50,61 @@ class Scalar(Node):
             new_node._val *= other._val
             new_node._der = self._val * other._der + self._der * other._val
             new_node._jacobian = {k: self._val * other.get_partial(k)
-                                  + self.get_partial(k) * other._val
+                                  + v * other._val
                                   for k, v in self._jacobian.items()}
         except:
             new_node._val *= other
             new_node._der *= other
-            new_node._jacobian = {k: v * other
-                                  for k, v in self._jacobian.items()}
+            new_node._jacobian = \
+                {k: v * other for k, v in self._jacobian.items()}
         return new_node
 
     def __rmul__(self, other):
         return self * other
 
     def __truediv__(self, other):
-        raise NotImplemented
+        '''
+        Need to calculate @self / @other
+        '''
+        new_node = Scalar(self._val, self._der, self._jacobian, self._universe)
+        try:
+            new_node._val /= other._val
+            new_node._der = (self._val * other._der - self._der * other._val) \
+                / ((self._val - other._val) ** 2)
+            new_node._jacobian = \
+                {k: (self._val * other.get_partial(k) - v * other._self)
+                 / ((self._val - other._val) ** 2)
+                 for k, v in self._jacobian.items()}
+        except AttributeError:
+            new_node._val /= other
+            new_node._der /= other
+            new_node._jacobian = \
+                {k: v / other for k, v in self._jacobian.items()}
+        return new_node
 
     def __rtruediv__(self, other):
-        raise NotImplemented
+        '''
+        Need to calculate @other / @self
+        '''
+        # new_node = Scalar(self._val, self._der, self._jacobian, self._universe)
+        # try:
+        #     new_node._val = other._val / self._val
+        #     new_node._der = \
+        #         (other._val * self._der - other._der * self._val) \
+        #         / ((other._val - self._val) ** 2)
+        #     new_node._jacobian = \
+        #         {k: (other._val * v - other.get_partial(k) * self._val)
+        #          / ((other._val - self._val) ** 2)
+        #          for k, v in self._jacobian.items()}
+        # except AttributeError:
+        #     new_node._val = other / self._val
+        #     new_node._der = other * (-self._der) / (self._val ** 2)
+        #     new_node._jacobian = \
+        #         {k: other * (-v) / (self._val ** 2)
+        #          for k, v in self._jacobian.items()}
+        return self
 
     def __neg__(self):
-        new_node = Scalar(-1 * self._val, -1 * self._der)
+        new_node = Scalar(-1 * self._val, -1 * self._der, u=self._universe)
         new_node._jacobian = {k: -1 * v for k, v in self._jacobian.items()}
-        new_node._universe = self._universe
         return new_node
