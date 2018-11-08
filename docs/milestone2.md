@@ -61,10 +61,18 @@ When one evaluates <img src="https://latex.codecogs.com/png.latex?f(x&space;&plu
 To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision).
 
 ## How to Use AutoDiff
+
+### How to Install
+The way to install our package is to...
+
+### Creating a Virtual Environment
+Is this necessary...
+
+### Import and Usage Example
 In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
 
 ```py
-Import AutoDiff.AutoDiff as ad
+Import autodiff.AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
@@ -76,13 +84,13 @@ The AutoDiff class is the core constructor for all variables in the function tha
 1. Create either a Scalar or Vector AutoDiff object to generate inputs to later pass into the function to be differentiated. The initialization works as follows:
 
 ```python
-x, y = ad.create_scalar(num = 2, value = [1,2])
-z = ad.create_vector(num = 3, value = [1,2,3])
+x, y = ad.create_scalar(vals = [1,2])
+z = ad.create_vector(vals = [1,2,3])
 ```
 
 2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
 ```python
-from AutoDiff.Operators import Operator as op
+from AutoDiff.operators import Operator as op
 result = op.sin(x*y)
 results = op.sin(z)
 ```
@@ -98,7 +106,7 @@ results = z + 4
 ```python
 print(result.eval())
 ```
-For scalars, result.eval() will return a tuple of (value, derivative) and for vectors, result.eval() shall return a list of tuples (value1, partialderivative1).
+For scalars, result.eval() will return a tuple of (value, jacobian) and for vectors, result.eval() shall return a list of tuples (value1, partialderivative1).
 
 ## Software Organization
 
