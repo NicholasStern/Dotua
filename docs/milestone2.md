@@ -273,7 +273,10 @@ of the user defined expression) is to serve as an interface for the two other cl
  class attribute (which can be implementd using a two-dimensional
 list or two-dimensional dictioary).
 
-For *Vector* class, the elementary functions such as exponential functions and trig functions have not been implemented yet. But basic functions such as '+', '-', '*', '/', '**' are supported for *Vector* class now.
+### Vector
+*Vector* is a subclass of *Node*. Every vector variable consists of a 1-d numpy array to store the values and a 2-d numpy array to store the jacobian matrix.
+User can use index to acess specific element in a *Vector* instance. And operations between elements in the same vector instance and operations between vectors are implemented by overloading the operators of the class.
+For *Vector* class, the elementary functions such as exponential functions and trig functions have not been implemented in the operator class yet. (But basic operations such as '+', '-', '*', '/', '**' are supported for *Vector* class now.)
 
 ## AutoDiff Driver
 
@@ -368,3 +371,10 @@ print(z.eval())
 ## External Depencies
 
 This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
+
+
+## Future Plans
+
+https://arxiv.org/abs/1502.05767
+
+[TBD by ZW]
