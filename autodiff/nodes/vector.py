@@ -7,7 +7,7 @@ class Vector(Node):
 
 		INPUTS
 		=======
-		val: float, compulsory
+		val: list of floats, compulsory
 			Value of the Vector variable
 		der: float, optional, default value is 1
 			Derivative of the Vector variable/function of a variable
@@ -19,14 +19,14 @@ class Vector(Node):
 		NOTES
 		=====
 		PRE:
-			- val and der have numeric type
+			- val and der have numeric type and val must be a list
 			- two or fewer inputs
 		POST:
 			returns a Vector class instance with value = val and derivative = der
 
 		EXAMPLES
 		=========
-		>>> Vector(2, 1)
+		>>> Vector([2], 1)
 		Vector variable with value 2
 		"""
 		self._val = np.array(val)
@@ -49,8 +49,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x+y
 		Vector variable with value 3
 		"""
@@ -132,8 +132,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x+y
 		Vector variable with value 3
 		"""
@@ -153,8 +153,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x-y
 		Vector variable with value -1
 		"""
@@ -235,8 +235,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x-y
 		Vector variable with value -1
 		"""
@@ -256,8 +256,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x * y
 		Vector variable with value 2
 		"""
@@ -343,8 +343,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(2,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([2],1)
 		>>> x * y
 		Vector variable with value 2
 		"""
@@ -364,7 +364,7 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
+		>>> x = Vector([1],1)
 		>>> x / 2
 		Vector variable with value 0.5
 		"""
@@ -467,7 +467,7 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
+		>>> x = Vector([1],1)
 		>>> 2 / x
 		Vector variable with value 2
 		"""
@@ -569,7 +569,7 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
+		>>> x = Vector([1],1)
 		>>> - x
 		Vector variable with value -1
 		"""
@@ -607,8 +607,8 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
-		>>> y = Vector(3,1)
+		>>> x = Vector([1],1)
+		>>> y = Vector([3],1)
 		>>> f = 2 * x + x * y
 		>>> f.getDerivative(x)
 		5
@@ -628,7 +628,7 @@ class Vector(Node):
 
 		EXAMPLES
 		=========
-		>>> x = Vector(1,1)
+		>>> x = Vector([1],1)
 		>>> print(x)
 		'Vector variable with value 1'
 		"""
@@ -767,21 +767,6 @@ class Counter(dict):
 	def __getitem__(self, idx):
 		"""	It will give 0 if the key is not in the key list of the dictionary.
 			So it will give 0 if the called variable is not in the function.
-
-		INPUTS
-		=======
-		idx: variable, compulsory
-			one of the keys of the dictionary
-
-		RETURNS
-		========
-		derivative of function 'self' of variable 'idx': float
-
-		EXAMPLES
-		=========
-		>>> derivative = Counter()
-		>>> derivative('x')
-		0
 		"""
 		self.setdefault(idx, 0)
 		return dict.__getitem__(self, idx)
