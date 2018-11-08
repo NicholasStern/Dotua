@@ -61,10 +61,28 @@ When one evaluates <img src="https://latex.codecogs.com/png.latex?f(x&space;&plu
 To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision).
 
 ## How to Use AutoDiff
+
+### How to Install
+To install our package, clone the git repository using the following command line argument:
+
+```bash
+$ git clone https://github.com/VV-NS-CY-ZW-CS-207-Organization/cs207-FinalProject.git
+```
+
+### Creating a Virtual Environment
+After cloning the git repository, create a virtual environment to install all the necessary dependencies through the following command line arguments:
+
+```bash
+$ virtualenv env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+```
+
+### Import and Usage Example
 In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
 
 ```py
-Import AutoDiff.AutoDiff as ad
+import autodiff.AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
@@ -76,13 +94,13 @@ The AutoDiff class is the core constructor for all variables in the function tha
 1. Create either a Scalar or Vector AutoDiff object to generate inputs to later pass into the function to be differentiated. The initialization works as follows:
 
 ```python
-x, y = ad.create_scalar(num = 2, value = [1,2])
-z = ad.create_vector(num = 3, value = [1,2,3])
+x, y = ad.create_scalar(vals = [1,2])
+z = ad.create_vector(vals = [1,2,3])
 ```
 
 2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
 ```python
-from AutoDiff.Operators import Operator as op
+from AutoDiff.operators import Operator as op
 result = op.sin(x*y)
 results = op.sin(z)
 ```
@@ -98,7 +116,7 @@ results = z + 4
 ```python
 print(result.eval())
 ```
-For scalars, result.eval() will return a tuple of (value, derivative) and for vectors, result.eval() shall return a list of tuples (value1, partialderivative1).
+For scalars, result.eval() will return a tuple of (value, jacobian) and for vectors, result.eval() shall return a list of tuples (value1, partialderivative1).
 
 ## Software Organization
 
@@ -111,6 +129,7 @@ autodiff/
     autodiff/
         examples/
             __init__.py
+            newton_demo.py
             ...
         nodes/
             __init__.py
@@ -122,6 +141,11 @@ autodiff/
             operator.py
         tests/
             __init__.py
+            test_initializer.py
+            test_newton.py
+            test_opertor.py
+            test_scalar.py
+            test_vector.py
             ...
         autodiff.py  # driver for centralizing operator and node usage
     LICENSE
@@ -160,6 +184,15 @@ Additionally, the test suite will contain benchmarking and performance tests to 
 #### Test Automation
 In this project we will use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we will use **Coveralls** to validate the high code coverage of our testing suite (goal: 98-100%).
 We will embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
+
+#### Installation
+To install our package, you can download the whole project from our github organization. You will get a folder named 'cs207-FinalProject-master' once you download the zip file. You can go into the folder to start your own script and use our library now. You can find 'driver.py' here, which is actually a use case and you may follow that to build up your own functions. It is worth noting that you have to put your script out of the 'autodiff' folder to import classes and functions from our package. When your script and the 'autodiff' folder is at the same level in the directory tree, you can use these sentences to import from ourt package:
+
+```
+python
+from autodiff.autodiff import AutoDiff as ad
+from autodiff.operators.operator import Operator as op
+```
 
 #### User Verification
 We plan on including all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
@@ -239,6 +272,8 @@ of the user defined expression) is to serve as an interface for the two other cl
  implemented using a list or dictionary) and the *Vector* class will have a *jacobian*
  class attribute (which can be implementd using a two-dimensional
 list or two-dimensional dictioary).
+
+For *Vector* class, the elementary functions such as exponential functions and trig functions have not been implemented yet. But basic functions such as '+', '-', '*', '/', '**' are supported for *Vector* class now.
 
 ## AutoDiff Driver
 
