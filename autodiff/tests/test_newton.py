@@ -1,11 +1,16 @@
 from ..operators.operator import Operator as op
-from ..nodes.scalar import Scalar
+from ..autodiff import AutoDiff as ad
 from ..examples import newton_demo as newton
 import numpy as np
+#from scipy import optimize
+from math import isclose
 
-#define example function using ad objects
-#x = Scalar(0,1)
-#func = op.sin(x)
+def func(x):
+    return op.sin(ad.create_scalar(x)[0])
 
-#def test_newton_method():
-#    assert newton.NewtonsMethod(func,0) == np.cos(0)
+#def f(x):
+#    return np.sin(x)
+
+def test_newton_method():
+    assert isclose(newton.NewtonsMethod(func, 0), 0, abs_tol=1e-10)
+    #optimize.newton(f,0)
