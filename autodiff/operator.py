@@ -1,5 +1,5 @@
 import numpy as np
-from ..nodes.scalar import Scalar
+from autodiff.nodes.scalar import Scalar
 
 class Operator:
 

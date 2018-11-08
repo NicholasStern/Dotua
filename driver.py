@@ -1,5 +1,5 @@
 from autodiff.autodiff import AutoDiff as ad
-from autodiff.operators.operator import Operator as op
+from autodiff.operator import Operator as op
 
 scalars = ad.create_scalar([1, 1, 1], num = 3)
 

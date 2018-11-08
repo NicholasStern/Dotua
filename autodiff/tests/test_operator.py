@@ -1,5 +1,5 @@
 # This file serves to test the operator.py module
-from ..operators.operator import Operator as op
+from ..operator import Operator as op
 from ..autodiff import AutoDiff as ad
 import numpy as np
 
