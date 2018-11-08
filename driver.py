@@ -1,7 +1,7 @@
 from autodiff.autodiff import AutoDiff as ad
 from autodiff.operators.operator import Operator as op
 
-scalars = ad.create_scalar([1, 1, 1], num = 3)
+scalars = ad.create_scalar([1, 1, 1])
 
 x = scalars[0]
 y = scalars[1]
