@@ -63,10 +63,20 @@ To recap: automatic differentiation is an algorithmic means of computing complic
 ## How to Use AutoDiff
 
 ### How to Install
-The way to install our package is to...
+The way to install our package is to clone the git repository using the following command line argument:
+
+```bash
+$ git clone https://github.com/VV-NS-CY-ZW-CS-207-Organization/cs207-FinalProject.git
+```
 
 ### Creating a Virtual Environment
-Is this necessary...
+After cloning the git repository, create a virtual environment to install all the necessary dependencies through the following command line arguments:
+
+```bash
+$ virtualenv env
+$ source env/bin/activate
+$ pip install -r requirements.txt
+```
 
 ### Import and Usage Example
 In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
