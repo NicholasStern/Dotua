@@ -1,4 +1,5 @@
 from ..autodiff import AutoDiff as ad
+import numpy as np
 
 def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
     '''
