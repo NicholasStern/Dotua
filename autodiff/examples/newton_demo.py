@@ -8,12 +8,6 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
     func must be composed of 'AutoDiff.Operator' operations and AutoDiff.Scalar structures.
 
     Example usage:
-    #f(x) = sin(x)
-
-    def func(x):
-        return AutoDiff.Operator.sin(Scalar(x))
-
-    NewtonsMethod(func,0)
     '''
     #from ..nodes.scalar import Scalar
     xn = x0 #ad.AutoDiff.create_scalar(vals=[0])[0]

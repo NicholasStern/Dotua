@@ -9,8 +9,8 @@ from math import isclose
 def func(x):
     return op.sin(Scalar(x))
 
-def f(x):
-    return np.sin(x)
+#def f(x):
+#    return np.sin(x)
 
 def test_newton_method():
     assert isclose(newton.NewtonsMethod(func,0), 0,abs_tol=1e-10)
