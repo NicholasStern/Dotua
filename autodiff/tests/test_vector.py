@@ -42,7 +42,7 @@ def test_vector_add():
 	assert(f_7.eval() == [2,4])
 
 def test_vector_sub():
-	assert(f_8.eval() == [-2,-4])
+	assert(f_8.eval() == [-5,-7])
 
 def test_vector_times():
 	assert(f_9.eval() == [3,10])
