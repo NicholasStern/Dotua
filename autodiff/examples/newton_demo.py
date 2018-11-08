@@ -1,3 +1,5 @@
+from .autodiff import AutoDiff as ad
+
 def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
     '''
     Computes the roots of func through iterative guesses until change is below tolerance.
@@ -10,7 +12,7 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
     Example usage:
     '''
     #from ..nodes.scalar import Scalar
-    xn = x0 #ad.AutoDiff.create_scalar(vals=[0])[0]
+    xn = ad.create_scalar(vals=[0])[0]
 
     for i in range(maxiters):
 
