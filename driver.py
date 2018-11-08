@@ -31,6 +31,12 @@ print(f_4.partial(x))
 print(f_4.partial(y))
 print(f_4.partial(z))
 
+#f_5 = x ** 2 + 3 ** y - x ** y
+#print(f_5.eval())
+#print(f_5.partial(x))
+#print(f_5.partial(y))
+#print(f_5.partial(z))
+
 #f = 1/(x*y*z) + op.sin(1/x + 1/y + 1/z)
 #print(f.eval())
 #print(f.partial(x))
