@@ -8,95 +8,148 @@ x = scalars[0]
 z = scalars[1]
 y = 0
 
+
 def test_sin():
     # Autodiff Obj
-    assert np.sin(x._val) == op.sin(x)._val and x._der*np.cos(x._val) \
-           == op.sin(x)._der
+    sx = op.sin(x)
+    assert np.sin(x._val) == sx._val
+    for k in x._jacobian.keys():
+        assert(sx.partial(k) == x.partial(k) * np.cos(x._val))
     # Constant
     assert op.sin(y) == np.sin(y)
 
+
 def test_cos():
     # Autodiff Obj
-    assert np.cos(x._val) == op.cos(x)._val and -x._der*np.sin(x._val) \
-           == op.cos(x)._der
+    cx = op.cos(x)
+    assert np.cos(x._val) == cx._val
+    for k in x._jacobian.keys():
+        assert(cx.partial(k) == -x.partial(k) * np.sin(x._val))
     # Constant
     assert op.cos(y) == np.cos(y)
 
+
 def test_tan():
     # Autodiff Obj
-    assert np.tan(x._val) == op.tan(x)._val and x._der*np.arccos(x._val)**2 \
-           == op.tan(x)._der
+    tx = op.tan(x)
+    assert np.tan(x._val) == tx._val
+    for k in x._jacobian.keys():
+        assert(tx.partial(k) == x.partial(k) * np.arccos(x._val)**2)
+
     # Constant
     assert op.tan(y) == np.tan(y)
 
+
 def test_arcsin():
     # Autodiff Obj
-    assert np.arcsin(x._val) == op.arcsin(x)._val and -x._der*np.arcsin(x._val)\
-           *np.arctan(x._val) == op.arcsin(x)._der
+    asx = op.arcsin(x)
+    assert np.arcsin(x._val) == asx._val
+    for k in x._jacobian.keys():
+        assert(asx.partial(k) == -x.partial(k) * np.arcsin(x._val)
+               * np.arctan(x._val))
     # Constant
     assert op.arcsin(y) == np.arcsin(y)
 
+
 def test_arccos():
     # Autodiff Obj
-    assert np.arccos(x._val) == op.arccos(x)._val and x._der*np.arccos(x._val)\
-           *np.tan(x._val) == op.arccos(x)._der
+    acx = op.arccos(x)
+    assert np.arccos(x._val) == acx._val
+    for k in x._jacobian.keys():
+        assert(acx.partial(k) == x.partial(k) * np.arccos(x._val)
+               * np.tan(x._val))
+
     # Constant
     assert op.arccos(y) == np.arccos(y)
 
+
 def test_arctan():
     # Autodiff Obj
-    assert np.arctan(x._val) == op.arctan(x)._val and -x._der*np.arcsin(x._val)**2 \
-           == op.arctan(x)._der
+    atx = op.arctan(x)
+    assert np.arctan(x._val) == atx._val
+    for k in x._jacobian.keys():
+        assert(atx.partial(k) == -x.partial(k) * np.arcsin(x._val)**2)
+
     # Constant
     assert op.arctan(y) == np.arctan(y)
 
+
 def test_sinh():
     # Autodiff Obj
-    assert np.sinh(x._val) == op.sinh(x)._val and x._der*np.cosh(x._val) \
-           == op.sinh(x)._der
+    shx = op.sinh(x)
+    assert np.sinh(x._val) == shx._val
+    for k in x._jacobian.keys():
+        assert(shx.partial(k) == x.partial(k) * np.cosh(x._val))
+
     # Constant
     assert op.sinh(y) == np.sinh(y)
 
+
 def test_cosh():
     # Autodiff Obj
-    assert np.cosh(x._val) == op.cosh(x)._val and x._der*np.sinh(x._val) \
-           == op.cosh(x)._der
+    chx = op.cosh(x)
+    assert np.cosh(x._val) == chx._val
+    for k in x._jacobian.keys():
+        assert(chx.partial(k) == x.partial(k) * np.sinh(x._val))
+
     # Constant
     assert op.cosh(y) == np.cosh(y)
 
+
 def test_tanh():
     # Autodiff Obj
-    assert np.tanh(x._val) == op.tanh(x)._val and x._der*(1-np.tanh(x._val)**2) \
-           == op.tanh(x)._der
+    thx = op.tanh(x)
+    assert np.tanh(x._val) == thx._val
+    for k in x._jacobian.keys():
+        assert(thx.partial(k) == x.partial(k) * (1 - np.tanh(x._val)**2))
+
     # Constant
     assert op.tanh(y) == np.tanh(y)
 
+
 def test_arcsinh():
     # Autodiff Obj
-    assert np.arcsinh(x._val) == op.arcsinh(x)._val and -x._der*np.arcsinh(x._val)\
-           *np.arctanh(x._val) == op.arcsinh(x)._der
+    ashx = op.arcsinh(x)
+    assert np.arcsinh(x._val) == ashx._val
+    for k in x._jacobian.keys():
+        assert(ashx.partial(k) == -x.partial(k) * np.arcsinh(x._val)
+               * np.arctanh(x._val))
+
     # Constant
     assert op.arcsinh(y) == np.arcsinh(y)
+
 
 def test_arccosh():
     x = ad.create_scalar(1, num=1)[0]  # Autodiff obj w/ derivative of 2
     y = 2
     # Autodiff Obj
-    assert np.arccosh(x._val) == op.arccosh(x)._val and -x._der*np.arccosh(x._val)\
-           *np.tanh(x._val) == op.arccosh(x)._der
+    achx = op.arccosh(x)
+    assert np.arccosh(x._val) == achx._val
+    for k in x._jacobian.keys():
+        assert(achx.partial(k) == -x.partial(k) * np.arccosh(x._val)
+               * np.tanh(x._val))
+
     # Constant
     assert op.arccosh(y) == np.arccosh(y)
 
+
 def test_arctanh():
     # Autodiff Obj
-    assert np.arctanh(x._val) == op.arctanh(x)._val and x._der*\
-           (1-np.arctanh(x._val)**2) == op.arctanh(x)._der
+    athx = op.arctanh(x)
+    assert np.arctanh(x._val) == athx._val
+    for k in x._jacobian.keys():
+        assert(athx.partial(k) == x.partial(k) * (1 - np.arctanh(x._val)**2))
+
     # Constant
     assert op.arctanh(y) == np.arctanh(y)
 
 def test_exp():
     # Autodiff Obj
-    assert np.exp(x._val) == op.exp(x)._val and x._der*np.exp(x._val) == op.exp(x)._der
+    ex = op.exp(x)
+    assert np.exp(x._val) == ex._val
+    for k in x._jacobian.keys():
+        assert(ex.partial(k) == x.partial(k) * np.exp(x._val))
+
     # Constant
     assert op.exp(y) == np.exp(y)
 
