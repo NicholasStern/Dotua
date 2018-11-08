@@ -6,14 +6,14 @@ class AutoDiff():
         pass
 
     @staticmethod
-    def create_scalar(vals=[0], num=1):
+    def create_scalar(vals):
         '''
         Returns a list of Scalar variables to the user,
         with the values initialized to the user defined values or all 0
         by default
         '''
 
-        vars = [None]*num
+        vars = [None] * 
         for i in range(num):
             try:
                 vars[i] = scalar.Scalar(vals[i])
