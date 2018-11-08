@@ -23,95 +23,122 @@ class Operator:
     @staticmethod
     def sin(x):
         try:
-            return Scalar(np.sin(x._val), np.cos(x._val)*x._der)
+            jacobian = {k: x.get_partial(k)*np.cos(x._val)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.sin(x._val), np.cos(x._val)*x._der, jacobian)
         except AttributeError:
             return np.sin(x)
 
     @staticmethod
     def cos(x):
         try:
-            return Scalar(np.cos(x._val), -np.sin(x._val)*x._der)
+            jacobian = {k: x.get_partial(k) * -np.sin(x._val)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.cos(x._val), -np.sin(x._val)*x._der, jacobian)
         except AttributeError:
             return np.cos(x)
 
     @staticmethod
     def tan(x):
         try:
-            return Scalar(np.tan(x._val), np.arccos(x._val)**2*x._der)
+            jacobian = {k: x.get_partial(k) * np.arccos(x._val)**2
+                        for k in x._jacobian.keys()}
+            return Scalar(np.tan(x._val), np.arccos(x._val)**2*x._der, jacobian)
         except AttributeError:
             return np.tan(x)
 
     @staticmethod
     def arcsin(x):
         try:
+            jacobian = {k: x.get_partial(k) * -np.arcsin(x._val)*np.arctan(
+                x._val) for k in x._jacobian.keys()}
             return Scalar(np.arcsin(x._val), -np.arcsin(x._val)*np.arctan(
-                x._val)*x._der)
+                x._val)*x._der, jacobian)
         except AttributeError:
             return np.arcsin(x)
 
     @staticmethod
     def arccos(x):
         try:
+            jacobian = {k: x.get_partial(k) * np.arccos(x._val)*np.tan(
+                x._val) for k in x._jacobian.keys()}
             return Scalar(np.arccos(x._val), np.arccos(x._val)*np.tan(
-                x._val)*x._der)
+                x._val)*x._der, jacobian)
         except AttributeError:
             return np.arccos(x)
 
     @staticmethod
     def arctan(x):
         try:
-            return Scalar(np.arctan(x._val), -np.arcsin(x._val)**2*x._der)
+            jacobian = {k: x.get_partial(k) * -np.arcsin(x._val)**2
+                        for k in x._jacobian.keys()}
+            return Scalar(np.arctan(x._val), -np.arcsin(x._val)**2*x._der, jacobian)
         except AttributeError:
             return np.arctan(x)
 
     @staticmethod
     def sinh(x):
         try:
-            return Scalar(np.sinh(x._val), np.cosh(x._val)*x._der)
+            jacobian = {k: x.get_partial(k) * np.cosh(x._val)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.sinh(x._val), np.cosh(x._val)*x._der, jacobian)
         except AttributeError:
             return np.sinh(x)
 
     @staticmethod
     def cosh(x):
         try:
-            return Scalar(np.cosh(x._val), np.sinh(x._val)*x._der)
+            jacobian = {k: x.get_partial(k) * np.sinh(x._val)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.cosh(x._val), np.sinh(x._val)*x._der, jacobian)
         except AttributeError:
             return np.cosh(x)
 
     @staticmethod
     def tanh(x):
         try:
-            return Scalar(np.tanh(x._val), (1-np.tanh(x._val)**2)*x._der)
+            jacobian = {k: x.get_partial(k) * (1-np.tanh(x._val)**2)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.tanh(x._val), (1-np.tanh(x._val)**2)*x._der, jacobian)
         except AttributeError:
             return np.tanh(x)
 
     @staticmethod
     def arcsinh(x):
         try:
+            jacobian = {k: x.get_partial(k) * -np.arcsinh(x._val)*np.arctanh(
+                x._val) for k in x._jacobian.keys()}
             return Scalar(np.arcsinh(x._val), -np.arcsinh(x._val)*np.arctanh(
-                x._val)*x._der)
+                x._val)*x._der, jacobian)
         except AttributeError:
             return np.arcsinh(x)
 
     @staticmethod
     def arccosh(x):
         try:
+            jacobian = {k: x.get_partial(k) * -np.arccosh(x._val)*np.tanh(
+                x._val) for k in x._jacobian.keys()}
             return Scalar(np.arccosh(x._val), -np.arccosh(x._val)*np.tanh(
-                x._val)*x._der)
+                x._val)*x._der, jacobian)
         except AttributeError:
             return np.arccosh(x)
 
     @staticmethod
     def arctanh(x):
         try:
-            return Scalar(np.arctanh(x._val), (1-np.arctanh(x._val)**2)*x._der)
+            jacobian = {k: x.get_partial(k) * (1-np.arctanh(x._val)**2)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.arctanh(x._val), (1-np.arctanh(x._val)**2)*x._der,
+                          jacobian)
         except AttributeError:
             return np.arctanh(x)
 
     @staticmethod
     def exp(x):
         try:
-            return Scalar(np.exp(x._val), np.exp(x._val)*x._der)
+            jacobian = {k: x.get_partial(k) * np.exp(x._val)
+                        for k in x._jacobian.keys()}
+            return Scalar(np.exp(x._val), np.exp(x._val)*x._der, jacobian)
         except AttributeError:
             return np.exp(x)
 
