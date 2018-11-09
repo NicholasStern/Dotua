@@ -419,25 +419,6 @@ At this point, the following features are in progress but not yet completed:
 We will provide support for *Vector* objects going forward.
 
 
-
-## Example Usage
-
-Here is an example usage of our libary where the user wants to perform
-automatic differentation on the function
-<img src="http://latex.codecogs.com/gif.latex?sin(x&space;+&space;y)" border="0" />:
-at <img src="http://latex.codecogs.com/gif.latex?x&space;==&space;y&space;==&space;1" border="0" />:
-
-```Python
-import AutoDiff.AutoDiff as ad
-from AutoDiff.Operators import operator as op
-
-# Create variables x, y
-x, y = ad.create_scalar([1,1])
-z = op.sin(x + y)
-
-print(z.eval())
-```
-
 ## External Depencies
 
 This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
