@@ -425,6 +425,8 @@ This project aims to restrict dependencies on third-party libraries to the neces
 
 ## Future Plans
 
-https://arxiv.org/abs/1502.05767
+Our group will implement two future developments. The first we will signpost as dynamic variable universes. The current build requires the user to create a single universe of all variables within a given function and then creates a data structure to hold the associated Jacobian matrix of partial derivatives. In the future, users will be able to create additional variables that will communicate with previously defined functions. This is useful for optimization projects which involve the creation of additional features.
 
-[TBD by ZW]
+Speaking of optimization, we will also implement backwards auto-differentiation. Forward auto-differentiation computes the computational graph beginning with the input functions, while backpropagation (a special case of auto-differentiation) begins with the output and optimizes the function in reverse. In massively complex neural networks with many many inputs but only a few outputs, this greatly reduces computational time.
+
+Automatic differentiation in machine learning: a survey. Baydin et al. 2018. Available at https://arxiv.org/abs/1502.05767
