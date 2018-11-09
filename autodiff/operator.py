@@ -1,8 +1,8 @@
 import numpy as np
 from autodiff.nodes.scalar import Scalar
 
-class Operator:
 
+class Operator:
     """Returns a new scalar object subject to the operator and propagates the
     value and derivative according to the chain rule
 
@@ -17,9 +17,6 @@ class Operator:
         $ y = op.sin(x)
 
     """
-    def __init__(self):
-        pass
-
     @staticmethod
     def sin(x):
         try:
