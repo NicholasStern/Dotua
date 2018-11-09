@@ -142,3 +142,12 @@ pip-selfcheck.json
 
 # Temporary md files
 .md~
+.md.un~
+
+# .Rhistory
+.Rhistory
+
+# Texpad files
+.aux
+.out
+.synctex.gz
