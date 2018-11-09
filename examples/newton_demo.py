@@ -1,7 +1,4 @@
-from ..autodiff import AutoDiff as ad
-import numpy as np
-
-def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
+def NewtonsMethod(func, x0, tol=1e-15, maxiters=1000):
     '''
     Computes the roots of func through iterative guesses until change is below tolerance.
 
@@ -12,26 +9,30 @@ def NewtonsMethod(func, x0, tol=1e-15,maxiters=1000):
 
     Example usage:
     '''
-    #from ..nodes.scalar import Scalar
-    xn = ad.create_scalar(vals=[0])
+
+    xn = x0
+    steps = []
 
     for i in range(maxiters):
 
-        ####Calculate y at this step.
+        # Calculate y at this step.
         y = func(xn)._val
 
-        #### Calculate derivative at this step
-        dy_dx = func(xn)._der
+        # Calculate derivative at this step
+        dy_dx = list(func(xn)._jacobian.values())[0]
 
-        #If y reaches tolerance, stop
+        # If y reaches tolerance, stop
         if abs(y) < tol:
-            return(xn)
+            return xn._val, steps
             break
 
         else:
-            #Compute Newton Step
+            steps.append((xn._val, y))
+            # Compute Newton Step
             x_next = y / dy_dx
-            #Update X
-            xn = xn + x_next
 
-        return(xn)
+            # Update X
+            xn = xn - x_next
+
+
+    return xn._val, steps

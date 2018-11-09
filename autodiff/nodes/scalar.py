@@ -1,4 +1,5 @@
 from .node import Node
+import numpy as np
 
 
 class Scalar(Node):
@@ -85,6 +86,44 @@ class Scalar(Node):
             new_node._val = other / self._val
             new_node._jacobian = \
                 {k: other * (-v) / (self._val ** 2)
+                 for k, v in self._jacobian.items()}
+        return new_node
+
+    def __pow__(self, other):
+        '''
+        Need to calculate @self ** @other
+        '''
+        new_node = Scalar(self._val, self._jacobian)
+        try:
+            new_node._val **= other._val
+            new_node._jacobian = \
+                {k: (other._val * v / self._val
+                 + np.log(self._val) * other.partial(k))
+                 * (self._val ** other._val)
+                 for k, v in self._jacobian.items()}
+        except:
+            new_node._val **= other
+            new_node._jacobian = \
+                {k: other * (self._val ** (other - 1)) * v
+                 for k, v in self._jacobian.items()}
+        return new_node
+
+    def __rpow__(self, other):
+        '''
+        Need to calculate @other ** @self
+        '''
+        new_node = Scalar(self._val, self._jacobian)
+        try:
+            new_node._val = other._val ** self._val
+            new_node._jacobian = \
+                {k: (self._val * other.partial(k) / other._val
+                 + np.log(other._val) * v)
+                 * (other._val ** self._val)
+                 for k, v in self._jacobian.items()}
+        except:
+            new_node._val = other ** self._val
+            new_node._jacobian = \
+                {k: (other ** self._val) * np.log(other) * v
                  for k, v in self._jacobian.items()}
         return new_node
 
