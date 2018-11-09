@@ -1,4 +1,4 @@
-# AutoDiff Documentation (Milestone 1)
+# AutoDiff Documentation (Milestone 2)
 
 ### Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein
 
@@ -210,38 +210,33 @@ This project will be distributed under the GNU GPLv3 license to allow free “as
 
 The purpose of this library (AutoDiff) is to perform automatic differentation on
 user defined functions, where the domain and codomain may be single- or
-multi-dimensional.  At a high level, AutoDiff will serve as a partial replacement
+multi-dimensional.  At a high level, AutoDiff serves as a partial replacement
 for NumPy in the sense that rather than defining functions using NumPy methods
-such as *sin* and *cos*, the user will use the AutoDiff methods *sin* and *cos* that
+such as *sin* and *cos*, the user can use the AutoDiff methods *sin* and *cos* that
 perform the same evaluation but also perform additional computation in the form of
 the derivative (i.e., thus implementing the forward mode of automatic differentiation).
 
-To achieve this goal, the AutoDiff library will implement the following
+To achieve this goal, the AutoDiff library implements the following
 abstract ideas:
   1. Keeping track of the value and derivative of user defined expressions.
   2. Allowing users to be as expressive as they would like by providing our own
     versions of binary and unary opertors.
 
-With these goals in mind, the AutoDiff implementation will rely on two modules
-**Nodes** and **Operators** and will allow user interface through the AutoDiff
-class which serves as a driver.
+With these goals in mind, the AutoDiff implementation relies on the
+**Nodes** modules and the **Operator** class and allows user interface through the AutoDiff class which serves as a **Node** factory for initializing instances of *Scalar* and *Vector*.
 
 ## Nodes
-The **Nodes** module will contain a *Node* superclass with the following basic design;
+The **Nodes** module contains a *Node* superclass with the following basic design:
 
 ```python
 class Node():
-    def __init__(self, val, der = 1):
-        self._val = val
-        self._der = der
-
-    def eval(self, new_val = self._val):
+    def eval(self):
         '''
-        When implemented by subclasses, this function will both
-        update the self._val attribute of the Node type and will
-        modify the derivative accordingly
+        For the Scalar and Vector subclasses, this function returns the node's
+        value as well as its derivative, both of which are guaranteed to be
+        up to date by the class' operator overloads.
 
-        Returns (self._val, self._der)
+        Returns (self._val, self._jacobian)
         '''
         raise NotImplementedError
 
@@ -262,50 +257,83 @@ class Node():
 
 Essentially, the role of the *Node* class (which in abstract terms is meant to
 represent a node in the computational graph underlying the automatic differentiation
-of the user defined expression) is to serve as an interface for the two other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses will implement the required operator overloading as necessary for scalar and vector functions respectively.
- This logic is separated into two separate classes to provide increased organization
- for higher dimensional functions and to allow class methods to use assumptions of
- specific properties of scalars and vectors to reduce implementation complexity.
+of the user defined expression) is to serve as an interface for the two other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses implements the required operator overloading as necessary for scalar and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.).
+This logic is separated into two separate classes to provide increased organization for higher dimensional functions and to allow class methods to use assumptions of specific properties of scalars and vectors to reduce implementation complexity.
 
- One key difference between the *Scalar* class and the *Vector* class is that the
- *Scalar* class will have a *gradient* class atribute (which can be
- implemented using a list or dictionary) and the *Vector* class will have a *jacobian*
- class attribute (which can be implementd using a two-dimensional
-list or two-dimensional dictioary).
+Both the *Scalar* class and the *Vector* class have *_val* and *_jacobian* class attributes which allow for automatic differentiation by keeping tarck of each
+node's value and derivative.
+
+### Scalar
+The *Scalar* class is used for user defined one-dimensional variables.  Specifically,
+users can define functions of scalar variables (i.e., functions defined over
+multiple scalar variables with a one-dimensional codomain) using instances of
+*Scalar* in order to simultaneous calculate the function value and first derivative
+at a pre-chosen point of evaluation.  Objects of the *Scalar* class are initialized
+with a value (i.e., the point of evaluation) which is stored in the class attribute
+**self._val** (n.b., as the single underscore suggests, this attribute should not
+be directly accessed or modifief by the user).  Additionally, *Scalar* objects –
+which could be either individual scalar variables or expressions of scalar variables
+– keep track of their own derivatives in the class attribute **self._jacobian**.
+This derivative is implemented as a dictionary with *Scalar* objects serving
+as the keys and real numbers as values.  Note that each *Scalar* object's
+**_jacobian** attribute has an entry for all scalar variables which the object
+might interact with (see AutoDiff Initializer section for more information).
+
+Users interact with *Scalar* object's in two ways:
+1. **eval(self)**: This method allows users to obtain the value and derivative
+for a *Scalar* object at the point of evaluation defined when the user first
+initialized their *Scalar* objects.  Specifically, this method returns a tuple
+of **self._val** and **self._jacobian**.
+2. **partial(self, var)**: This method allows users to obtain a partial derivative
+of the given *Scalar* object with respect to **var**.  If **self** is one of the
+*Scalar* objects directly initialized by the user (see AutoDiff Initializer
+section), then **partial()** returns 1 if **var == self** and 0 otherwise.  If
+**self** is a *Scalar* object formed by an expression of other *Sacalar* objects
+(e.g., **self = Scalar(1) + Scalar(2)**), then this method returns the correct partial
+derivative of **self** with respect to **var**.
+
+Note that these are the only methods that users should be calling for *Scalar*
+objects and that users should not be directly accessing any of the object's
+class attributes.
+
+Currently, *Scalar* objects support left- and right-sided addition, subtractionm multiplication, division, exponentiation, and negation.
 
 ### Vector
 *Vector* is a subclass of *Node*. Every vector variable consists of a 1-d numpy array to store the values and a 2-d numpy array to store the jacobian matrix.
 User can use index to acess specific element in a *Vector* instance. And operations between elements in the same vector instance and operations between vectors are implemented by overloading the operators of the class.
 For *Vector* class, the elementary functions such as exponential functions and trig functions have not been implemented in the operator class yet. (But basic operations such as '+', '-', '*', '/', '**' are supported for *Vector* class now.)
 
-## AutoDiff Driver
+## AutoDiff Initializer
 
-The AutoDiff class will function as a driver, allowing the user to initialize
-variables for the sake of constructing arbitray functions.  Because the *Node* class
-functions only as an interface for the *Scalar* and *Vector* classes, we do not
-want users to instantiate objects of the *Node* class directly.  Thus, we will
+The AutoDiff class functions as a **Node** factory, allowing the user to initialize
+variables for the sake of constructing arbitray functions.  Because the **Node**
+class serves only as an interface for the *Scalar* and *Vector* classes, we do not
+want users to instantiate objects of the *Node* class directly.  Thus, we
 define the *AutoDiff* class in the following way to allow users only to
 initialize *Scalar* and *Vector* variables:
 
 ```Python
-from Nodes import Scalar
-from Nodes import Vector
+from autodiff.nodes.scalar import Scalar
+from autodiff.nodes.vector import Vector
 
 class AutoDiff():
     def __init__(self):
         pass
 
     @staticmethod
-    def create_scalar(self, num = 1, vals = [0]):
+    def create_scalar(vals):
         '''
-        Returns a list of Scalar variables to the user,
-        with the values initialized to the user defined values or all 0
-        by default
+        @vals denotes the evaluation points of variables for which the user
+        would like to create Scalar variables.  If @vals is a list,
+        the function returns a list of Scalar variables with @vals
+        values.  If @vals is a single value, the user receives a single Scalar
+        variable (not as a list).  This function also initializes the jacobians
+        of all variables allocated.
         '''
         pass
 
     @staticmethod
-    def create_vector(self, num, vals):
+    def create_vector(vals):
         '''
         The idea is similar to create_scalar.
         This will allow the user to create vectors and specify initial
@@ -314,41 +342,75 @@ class AutoDiff():
         pass
 ```
 
-Using the *create_scalar* and *create_vector* methods, users will be able to
+Using the *create_scalar* and *create_vector* methods, users are able to
 initialize variables for use in constructing arbitrary functions.  Additionally,
 users are able to specify initial values for these variables.  Creating variables
 in this way will ensure that users are able to use the AutoDiff defined
 operators to both evaluate functions and compute their derivatives.
 
-## Operators
+### Variable Universes
 
-The **Operators** module will consist of a single class *Operator*.
-The purpose of this class is to define static methods for elementary mathematical
+The implementaiton of the AutoDiff library makes the following assumption:
+for each environment in which the user uses autodifferentiable variables
+(i.e., *Scalar* and *Vector* objects), the user initializes all such variables
+with a single call to **create_scalar** or **create_vector**.  This assumption
+allows *Scalar* and *Vector* objects to fully initialize their jacobians before
+being used by the user.  This greatly reduces implementation complexity.
+
+This design choice should not restrict users in their construction of arbitrary
+functions for the reason that in order to define a function, the user must
+know how many primitive scalar variables they need to use in advance.  Realize
+that this not mean that a user is prevented from defining new Python variables
+as functions of previously created *Scalar* objects, but only that a user, in
+defining a mathematical function **f(x, y, z)** must initialize **x, y, and z**
+with a single call to **create_scalar**.  It is perfectly acceptable that in the
+definition of **f(x, y, z)** a Python variable such as **a = x + y** is created.
+The user is guaranteed that **a.eval()** and **a.partial(x), a.partial(y),
+and a.partial(z)** are all well defined and correct because **a** in this case
+is an instance of *Scalar*; however, it is not a "primitive" scalar variable and
+thus the user could not take a partial derivative with respect to **a**.
+
+## Operator
+
+The *Operator* class defines static methods for elementary mathematical
 functions and operators (specifically those that cannot be overloaded in the
 *Scalar* and *Vector* classes) that can be called by users in constructing arbitrary functions.  The *Operator* class will import the Nodes module in order to
 return new *Scalar* or *Vector* variables as appropriate.  The design of the
-*Operator* class will be as follows:
+*Operator* class is as follows:
 
 ```Python
-from .. import Nodes as nd
+import numpy as np
+from autodiff.nodes.scalar import Scalar
 
 class Operator():
-    def __init__(self):
+    @staticmethod
+    def sin(x):
         pass
 
     @staticmethod
-    def sin(self, x):
+    def cos(x):
         pass
 
-    @staticmethod
-    def cos(self, x):
-        pass
-    ...
+    ... # Other elementary functions
 ```
 
-In order to facilitate the usage of the AutoDiff library for users of NumPy, we
-will ensure that the signatures of the methods we implement correspond to the
-NumPy equivalents.
+For each method defined in the *Operator* class, our implementation uses
+ducktyping to return the necessary object.  If user passes a *Scalar* object
+to one of the methods then a new *Scalar* object is returned to the user
+with the correct value and jacobian.  On the other hand, if the user passes
+a Python numeric type, then the method returns the evaluation of the
+corresponding NumPy method on the given argument
+(e.g., **op.sin(1) = np.sin(1)**).
+
+## Further Implementation
+
+At this point, the following features are in progress but not yet completed:
+1. Some operators still need to be overloaded for the *Vector* class (e.g., power)
+2. Full support for **create_vetor** is not yet complete.
+3. The *Operator* class currently only provides support for *Scalar* objects.
+We will provide support for *Vector* objects going forward.
+
+
 
 ## Example Usage
 
@@ -362,7 +424,7 @@ import AutoDiff.AutoDiff as ad
 from AutoDiff.Operators import operator as op
 
 # Create variables x, y
-x, y = ad.create_scalar(2, [1,1])
+x, y = ad.create_scalar([1,1])
 z = op.sin(x + y)
 
 print(z.eval())
