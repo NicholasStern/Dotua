@@ -82,7 +82,7 @@ $ pip install -r requirements.txt
 In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
 
 ```py
-import autodiff.AutoDiff as ad
+from autodiff.autodiff import AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
@@ -99,8 +99,9 @@ z = ad.create_vector(vals = [1,2,3])
 ```
 
 2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
+
 ```python
-from AutoDiff.operators import Operator as op
+from autodiff.operator import Operator as op
 result = op.sin(x*y)
 results = op.sin(z)
 ```
@@ -116,7 +117,14 @@ results = z + 4
 ```python
 print(result.eval())
 ```
-For scalars, result.eval() will return a tuple of (value, jacobian) and for vectors, result.eval() shall return a list of tuples (value1, partialderivative1).
+For scalars, result.eval() will return a tuple of (value, jacobian) where the jacobian is an array of partial derivatives of the function with respect to each scalar variable that was intialized at the same time. For vectors, results.eval() returns a list of tuples (value, jacobian), with one tuple for each function in the vector.
+
+### Examples
+There are two files in the top level directory of the autodiff package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the autodiff package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+
+The second file is an interactive jupyter notebook which contains an example use case where the autodiff package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in the top level directory of the package as well. The output of this demo is reproduced here for convenience:
+
+![](images/newton.png)
 
 ## Software Organization
 

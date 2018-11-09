@@ -11,6 +11,7 @@ def NewtonsMethod(func, x0, tol=1e-15, maxiters=1000):
     '''
 
     xn = x0
+    steps = []
 
     for i in range(maxiters):
 
@@ -22,14 +23,16 @@ def NewtonsMethod(func, x0, tol=1e-15, maxiters=1000):
 
         # If y reaches tolerance, stop
         if abs(y) < tol:
-            return xn._val
+            return xn._val, steps
             break
 
         else:
+            steps.append((xn._val, y))
             # Compute Newton Step
             x_next = y / dy_dx
 
             # Update X
             xn = xn - x_next
 
-    return xn._val
+
+    return xn._val, steps
