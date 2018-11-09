@@ -122,7 +122,7 @@ For scalars, result.eval() will return a tuple of (value, jacobian) where the ja
 ### Examples
 There are two files in the top level directory of the autodiff package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the autodiff package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
 
-The second file is an interactive jupyter notebook which contains an example use case where the autodiff package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in the top level directory of the package as well. The output of this demo is reproduced here for convenience:
+The second file is an interactive jupyter notebook which contains an example use case where the autodiff package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
 
 ![](images/newton.png)
 
