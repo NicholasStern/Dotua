@@ -3,7 +3,7 @@ from ..operator import Operator as op
 from ..autodiff import AutoDiff as ad
 import numpy as np
 
-x, z = tuple(ad.create_scalar([0, 1]))
+x, z, n = tuple(ad.create_scalar([0, 1, 2048]))
 y = 0
 
 
@@ -12,7 +12,7 @@ def test_sin():
     sx = op.sin(x)
     assert np.sin(x._val) == sx._val
     for k in x._jacobian.keys():
-        assert(sx.partial(k) == x.partial(k) * np.cos(x._val))
+        assert sx.partial(k) == x.partial(k) * np.cos(x._val)
     # Constant
     assert op.sin(y) == np.sin(y)
 
@@ -32,7 +32,7 @@ def test_tan():
     tx = op.tan(x)
     assert np.tan(x._val) == tx._val
     for k in x._jacobian.keys():
-        assert(tx.partial(k) == x.partial(k) * np.arccos(x._val)**2)
+        assert tx.partial(k) == x.partial(k) * np.arccos(x._val)**2
 
     # Constant
     assert op.tan(y) == np.tan(y)
@@ -43,8 +43,8 @@ def test_arcsin():
     asx = op.arcsin(x)
     assert np.arcsin(x._val) == asx._val
     for k in x._jacobian.keys():
-        assert(asx.partial(k) == -x.partial(k) * np.arcsin(x._val)
-               * np.arctan(x._val))
+        assert asx.partial(k) == -x.partial(k) * np.arcsin(x._val) \
+               * np.arctan(x._val)
     # Constant
     assert op.arcsin(y) == np.arcsin(y)
 
@@ -54,8 +54,8 @@ def test_arccos():
     acx = op.arccos(x)
     assert np.arccos(x._val) == acx._val
     for k in x._jacobian.keys():
-        assert(acx.partial(k) == x.partial(k) * np.arccos(x._val)
-               * np.tan(x._val))
+        assert acx.partial(k) == x.partial(k) * np.arccos(x._val) \
+               * np.tan(x._val)
 
     # Constant
     assert op.arccos(y) == np.arccos(y)
@@ -66,7 +66,7 @@ def test_arctan():
     atx = op.arctan(x)
     assert np.arctan(x._val) == atx._val
     for k in x._jacobian.keys():
-        assert(atx.partial(k) == -x.partial(k) * np.arcsin(x._val)**2)
+        assert atx.partial(k) == -x.partial(k) * np.arcsin(x._val)**2
 
     # Constant
     assert op.arctan(y) == np.arctan(y)
@@ -77,7 +77,7 @@ def test_sinh():
     shx = op.sinh(x)
     assert np.sinh(x._val) == shx._val
     for k in x._jacobian.keys():
-        assert(shx.partial(k) == x.partial(k) * np.cosh(x._val))
+        assert shx.partial(k) == x.partial(k) * np.cosh(x._val)
 
     # Constant
     assert op.sinh(y) == np.sinh(y)
@@ -88,7 +88,7 @@ def test_cosh():
     chx = op.cosh(x)
     assert np.cosh(x._val) == chx._val
     for k in x._jacobian.keys():
-        assert(chx.partial(k) == x.partial(k) * np.sinh(x._val))
+        assert chx.partial(k) == x.partial(k) * np.sinh(x._val)
 
     # Constant
     assert op.cosh(y) == np.cosh(y)
@@ -99,7 +99,7 @@ def test_tanh():
     thx = op.tanh(x)
     assert np.tanh(x._val) == thx._val
     for k in x._jacobian.keys():
-        assert(thx.partial(k) == x.partial(k) * (1 - np.tanh(x._val)**2))
+        assert thx.partial(k) == x.partial(k) * (1 - np.tanh(x._val)**2)
 
     # Constant
     assert op.tanh(y) == np.tanh(y)
@@ -110,8 +110,8 @@ def test_arcsinh():
     ashx = op.arcsinh(x)
     assert np.arcsinh(x._val) == ashx._val
     for k in x._jacobian.keys():
-        assert(ashx.partial(k) == -x.partial(k) * np.arcsinh(x._val)
-               * np.arctanh(x._val))
+        assert ashx.partial(k) == -x.partial(k) * np.arcsinh(x._val) \
+               * np.arctanh(x._val)
 
     # Constant
     assert op.arcsinh(y) == np.arcsinh(y)
@@ -124,11 +124,11 @@ def test_arccosh():
     achx = op.arccosh(x)
     assert np.arccosh(x._val) == achx._val
     for k in x._jacobian.keys():
-        assert(achx.partial(k) == -x.partial(k) * np.arccosh(x._val)
-               * np.tanh(x._val))
+        assert achx.partial(k) == -x.partial(k) * np.arccosh(x._val) \
+               * np.tanh(x._val)
 
     # Constant
-    assert op.arccosh(y) == np.arccosh(y)
+    assert(op.arccosh(y) == np.arccosh(y))
 
 
 def test_arctanh():
@@ -136,25 +136,42 @@ def test_arctanh():
     athx = op.arctanh(x)
     assert np.arctanh(x._val) == athx._val
     for k in x._jacobian.keys():
-        assert(athx.partial(k) == x.partial(k) * (1 - np.arctanh(x._val)**2))
+        assert athx.partial(k) == x.partial(k) * (1 - np.arctanh(x._val)**2)
 
     # Constant
     assert op.arctanh(y) == np.arctanh(y)
+
 
 def test_exp():
     # Autodiff Obj
     ex = op.exp(x)
     assert np.exp(x._val) == ex._val
     for k in x._jacobian.keys():
-        assert(ex.partial(k) == x.partial(k) * np.exp(x._val))
+        assert ex.partial(k) == x.partial(k) * np.exp(x._val)
 
     # Constant
     assert op.exp(y) == np.exp(y)
 
-def test_add():
-    res = op.sin(x) + op.sin(z)
-    print('res: ', res)
-    print('res._val: ', res._val)
-    print(np.sin(x._val) + np.sin(z._val))
 
+def test_add():
+    # Autodiff Obj
+    res = op.sin(x) + op.sin(z)
     assert np.sin(x._val) + np.sin(z._val) == res._val
+    for k in x._jacobian.keys():
+        assert res.partial(k) == op.sin(x).partial(k) + op.sin(z).partial(k)
+
+    # Constant
+    assert op.sin(y) + op.sin(2 * y) == np.sin(y) + np.sin(2 * y)
+
+
+def test_log():
+    # Autofiff obj
+    base = 10
+    lgn = op.log(n, base)
+    assert np.log(n._val) / np.log(base) == lgn._val
+    for k in x._jacobian.keys():
+        assert lgn.partial(k) == n.partial(k) / (n._val * np.log(base))
+
+    # Constant
+    z = 24
+    assert op.log(z, base) == np.log(z) / np.log(base)

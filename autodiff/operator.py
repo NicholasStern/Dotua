@@ -154,7 +154,6 @@ class Operator:
         except AttributeError:
             return np.exp(x)
 
-
     @staticmethod
     def log(x, base=np.exp(1)):
         try:
