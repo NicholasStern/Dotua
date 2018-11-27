@@ -22,28 +22,28 @@ class Operator:
     @staticmethod
     def sin(x):
         try:
-            j = x._jacobian
+            j = x._jacobian # To tell whether x is a constant or variable
         except AttributeError:
-            return np.sin(x)
+            return np.sin(x) # If x is a constant
         else:
             try:
-                k = j.keys()
+                k = j.keys() # To tell wether x is a scalar or vector
             except AttributeError:
-                new = Vector(np.sin(x._val), x._jacobian)
+                new = Vector(np.sin(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.cos(x._val)
                     new._dict = dict_self
                     return new
                 except AttributeError:
                     derivative = Counter()
-                    derivative[x] = x._jacobian * np.cos(x._val)
-                    new._dict = derivative
+                    derivative[x] = x._jacobian * np.cos(x._val) 
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
                     return new
             else:
                 jacobian = {k: x.partial(k) * np.cos(x._val)
-                        for k in x._jacobian.keys()}
+                        for k in x._jacobian.keys()} # If x is a scalar variable
                 return Scalar(np.sin(x._val), jacobian)
 
     @staticmethod
