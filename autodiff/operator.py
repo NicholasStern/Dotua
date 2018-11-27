@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from autodiff.nodes.scalar import Scalar
+from autodiff.nodes.vector import Vector
 
 
 class Operator:
@@ -21,11 +22,29 @@ class Operator:
     @staticmethod
     def sin(x):
         try:
-            jacobian = {k: x.partial(k) * np.cos(x._val)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.sin(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
             return np.sin(x)
+        else:
+            try:
+                k = j.keys()
+            except AttributeError:
+                new = Vector(np.sin(x._val), x._jacobian)
+                try:
+                    dict_self = x._dict
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.cos(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.cos(x._val)
+                    new._dict = derivative
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.cos(x._val)
+                        for k in x._jacobian.keys()}
+                return Scalar(np.sin(x._val), jacobian)
 
     @staticmethod
     def cos(x):
@@ -135,6 +154,7 @@ class Operator:
         except AttributeError:
             return np.exp(x)
 
+
     @staticmethod
     def log(x, base=np.exp(1)):
         try:
@@ -143,3 +163,13 @@ class Operator:
             return Scalar(math.log(x._val, base), jacobian)
         except AttributeError:
             return math.log(x, base)
+
+class Counter(dict):
+    """ Data structure for storing derivatives of a function, which is a subclass of dict
+    """
+    def __getitem__(self, idx):
+        """ It will give 0 if the key is not in the key list of the dictionary.
+            So it will give 0 if the called variable is not in the function.
+        """
+        self.setdefault(idx, 0)
+        return dict.__getitem__(self, idx)

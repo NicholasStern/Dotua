@@ -77,3 +77,18 @@ for function in f:
     jacobian.append(function.eval()[1])
 
 print('Example jacobian for vector of functions: ', jacobian)
+
+vector_f1 = x ** y
+print("value of vector function",vector_f1.eval())
+partial_x = vector_f1.getDerivative(x)
+partial_y = vector_f1.getDerivative(y)
+print("partial derivative about x", partial_x, "partial derivative about y", partial_y)
+
+vector_f2 = op.sin(x)
+print("value of vector function",vector_f2.eval())
+partial_x = vector_f2.getDerivative(x)
+partial_y = vector_f2.getDerivative(y)
+print("partial derivative about x", partial_x, "partial derivative about y", partial_y)
+
+print(x == y)
+print(x != y)
