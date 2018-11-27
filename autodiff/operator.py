@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from autodiff.nodes.scalar import Scalar
 
@@ -133,3 +134,12 @@ class Operator:
             return Scalar(np.exp(x._val), jacobian)
         except AttributeError:
             return np.exp(x)
+
+    @staticmethod
+    def log(x, base=np.exp(1)):
+        try:
+            jacobian = {k: x.partial(k) / (x._val * math.log(base))
+                        for k in x._jacobian.keys()}
+            return Scalar(math.log(x._val, base), jacobian)
+        except AttributeError:
+            return math.log(x, base)
