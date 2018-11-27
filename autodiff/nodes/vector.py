@@ -656,7 +656,10 @@ class Vector(Node):
 		try:
 			d = sum(self._dict[x])
 		except Exception:
-			return self._dict[x]
+			if self == x:
+				return sum(self._jacobian)
+			else:
+				return 0
 		else:
 			return d
 
