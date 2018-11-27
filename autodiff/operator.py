@@ -27,7 +27,7 @@ class Operator:
             return np.sin(x) # If x is a constant
         else:
             try:
-                k = j.keys() # To tell wether x is a scalar or vector
+                k = j.keys() # To tell whether x is a scalar or vector
             except AttributeError:
                 new = Vector(np.sin(x._val), x._jacobian) # If x is a vector variable
                 try:
@@ -49,119 +49,355 @@ class Operator:
     @staticmethod
     def cos(x):
         try:
-            jacobian = {k: x.partial(k) * -np.sin(x._val)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.cos(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.cos(x)
+            return np.cos(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.cos(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * -np.sin(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * -np.sin(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * -np.sin(x._val)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.cos(x._val), jacobian)
+
 
     @staticmethod
     def tan(x):
         try:
-            jacobian = {k: x.partial(k) * np.arccos(x._val)**2
-                        for k in x._jacobian.keys()}
-            return Scalar(np.tan(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.tan(x)
+            return np.tan(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.tan(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.arccos(x._val)**2
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.arccos(x._val)**2
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.arccos(x._val)**2
+                            for k in x._jacobian.keys()}
+                return Scalar(np.tan(x._val), jacobian)
 
     @staticmethod
     def arcsin(x):
         try:
-            jacobian = {k: x.partial(k) * -np.arcsin(x._val)*np.arctan(
-                x._val) for k in x._jacobian.keys()}
-            return Scalar(np.arcsin(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arcsin(x)
+            return np.arcsin(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arcsin(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * -np.arcsin(x._val)*np.arctan(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * -np.arcsin(x._val)*np.arctan(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * -np.arcsin(x._val)*np.arctan(
+                    x._val) for k in x._jacobian.keys()}
+                return Scalar(np.arcsin(x._val), jacobian)
+
 
     @staticmethod
     def arccos(x):
         try:
-            jacobian = {k: x.partial(k) * np.arccos(x._val)*np.tan(
-                x._val) for k in x._jacobian.keys()}
-            return Scalar(np.arccos(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arccos(x)
+            return np.arccos(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arccos(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.arccos(x._val)*np.tan(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.arccos(x._val)*np.tan(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.arccos(x._val)*np.tan(
+                    x._val) for k in x._jacobian.keys()}
+                return Scalar(np.arccos(x._val), jacobian)
 
     @staticmethod
     def arctan(x):
         try:
-            jacobian = {k: x.partial(k) * -np.arcsin(x._val)**2
-                        for k in x._jacobian.keys()}
-            return Scalar(np.arctan(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arctan(x)
+            return np.arctan(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arctan(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * -np.arcsin(x._val)**2
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * -np.arcsin(x._val)**2
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * -np.arcsin(x._val)**2
+                            for k in x._jacobian.keys()}
+                return Scalar(np.arctan(x._val), jacobian)
 
     @staticmethod
     def sinh(x):
         try:
-            jacobian = {k: x.partial(k) * np.cosh(x._val)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.sinh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.sinh(x)
+            return np.sinh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.sinh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.cosh(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.cosh(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.cosh(x._val)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.sinh(x._val), jacobian)
 
     @staticmethod
     def cosh(x):
         try:
-            jacobian = {k: x.partial(k) * np.sinh(x._val)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.cosh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.cosh(x)
+            return np.cosh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.cosh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.sinh(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.sinh(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.sinh(x._val)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.cosh(x._val), jacobian)
 
     @staticmethod
     def tanh(x):
         try:
-            jacobian = {k: x.partial(k) * (1-np.tanh(x._val)**2)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.tanh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.tanh(x)
+            return np.tanh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.tanh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * (1-np.tanh(x._val)**2)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * (1-np.tanh(x._val)**2)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * (1-np.tanh(x._val)**2)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.tanh(x._val), jacobian)
 
     @staticmethod
     def arcsinh(x):
         try:
-            jacobian = {k: x.partial(k) * -np.arcsinh(x._val)*np.arctanh(
-                x._val) for k in x._jacobian.keys()}
-            return Scalar(np.arcsinh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arcsinh(x)
+            return np.arcsinh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arcsinh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * -np.arcsinh(x._val)*np.arctanh(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * -np.arcsinh(x._val)*np.arctanh(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * -np.arcsinh(x._val)*np.arctanh(
+                    x._val) for k in x._jacobian.keys()}
+                return Scalar(np.arcsinh(x._val), jacobian)
 
     @staticmethod
     def arccosh(x):
         try:
-            jacobian = {k: x.partial(k) * -np.arccosh(x._val)*np.tanh(
-                x._val) for k in x._jacobian.keys()}
-            return Scalar(np.arccosh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arccosh(x)
+            return np.arccosh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arccosh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * -np.arccosh(x._val)*np.tanh(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * -np.arccosh(x._val)*np.tanh(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * -np.arccosh(x._val)*np.tanh(
+                    x._val) for k in x._jacobian.keys()}
+                return Scalar(np.arccosh(x._val), jacobian)
 
     @staticmethod
     def arctanh(x):
         try:
-            jacobian = {k: x.partial(k) * (1-np.arctanh(x._val)**2)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.arctanh(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.arctanh(x)
+            return np.arctanh(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.arctanh(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * (1-np.arctanh(x._val)**2)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * (1-np.arctanh(x._val)**2)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * (1-np.arctanh(x._val)**2)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.arctanh(x._val), jacobian)
 
     @staticmethod
     def exp(x):
         try:
-            jacobian = {k: x.partial(k) * np.exp(x._val)
-                        for k in x._jacobian.keys()}
-            return Scalar(np.exp(x._val), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return np.exp(x)
+            return np.exp(x) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector(np.exp(x._val), x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] * np.exp(x._val)
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian * np.exp(x._val)
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) * np.exp(x._val)
+                            for k in x._jacobian.keys()}
+                return Scalar(np.exp(x._val), jacobian)
 
     @staticmethod
     def log(x, base=np.exp(1)):
         try:
-            jacobian = {k: x.partial(k) / (x._val * math.log(base))
-                        for k in x._jacobian.keys()}
-            return Scalar(math.log(x._val, base), jacobian)
+            j = x._jacobian
         except AttributeError:
-            return math.log(x, base)
+            return math.log(x, base) # If x is a constant
+        else:
+            try:
+                k = j.keys() # To tell whether x is a scalar or vector
+            except AttributeError:
+                new = Vector([math.log(i, base) for i in x._val], x._jacobian) # If x is a vector variable
+                try:
+                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    for key in dict_self.keys():
+                        dict_self[key] = dict_self[key] / (x._val * math.log(base))
+                    new._dict = dict_self
+                    return new
+                except AttributeError:
+                    derivative = Counter()
+                    derivative[x] = x._jacobian / (x._val * math.log(base))
+                    new._dict = derivative # If x is not a complex vector variable, it will add an attribute to the new variable
+                    return new
+            else:
+                jacobian = {k: x.partial(k) / (x._val * math.log(base))
+                            for k in x._jacobian.keys()}
+                return Scalar(math.log(x._val, base), jacobian)
 
 class Counter(dict):
     """ Data structure for storing derivatives of a function, which is a subclass of dict
