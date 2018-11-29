@@ -231,7 +231,7 @@ class Vector(Node):
 			try:
 				dict_self = self._dict # If self is a user defined variable, then there will be an attribute
 				for key in dict_self.keys():
-					dict_[key] = dict_self[key] * val_other
+					dict_self[key] = dict_self[key] * val_other
 				new = Vector(value, self._jacobian)
 				new._dict = dict_self # When self is a complex function and other is a constant, the derivatives of the result variable is just the derivatives of self
 				return new
@@ -264,7 +264,6 @@ class Vector(Node):
 					lst = list(dict_self.keys()) + list(dict_other.keys())
 					for key in lst:
 						derivative[key] = dict_self[key] * val_other + dict_other[key] * self._val # If self and other are both complex functions,then the derivatives of result Vector variable are sum of products of derivatives and values
-					new = Vector(value, self._jacobian)
 					new = Vector(value, self._jacobian)
 					new._dict = derivative
 					return new
@@ -501,6 +500,96 @@ class Vector(Node):
 					new._dict = derivative
 					return new
 
+	def __pow__(self, other):
+		try:
+			val_other = other._val
+			value = np.power(self._val, val_other)
+		except AttributeError:
+			val_other  = other
+			value = np.power(self._val, val_other)
+			try:
+				dict_self = self._dict
+				for key in dict_self.keys():
+					dict_self[key] = dict_self[key] * val_other * self._val ** (val_other - 1)
+				new = Vector(value, self._jacobian)
+				new._dict = dict_self
+				return new
+			except AttributeError:
+				derivative = Counter()
+				derivative[self] = self._jacobian * val_other * self._val ** (val_other - 1)
+				new = Vector(value, self._jacobian)
+				new._dict = derivative
+				return new
+		else:
+			try:
+				dict_self = self._dict
+			except AttributeError:
+				dict_self = Counter()
+				dict_self[self] = self._jacobian
+				try:
+					dict_other = other._dict
+				except AttributeError:
+					dict_other = Counter()
+					dict_other[other] = other._jacobian
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						derivative[key] = self._val ** val_other * (val_other / self._val * dict_self[key] + np.log(self._val) * dict_other[key])
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+				else:
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						derivative[key] = self._val ** val_other * (val_other / self._val * dict_self[key] + np.log(self._val) * dict_other[key])
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+			else:
+				try:
+					dict_other = other._dict
+				except AttributeError:
+					dict_other = Counter()
+					dict_other[other] = other._jacobian
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						derivative[key] = self._val ** val_other * (val_other / self._val * dict_self[key] + np.log(self._val) * dict_other[key])
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+				else:
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						derivative[key] = self._val ** val_other * (val_other / self._val * dict_self[key] + np.log(self._val) * dict_other[key])
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+
+	def __rpow__(self, other):
+		try:
+			val_other = other._val
+		except AttributeError:
+			val_other  = other
+			value = np.power(val_other, self._val)
+			try:
+				dict_self = self._dict
+				for key in dict_self.keys():
+					dict_self[key] = val_other ** self._val * np.log(val_other) * dict_self[key]
+				new = Vector(value, self._jacobian)
+				new._dict = dict_self
+				return new
+			except AttributeError:
+				derivative = Counter()
+				derivative[self] = val_other ** self._val * np.log(val_other) * self._jacobian
+				new = Vector(value, self._jacobian)
+				new._dict = derivative
+				return new
+		else:
+			return other.__pow__(self)
+
 	def __neg__(self):
 		""" Returens the product of -1 and self
 
@@ -519,12 +608,30 @@ class Vector(Node):
 		try:
 			dict_self = self._dict
 		except AttributeError:
+			dict_self = Counter()
+			dict_self[self] = derivative
+			new._dict = dict_self
 			return new
 		else:
 			for key in dict_self.keys():
 				dict_self[key] = - dict_self[key]
 			new._dict = dict_self
 			return new
+			
+	def __repr__(self):
+		""" Returens a description about the Vector variable class instance
+
+		INPUTS
+		=======
+		self: this Vector class instance, compulsory
+
+		RETURNS
+		========
+		description about the Sclar variable class instance: string
+
+		"""
+		representation = 'Vector variable with value {}'.format(self._val)
+		return representation
 
 	def getDerivative(self, x):
 		""" Returens the derivative of function self of variable x
@@ -546,22 +653,15 @@ class Vector(Node):
 			- returns a float derivative
 
 		"""
-		return self._dict[x]
-
-	def __repr__(self):
-		""" Returens a description about the Vector variable class instance
-
-		INPUTS
-		=======
-		self: this Vector class instance, compulsory
-
-		RETURNS
-		========
-		description about the Sclar variable class instance: string
-
-		"""
-		representation = 'Vector variable with value {}'.format(self._val)
-		return representation
+		try:
+			d = sum(self._dict[x])
+		except Exception:
+			if self == x:
+				return sum(self._jacobian)
+			else:
+				return 0
+		else:
+			return d
 
 	def eval(self):
 		return list(self._val)
