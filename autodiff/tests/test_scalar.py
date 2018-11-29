@@ -34,65 +34,66 @@ h_3 = x ** y
 
 def test_jacobian():
     # Test jacobians of scalar primitives
-    assert(x.eval()[1] == {x: 1, y: 0})
-    assert(y.eval()[1] == {x: 0, y: 1})
+    assert x.eval()[1] == {x: 1, y: 0}
+    assert y.eval()[1] == {x: 0, y: 1}
 
     # Test jacobians of functions with addition
-    assert(f_1.eval()[1] == {x: 1, y: 1})
-    assert(f_2.eval()[1] == {x: 1, y: 1})
+    assert f_1.eval()[1] == {x: 1, y: 1}
+    assert f_2.eval()[1] == {x: 1, y: 1}
 
     # Test jacobians of functions with subtraction
-    assert(f_3.eval()[1] == {x: 1, y: -1})
-    assert(f_4.eval()[1] == {x: -1, y: 1})
+    assert f_3.eval()[1] == {x: 1, y: -1}
+    assert f_4.eval()[1] == {x: -1, y: 1}
 
     # Test jacobians of functions with multiplication
-    assert(f_5.eval()[1] == {x: 2, y: 1})
-    assert(f_6.eval()[1] == {x: 2, y: 1})
+    assert f_5.eval()[1] == {x: 2, y: 1}
+    assert f_6.eval()[1] == {x: 2, y: 1}
 
     # Test jacobians of functions with division
-    assert(f_7.eval()[1] == {x: 1/2, y: -1/4})
-    assert(f_8.eval()[1] == {x: -2, y: 1})
+    assert f_7.eval()[1] == {x: 1/2, y: -1/4}
+    assert f_8.eval()[1] == {x: -2, y: 1}
 
     # Test jacobians of more complicated functions
-    assert(g_1.eval()[1] == {x: 10, y: 1/2})
-    assert(g_2.eval()[1] == {x: -4, y: 1/4})
+    assert g_1.eval()[1] == {x: 10, y: 1/2}
+    assert g_2.eval()[1] == {x: -4, y: 1/4}
 
     # Test jacobians for exponentials and deg > 1 polynomials
-    assert(h_1.eval()[1] == {x: 2 * a, y: 0})
-    assert(h_2.eval()[1] == {x: (2 ** a) * np.log(2), y: 0})
+    assert h_1.eval()[1] == {x: 2 * a, y: 0}
+    assert h_2.eval()[1] == {x: (2 ** a) * np.log(2), y: 0}
 
 
 def test_add():
-    assert(f_1.eval()[0] == a + b)
-    assert(f_2.eval()[0] == a + b)
+    assert f_1.eval()[0] == a + b
+    assert f_2.eval()[0] == a + b
 
     # Directly check commutativity
-    assert(f_1.eval() == f_2.eval())
+    assert f_1.eval() == f_2.eval()
 
 
 def test_subtract():
-    assert(f_3.eval()[0] == a - b)
-    assert(f_4.eval()[0] == b - a)
+    assert f_3.eval()[0] == a - b
+    assert f_4.eval()[0] == b - a
 
 
 def test_multiply():
-    assert(f_5.eval()[0] == a * b)
-    assert(f_6.eval()[0] == a * b)
+    assert f_5.eval()[0] == a * b
+    assert f_6.eval()[0] == a * b
 
     # Directly check commutativity
-    assert(f_5.eval() == f_6.eval())
+    assert f_5.eval() == f_6.eval()
 
 
 def test_divide():
-    assert(f_7.eval()[0] == a / b)
-    assert(f_8.eval()[0] == b / a)
+    assert f_7.eval()[0] == a / b
+    assert f_8.eval()[0] == b / a
 
 
 def test_power():
-    assert(h_1.eval()[0] == a ** 2)
-    assert(h_2.eval()[0] == 2 ** a)
-    assert(h_3.eval()[0] == a ** b)
+    assert h_1.eval()[0] == a ** 2
+    assert h_2.eval()[0] == 2 ** a
+    assert h_3.eval()[0] == a ** b
+
 
 def test_other():
-    assert(g_1.eval()[0] == 10 * a + b / 2 + 1000)
-    assert(g_2.eval()[0] == -2 * (a ** 2) - 1 / b)
+    assert g_1.eval()[0] == 10 * a + b / 2 + 1000
+    assert g_2.eval()[0] == -2 * (a ** 2) - 1 / b

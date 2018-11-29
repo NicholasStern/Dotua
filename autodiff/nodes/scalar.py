@@ -101,7 +101,7 @@ class Scalar(Node):
                  + np.log(self._val) * other.partial(k))
                  * (self._val ** other._val)
                  for k, v in self._jacobian.items()}
-        except:
+        except AttributeError:
             new_node._val **= other
             new_node._jacobian = \
                 {k: other * (self._val ** (other - 1)) * v
@@ -120,7 +120,7 @@ class Scalar(Node):
                  + np.log(other._val) * v)
                  * (other._val ** self._val)
                  for k, v in self._jacobian.items()}
-        except:
+        except AttributeError:
             new_node._val = other ** self._val
             new_node._jacobian = \
                 {k: (other ** self._val) * np.log(other) * v
