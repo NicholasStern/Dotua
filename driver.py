@@ -50,7 +50,7 @@ print('F6.partial(y): ', f_6.partial(y))
 print('F6.partial(z): ', f_6.partial(z))
 
 # Define a list of vector variables
-vectors = ad.create_vector([[1,2], [3,4]],2)
+vectors = ad.create_vector([[1,2], [3,4]])
 
 # Define name for the vector variables you get
 x = vectors[0]
