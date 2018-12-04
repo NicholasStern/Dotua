@@ -1,6 +1,7 @@
-# .coveragerc to control coverage.py
 [run]
-branch = True
+branch = FALSE
+
+[report]
 omit =
     */autodiff/nodes/*
     */rautodiff/rnodes/*
