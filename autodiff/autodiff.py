@@ -47,7 +47,7 @@ class AutoDiff():
             returns a list of vector variables with value defined in vals
         '''
         try:
-            vecotrs = [None] * len(vals)
+            vectors = [None] * len(vals)
             for i in range(len(vals)):
                 vectors[i] = Vector(vals[i])
             return vectors
