@@ -1,7 +1,14 @@
 [run]
-branch = FALSE
+branch = TRUE
+omit =
+  */autodiff/nodes/node.py
+  */rautodiff/rnodes/rnode.py
+  */docs/*
+  */tests/*
 
 [report]
 omit =
-    */autodiff/nodes/*
-    */rautodiff/rnodes/*
+    */autodiff/nodes/node.py
+    */rautodiff/rnodes/rnode.py
+    */docs/*
+    */tests/*
