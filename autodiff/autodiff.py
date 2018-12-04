@@ -26,7 +26,7 @@ class AutoDiff():
             return scalar
 
     @staticmethod
-    def create_vector(vals, num=1):
+    def create_vector(vals):
         '''
 
         INPUTS
@@ -46,16 +46,11 @@ class AutoDiff():
         POST:
             returns a list of vector variables with value defined in vals
         '''
-        if(num > len(vals)):
-            print('You want to create a list of {} vectors'.format(num))
-            print('But you only put values for the first {} vectors'.format(len(vals)))
-        elif(num < len(vals)):
-            print('You want to create a list of {} vectors'.format(num))
-            print('But you only put values for {} vectors'.format(len(vals)))
-        vars = [None] * num
-        for i in range(num):
-            try:
-                vars[i] = Vector(vals[i])
-            except Exception:
-                vars[i] = Vector([0])
-        return vars
+        try:
+            vecotrs = [None] * len(vals)
+            for i in range(len(vals)):
+                vectors[i] = Vector(vals[i])
+            return vectors
+        except TypeError:
+            vector = Vector(vals)
+            return vector
