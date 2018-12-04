@@ -4,7 +4,7 @@ from ..autodiff import AutoDiff as ad
 import numpy as np
 
 x, z, n = tuple(ad.create_scalar([0, 1, 2048]))
-v = ad.create_vector([[.9,.25,.5,.75]], num=4)[0]
+v = ad.create_vector([[.9,.25,.5,.75]])[0]
 orig_vals = np.copy(v._val)
 y = 0
 
@@ -219,7 +219,7 @@ def test_arccosh():
                * np.tanh(x._val)
 
     # Vector Values
-    v_temp = ad.create_vector([[1, 2, 3, 4]], num=4)[0]
+    v_temp = ad.create_vector([[1, 2, 3, 4]])[0]
     orig_temp = np.copy(v_temp._val)
     achv = op.arccosh(v_temp)
     assert ~(np.arccosh(orig_temp) - achv._val).any()
