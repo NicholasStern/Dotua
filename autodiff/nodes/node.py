@@ -1,18 +1,15 @@
-'''
-This class will serve as an abstract interface for the @Scalar and @Vector
-classes.
-'''
-
-
 class Node():
-    def eval(self):
-        '''
-        When implemented by subclasses, this function will both
-        update the self._val attribute of the Node type and will
-        modify the derivative accordingly
+    """
+    Abstract interface for computational nodes in automatic differentiation.
 
-        Returns (self._val, self._der)
-        '''
+    Specifically, this class will provide the abstract interface for the
+    Scalar and Vector subclasses.  This class outlines each of the operators
+    that must be overloaded by Scalar and Vector.  Users of this AD library
+    should NEVER instantiate @Node objects directly (as mentioned in the
+    documentation).
+    """
+
+    def eval(self):
         raise NotImplementedError
 
     def __add__(self, other):
