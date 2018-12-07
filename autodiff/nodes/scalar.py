@@ -77,16 +77,10 @@ class Scalar(Node):
         Need to calculate @other / @self
         '''
         new_node = Scalar(self._val, self._jacobian)
-        try:
-            new_node._val = other._val / self._val
-            new_node._jacobian = \
-                {k: (self._val * other.partial(k) - v * other._val)
-                 / (self._val ** 2)for k, v in self._jacobian.items()}
-        except AttributeError:
-            new_node._val = other / self._val
-            new_node._jacobian = \
-                {k: other * (-v) / (self._val ** 2)
-                 for k, v in self._jacobian.items()}
+        new_node._val = other / self._val
+        new_node._jacobian = \
+            {k: other * (-v) / (self._val ** 2)
+             for k, v in self._jacobian.items()}
         return new_node
 
     def __pow__(self, other):
@@ -113,18 +107,10 @@ class Scalar(Node):
         Need to calculate @other ** @self
         '''
         new_node = Scalar(self._val, self._jacobian)
-        try:
-            new_node._val = other._val ** self._val
-            new_node._jacobian = \
-                {k: (self._val * other.partial(k) / other._val
-                 + np.log(other._val) * v)
-                 * (other._val ** self._val)
-                 for k, v in self._jacobian.items()}
-        except AttributeError:
-            new_node._val = other ** self._val
-            new_node._jacobian = \
-                {k: (other ** self._val) * np.log(other) * v
-                 for k, v in self._jacobian.items()}
+        new_node._val = other ** self._val
+        new_node._jacobian = \
+            {k: (other ** self._val) * np.log(other) * v
+             for k, v in self._jacobian.items()}
         return new_node
 
     def __neg__(self):

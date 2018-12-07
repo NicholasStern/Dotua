@@ -69,10 +69,18 @@ def test_add():
     # Directly check commutativity
     assert f_1.eval() == f_2.eval()
 
+    # Check addition with a constant
+    radd = 5 + x
+    assert radd.eval()[0] == 5 + a
+
 
 def test_subtract():
     assert f_3.eval()[0] == a - b
     assert f_4.eval()[0] == b - a
+
+    # Check subtraction from a constant
+    radd = 5 - x
+    assert radd.eval()[0] == 5 - a
 
 
 def test_multiply():
