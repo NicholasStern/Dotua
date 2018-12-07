@@ -68,13 +68,8 @@ class rScalar(rNode):
         Need to calculate @other / @self
         '''
         new_parent = rScalar(self.val)
-        try:
-            new_parent.val = other.val / self.val
-            self.parents.append((new_parent, -other.val / (self.val ** 2)))
-            other.parents.append((new_parent, 1 / self.val))
-        except AttributeError:
-            new_parent.val = other / new_parent.val
-            self.parents.append((new_parent, -other / (self.val ** 2)))
+        new_parent.val = other / new_parent.val
+        self.parents.append((new_parent, -other / (self.val ** 2)))
         return new_parent
 
     def __pow__(self, other):
@@ -98,16 +93,8 @@ class rScalar(rNode):
         Need to calculate @other ** @self
         '''
         new_parent = rScalar(self.val)
-        try:
-            new_parent.val = other.val ** self.val
-            self.parents.append((new_parent),
-                                other.val ** self.val * np.log(other.val))
-            other.parents.append((new_parent,
-                                 self.val * other.val ** (self.val - 1)))
-        except AttributeError:
-            new_parent.val = other ** self.val
-            self.parents.append((new_parent,
-                                other ** self.val * np.log(other)))
+        new_parent.val = other ** self.val
+        self.parents.append((new_parent, other ** self.val * np.log(other)))
         return new_parent
 
     def __neg__(self):
