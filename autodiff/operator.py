@@ -31,7 +31,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.sin(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.cos(x._val)
                     new._dict = dict_self
@@ -58,7 +58,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.cos(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * -np.sin(x._val)
                     new._dict = dict_self
@@ -86,7 +86,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.tan(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.arccos(x._val)**2
                     new._dict = dict_self
@@ -113,7 +113,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arcsin(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * -np.arcsin(x._val)*np.arctan(x._val)
                     new._dict = dict_self
@@ -141,7 +141,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arccos(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.arccos(x._val)*np.tan(x._val)
                     new._dict = dict_self
@@ -168,7 +168,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arctan(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * -np.arcsin(x._val)**2
                     new._dict = dict_self
@@ -195,7 +195,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.sinh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.cosh(x._val)
                     new._dict = dict_self
@@ -222,7 +222,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.cosh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.sinh(x._val)
                     new._dict = dict_self
@@ -249,7 +249,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.tanh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * (1-np.tanh(x._val)**2)
                     new._dict = dict_self
@@ -276,7 +276,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arcsinh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * -np.arcsinh(x._val)*np.arctanh(x._val)
                     new._dict = dict_self
@@ -303,7 +303,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arccosh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * -np.arccosh(x._val)*np.tanh(x._val)
                     new._dict = dict_self
@@ -330,7 +330,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.arctanh(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * (1-np.arctanh(x._val)**2)
                     new._dict = dict_self
@@ -357,7 +357,7 @@ class Operator:
             except AttributeError:
                 new = Vector(np.exp(x._val), x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] * np.exp(x._val)
                     new._dict = dict_self
@@ -384,7 +384,7 @@ class Operator:
             except AttributeError:
                 new = Vector([math.log(i, base) for i in x._val], x._jacobian) # If x is a vector variable
                 try:
-                    dict_self = x._dict # If x is a complex vector variable, it will update the original dictionary
+                    dict_self = x._dict.copy() # If x is a complex vector variable, it will update the original dictionary
                     for key in dict_self.keys():
                         dict_self[key] = dict_self[key] / (x._val * math.log(base))
                     new._dict = dict_self

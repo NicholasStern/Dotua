@@ -627,14 +627,14 @@ class Vector(Node):
 
 		RETURNS
 		========
-		description about the Sclar variable class instance: string
+		description about the Scalar variable class instance: string
 
 		"""
 		representation = 'Vector variable with value {}'.format(self._val)
 		return representation
 
 	def getDerivative(self, x):
-		""" Returens the derivative of function self of variable x
+		""" Returns the derivative of function self of variable x
 
 		INPUTS
 		=======
