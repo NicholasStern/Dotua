@@ -1,8 +1,7 @@
-from .rnode import rNode
 import numpy as np
 
 
-class rScalar(rNode):
+class rScalar():
     def __init__(self, val):
         self.val = val
         self.parents = []
