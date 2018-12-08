@@ -31,6 +31,7 @@ f_13 = y + z
 f_14 = b - 1
 f_15 = c - b
 f_16 = c - d
+f_17 = f_11 * 2
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
@@ -46,6 +47,7 @@ def test_sub():
 
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
+	assert(f_17.eval() == [6,6])
 
 def test_devide():
 	assert(f_4.eval() == (-4, [-2,-3.5]))
