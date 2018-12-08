@@ -11,6 +11,13 @@ def test_single_variable():
     assert(x.eval() == (5, {x: 1}))
 
 
+
+
+
+
+
+
+
 # Test initializing multiple variables at once
 def test_multiple_variables():
     x, y, z = tuple(AutoDiff.create_scalar([1, 2, 3]))
