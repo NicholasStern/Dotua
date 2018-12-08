@@ -37,7 +37,9 @@ f_19 = f_12 * f_14
 f_20 = x * f_12
 f_21 = f_12 * x
 f_22 = z + f_12
-f_23 = x / 2
+f_23 = x / f_12
+f_24 = f_12 / x
+f_25 = f_12 / f_15
 
 
 def test_add():
@@ -63,6 +65,9 @@ def test_mul():
 
 def test_devide():
 	assert(f_4.eval() == (-4, [-2,-3.5]))
+	assert(f_23.eval() == [0.5,2])
+	assert(f_24.eval() == [2,0.5])
+	assert(f_25.eval() == [2,0.5])
 
 def test_pow():
 	assert(f_5.eval() == (3, [1,1]))
