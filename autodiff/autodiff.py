@@ -75,11 +75,8 @@ class AutoDiff():
         POST:
             returns a list of vector variables with value defined in vals
         '''
-        try:
-            vectors = [None] * len(vals)
-            for i in range(len(vals)):
-                vectors[i] = Vector(vals[i])
-            return vectors
-        except TypeError:
-            vector = Vector(vals)
-            return vector
+        vectors = [None] * len(vals)
+        for i in range(len(vals)):
+            vectors[i] = Vector(vals[i])
+        return vectors
+
