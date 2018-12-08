@@ -23,10 +23,10 @@ class rAutoDiff():
     def reset_universe(self, var):
         try:
             for i in range(len(var)):
-                #var[i].parents = []
+                var[i].parents = []
                 var[i].grad_val = None
         except TypeError:
-            #var.parents = []
+            var.parents = []
             var.grad_val = None
 
     def partial(self, func, var):
