@@ -320,14 +320,10 @@ class Vector(Node):
 			val_other = other._val
 			if(0 not in val_other):
 				value = self._val / val_other
-			else:
-				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
 			if(val_other != 0):
 				value = self._val / val_other
-			else:
-				print('Divisor could not be 0')
 			try:
 				dict_self = self._dict
 				for key in dict_self.keys():
@@ -358,8 +354,6 @@ class Vector(Node):
 					for key in lst:
 						if(0 not in val_other):
 							derivative[key] = dict_self[key] / val_other - dict_other[key] * self._val / (val_other * val_other)
-						else:
-							print('Divisor could not be 0')
 					new = Vector(value, self._jacobian)
 					new._dict = derivative
 					return new
@@ -369,8 +363,6 @@ class Vector(Node):
 					for key in lst:
 						if(0 not in val_other):
 							derivative[key] = dict_self[key] / val_other - dict_other[key] * self._val / (val_other * val_other)
-						else:
-							print('Divisor could not be 0')
 					new = Vector(value, self._jacobian)
 					new._dict = derivative
 					return new
@@ -385,8 +377,6 @@ class Vector(Node):
 					for key in lst:
 						if(0 not in val_other):
 							derivative[key] = dict_self[key] / val_other - dict_other[key] * self._val / (val_other * val_other)
-						else:
-							print('Divisor could not be 0')
 					new = Vector(value, self._jacobian)
 					new._dict = derivative
 					return new
@@ -396,8 +386,6 @@ class Vector(Node):
 					for key in lst:
 						if(0 not in val_other):
 							derivative[key] = dict_self[key] / val_other - dict_other[key] * self._val / (val_other * val_other)
-						else:
-							print('Divisor could not be 0')
 					new = Vector(value, self._jacobian)
 					new._dict = derivative
 					return new
@@ -419,14 +407,10 @@ class Vector(Node):
 			val_other = other._val
 			if(self._val != 0):
 				value = val_other / self._val
-			else:
-				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
 			if(0 not in self._val):
 				value = val_other / self._val
-			else:
-				print('Divisor could not be 0')
 			try:
 				dict_self = self._dict
 				for key in dict_self.keys():
