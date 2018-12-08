@@ -415,33 +415,25 @@ class Vector(Node):
 		Vector class instance 
 
 		"""
+		#try:
+			#val_other = other._val
+		#except AttributeError:
+		val_other = other
 		try:
-			val_other = other._val
-			if(0 not in self._val):
-				value = val_other / self._val
-			else:
-				print('Divisor could not be 0')
+			dict_self = self._dict
+			for key in dict_self.keys():
+				dict_self[key] = - val_other * dict_self[key] / (self._val * self._val)
+			new = Vector(value, self._jacobian)
+			new._dict = dict_self
+			return new
 		except AttributeError:
-			val_other = other
-			if(0 not in self._val):
-				value = val_other / self._val
-			else:
-				print('Divisor could not be 0')
-			try:
-				dict_self = self._dict
-				for key in dict_self.keys():
-					dict_self[key] = - val_other * dict_self[key] / (self._val * self._val)
-				new = Vector(value, self._jacobian)
-				new._dict = dict_self
-				return new
-			except AttributeError:
-				derivative = Counter()
-				derivative[self] = - val_other * self._jacobian / (self._val * self._val)
-				new = Vector(value, self._jacobian)
-				new._dict = derivative
-				return new
-		else:
-			return other / self
+			derivative = Counter()
+			derivative[self] = - val_other * self._jacobian / (self._val * self._val)
+			new = Vector(value, self._jacobian)
+			new._dict = derivative
+			return new
+		#else:
+			#return other / self
 
 	def __pow__(self, other):
 		try:
