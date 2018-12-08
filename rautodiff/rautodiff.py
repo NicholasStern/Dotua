@@ -30,7 +30,5 @@ class rAutoDiff():
             var.grad_val = None
 
     def partial(self, func, var):
-        self.reset_universe(var)
-        self.func = func
         func.grad_val = 1
         return var.gradient()
