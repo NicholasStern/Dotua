@@ -10,6 +10,9 @@ x = Vector([1,2])
 y = Vector([0,1])
 z = Vector([2,1])
 a = Vector([0,0])
+b = Vector([1,1])
+c = Vector([1,0])
+d = Vector([2,2])
 
 
 f_1 = x[0] + x[1]
@@ -25,6 +28,9 @@ f_10 = y / 3 + 2 / x + y / x
 f_11 = z + x
 f_12 = z + a
 f_13 = y + z
+f_14 = b - 1
+f_15 = c - b
+f_16 = c - d
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
@@ -34,6 +40,9 @@ def test_add():
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
+	assert(f_14.eval() == [0,0])
+	assert(f_15.eval() == [0,-1])
+	assert(f_16.eval() == [-1,-2])
 
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
