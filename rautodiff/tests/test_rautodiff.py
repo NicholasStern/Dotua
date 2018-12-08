@@ -26,10 +26,12 @@ def test_partial():
 	assert rad.partial(f, y) == 1
 	assert rad.partial(f, z) == -1
 
+	rad.reset_universe([x,y])
 	g = x * y
 	assert rad.partial(g, x) == 3
 	assert rad.partial(g, y) == 1
 
+	rad.reset_universe([x,y,z])
 	h = op.sin(x * y * z) - op.cos(y)
 	assert rad.partial(h, x) == 3 * 6 * np.cos(1 * 3 * 6)
 	assert rad.partial(h, y) == 1 * 6 * np.cos(1 * 3 * 6) + np.sin(3)
