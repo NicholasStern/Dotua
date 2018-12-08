@@ -415,25 +415,25 @@ class Vector(Node):
 		Vector class instance 
 
 		"""
-		#try:
-			#val_other = other._val
-		#except AttributeError:
-		val_other = other
 		try:
-			dict_self = self._dict
-			for key in dict_self.keys():
-				dict_self[key] = - val_other * dict_self[key] / (self._val * self._val)
-			new = Vector(value, self._jacobian)
-			new._dict = dict_self
-			return new
+			val_other = other._val
 		except AttributeError:
-			derivative = Counter()
-			derivative[self] = - val_other * self._jacobian / (self._val * self._val)
-			new = Vector(value, self._jacobian)
-			new._dict = derivative
-			return new
-		#else:
-			#return other / self
+			val_other = other
+			try:
+				dict_self = self._dict
+				for key in dict_self.keys():
+					dict_self[key] = - val_other * dict_self[key] / (self._val * self._val)
+				new = Vector(value, self._jacobian)
+				new._dict = dict_self
+				return new
+			except AttributeError:
+				derivative = Counter()
+				derivative[self] = - val_other * self._jacobian / (self._val * self._val)
+				new = Vector(value, self._jacobian)
+				new._dict = derivative
+				return new
+		else:
+			return other / self
 
 	def __pow__(self, other):
 		try:
