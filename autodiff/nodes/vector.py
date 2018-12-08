@@ -282,7 +282,7 @@ class Vector(Node):
 					return new
 				else:
 					derivative = Counter()
-					lst = list(dict_.keys()) + list(dict_other.keys())
+					lst = list(dict_self.keys()) + list(dict_other.keys())
 					for key in lst:
 						derivative[key] = dict_self[key] * val_other + dict_other[key] * self._val
 					new = Vector(value, self._jacobian)
