@@ -20,7 +20,7 @@ def test_multiple_variables():
 
 # Test creating a single vector
 def test_single_vector():
-	x = AutoDiff.create_vector(5)
+	x = AutoDiff.create_vector([5])
 	assert x._val == 5
 
 # Test creating multiple vectors
