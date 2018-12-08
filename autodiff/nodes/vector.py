@@ -417,8 +417,16 @@ class Vector(Node):
 		"""
 		try:
 			val_other = other._val
+			if(self._val != 0):
+				value = val_other / self._val
+			else:
+				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
+			if(0 not in self._val):
+				value = val_other / self._val
+			else:
+				print('Divisor could not be 0')
 			try:
 				dict_self = self._dict
 				for key in dict_self.keys():
@@ -433,7 +441,64 @@ class Vector(Node):
 				new._dict = derivative
 				return new
 		else:
-			return other / self
+			try:
+				dict_self = self._dict
+			except AttributeError:
+				dict_self = Counter()
+				dict_self[self] = self._jacobian
+				try:
+					dict_other = other._dict
+				except AttributeError:
+					dict_other = Counter()
+					dict_other[other] = other._jacobian
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						if(self._val != 0):
+							derivative[key] = dict_other[key] / self._val - dict_self[key] * val_other / (self._val * self._val)
+						else:
+							print('Divisor could not be 0')
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+				else:
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						if(self._val != 0):
+							derivative[key] = dict_other[key] / self._val - dict_self[key] * val_other / (self._val * self._val)
+						else:
+							print('Divisor could not be 0')
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+			else:
+				try:
+					dict_other = other._dict
+				except AttributeError:
+					dict_other = Counter()
+					dict_other[other] = other._jacobian
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						if(self._val != 0):
+							derivative[key] = dict_other[key] / self._val - dict_self[key] * val_other / (self._val * self._val)
+						else:
+							print('Divisor could not be 0')
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
+				else:
+					derivative = Counter()
+					lst = list(dict_self.keys()) + list(dict_other.keys())
+					for key in lst:
+						if(self._val != 0):
+							derivative[key] = dict_other[key] / self._val - dict_self[key] * val_other / (self._val * self._val)
+						else:
+							print('Divisor could not be 0')
+					new = Vector(value, self._jacobian)
+					new._dict = derivative
+					return new
 
 	def __pow__(self, other):
 		try:
