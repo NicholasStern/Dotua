@@ -318,8 +318,16 @@ class Vector(Node):
 		"""
 		try:
 			val_other = other._val
+			if(0 not in val_other):
+				value = self._val / val_other
+			else:
+				print('Divisor could not be 0')
 		except AttributeError:
 			val_other = other
+			if(val_other != 0):
+				value = self._val / val_other
+			else:
+				print('Divisor could not be 0')
 			try:
 				dict_self = self._dict
 				for key in dict_self.keys():
