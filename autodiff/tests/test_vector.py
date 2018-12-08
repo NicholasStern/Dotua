@@ -40,34 +40,21 @@ f_22 = z + f_12
 f_23 = x / f_12
 f_24 = f_12 / x
 f_25 = f_12 / f_15
+f_26 = f_12 / 2
+f_27 = x - y
 
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
-	assert(f_11.eval() == [3,3])
-	assert(f_12.eval() == [2,1])
-	assert(f_13.eval() == [5,4])
-	assert(f_22.eval() == [4,2])
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
-	assert(f_14.eval() == [0,0])
-	assert(f_15.eval() == [1,2])
-	assert(f_16.eval() == [-2,-3])
-	assert(f_17.eval() == [2,1])
 
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
-	assert(f_18.eval() == [6,6])
-	assert(f_19.eval() == [0,0])
-	assert(f_20.eval() == [2,2])
-	assert(f_21.eval() == [2,2])
 
 def test_devide():
 	assert(f_4.eval() == (-4, [-2,-3.5]))
-	assert(f_23.eval() == [0.5,2])
-	assert(f_24.eval() == [2,0.5])
-	assert(f_25.eval() == [2,0.5])
 
 def test_pow():
 	assert(f_5.eval() == (3, [1,1]))
@@ -77,15 +64,32 @@ def test_rpow():
 
 def test_vector_add():
 	assert(f_7.eval() == [2,4])
+	assert(f_11.eval() == [3,3])
+	assert(f_12.eval() == [2,1])
+	assert(f_13.eval() == [5,4])
+	assert(f_22.eval() == [4,2])
 
 def test_vector_sub():
 	assert(f_8.eval() == [-5,-7])
+	assert(f_14.eval() == [0,0])
+	assert(f_15.eval() == [1,2])
+	assert(f_16.eval() == [-2,-3])
+	assert(f_17.eval() == [2,1])
+	assert(f_27.eval() == [1,1])
 
 def test_vector_times():
 	assert(f_9.eval() == [3,10])
+	assert(f_18.eval() == [6,6])
+	assert(f_19.eval() == [0,0])
+	assert(f_20.eval() == [2,2])
+	assert(f_21.eval() == [2,2])
 
 def test_vector_divide():
 	assert(f_10.eval() == [2,11/6])
+	assert(f_23.eval() == [0.5,2])
+	assert(f_24.eval() == [2,0.5])
+	assert(f_25.eval() == [2,0.5])
+	assert(f_26.eval() == [1,0.5])
 
 # Define a vector function and get a jacobian of the vector function to vector
 
