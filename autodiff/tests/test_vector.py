@@ -8,6 +8,9 @@ Test for vector variable basic functions and the jacobian of vector function to 
 # Define vector objects
 x = Vector([1,2])
 y = Vector([0,1])
+z = Vector([2,1])
+a = Vector([0,0])
+
 
 f_1 = x[0] + x[1]
 f_2 = x[0] - 3 - x[1] - x[1]
@@ -19,9 +22,13 @@ f_7 = 3 + x + y - 2
 f_8 = -1 - x - y - 3
 f_9 = 3 * x + y * 2 + x * y
 f_10 = y / 3 + 2 / x + y / x
+f_11 = z + x
+f_12 = z + a
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
+	assert(f_11.eval() == [3,3])
+	assert(f_12.eval() == [2,1])
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
