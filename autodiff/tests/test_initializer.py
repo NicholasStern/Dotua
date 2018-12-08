@@ -17,3 +17,14 @@ def test_multiple_variables():
     assert(x.eval() == (1, {x: 1, y: 0, z: 0}))
     assert(y.eval() == (2, {x: 0, y: 1, z: 0}))
     assert(z.eval() == (3, {x: 0, y: 0, z: 1}))
+
+# Test creating a single vector
+def test_single_vector():
+	x = AutoDiff.create_vector(5)
+	assert x._val == 5
+
+# Test creating multiple vectors
+def test_multiple_vectors():
+	x, y = AutoDiff.create_vector([1, 2])
+	assert x._val == 1
+	assert y._val == 2
