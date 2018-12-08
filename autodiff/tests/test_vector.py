@@ -24,11 +24,13 @@ f_9 = 3 * x + y * 2 + x * y
 f_10 = y / 3 + 2 / x + y / x
 f_11 = z + x
 f_12 = z + a
+f_13 = y + z
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
 	assert(f_11.eval() == [3,3])
 	assert(f_12.eval() == [2,1])
+	assert(f_13.eval() == [2,2])
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
