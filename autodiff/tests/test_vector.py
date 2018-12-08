@@ -25,7 +25,8 @@ f_7 = 3 + x + y - 2
 f_8 = -1 - x - y - 3
 f_9 = 3 * x + y * 2 + x * y
 f_10 = y / 3 + 2 / x + y / x
-f_11 = z + f_15
+f_11 = z + x
+f_22 = z + f_12
 f_12 = z + a
 f_13 = f_11 + f_12
 f_14 = b - 1
@@ -33,6 +34,9 @@ f_15 = f_11 - f_12
 f_16 = c - f_11
 f_17 = f_11 - x
 f_18 = f_11 * 2
+f_19 = f_12 * f_14
+f_20 = x * f_12
+f21 = f_12 * x
 
 
 def test_add():
@@ -40,6 +44,7 @@ def test_add():
 	assert(f_11.eval() == [3,3])
 	assert(f_12.eval() == [2,1])
 	assert(f_13.eval() == [5,4])
+	assert(f_22.eval() == [4,2])
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
@@ -51,6 +56,9 @@ def test_sub():
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
 	assert(f_18.eval() == [6,6])
+	assert(f_19.eval() == [0,0])
+	assert(f_20.eval() == [2,2])
+	assert(f_21.eval() == [2,2])
 
 def test_devide():
 	assert(f_4.eval() == (-4, [-2,-3.5]))
