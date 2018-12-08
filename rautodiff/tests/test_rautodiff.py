@@ -17,7 +17,7 @@ def test_reset_universe():
 
 	rad.reset_universe(x)
 	g = op.exp(x)
-	assert rad.pratial(g, x) == np.exp(x)
+	assert rad.partial(g, x) == np.exp(x)
 	#assert len(z.parents) == 0
 	#assert z.grad_val == None
 
