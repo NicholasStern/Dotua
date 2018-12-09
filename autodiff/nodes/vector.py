@@ -664,12 +664,8 @@ class Element():
 			value = val_other / self._val
 			return Element(value, - val_other * self._der / (self._val * self._val), self._vector)
 		else:
-			if self._vector == other._vector:
-				value = val_other / self._val
-				return Element(value, other._der / self._val - val_other * self._der / (self._val * self._val), self._vector)
-			else:
-				print("Elements from different vectors are not allowed to go together")
-				raise TypeError		
+			return other / self
+
 	def __repr__(self):
 		representation = 'Vector Element with value {} and derivative {}'.format(self._val, self._der)
 		return representation
@@ -693,10 +689,7 @@ class Element():
 			val_other  = other
 			return Element(val_other ** self._val, val_other ** self._val * np.log(val_other) * self._der, self._vector)
 		else:
-			if self._vector == other._vector:
-				return other.__pow__(self)
-			else:
-				print("Elements from different vectors are not allowed to go together")
+			return other.__pow__(self)
 
 	def eval(self):
 		return (self._val, list(self._der))
