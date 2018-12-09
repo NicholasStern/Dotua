@@ -414,6 +414,18 @@ class Vector(Node):
 			return new
 
 	def __pow__(self, other):
+		""" Returens the other'th power of self
+
+		INPUTS
+		=======
+		self: this Vector class instance, compulsory
+		other: constant or Vector class instance, compulsory
+
+		RETURNS
+		========
+		Vector class instance 
+
+		"""
 		try:
 			val_other = other._val
 			value = np.power(self._val, val_other)
@@ -482,6 +494,18 @@ class Vector(Node):
 					return new
 
 	def __rpow__(self, other):
+		""" Returens the self'th power of other
+
+		INPUTS
+		=======
+		self: this Vector class instance, compulsory
+		other: constant or Vector class instance, compulsory
+
+		RETURNS
+		========
+		Vector class instance 
+
+		"""
 		try:
 			val_other = other._val
 		except AttributeError:
@@ -581,11 +605,36 @@ class Vector(Node):
 
 class Element():
 	def __init__(self, val, der, vector):
+		""" Returens Element class instance
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		val: values of Element class instnaces
+		der: derivatives of Element class instances
+		vector: vector to which the Element class instances belong 
+
+		RETURNS
+		========
+		a list of Element class instance 
+		"""
+
 		self._val = val
 		self._der = der
 		self._vector = vector
 
 	def __add__(self, other):
+		""" Returens the sum of the two Element class instances
+
+		INPUTS
+		=======
+		self: this class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			value = self._val + other._val
 			derivative = self._der + other._der
@@ -601,12 +650,45 @@ class Element():
 				raise TypeError
 
 	def __radd__(self, other):
+		""" Returens the sum of the two Element class instances
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		return self + other
 
 	def __neg__(self):
+		""" Returens the product of -1 and this Element class instance
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		return Element(- self._val, - self._der, self._vector)
 
 	def __sub__(self, other):
+		""" Returens the difference of the two Element class instances
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			value  = self._val - other._val
 		except AttributeError:
@@ -620,9 +702,31 @@ class Element():
 
 
 	def __rsub__(self, other):
+		""" Returens the difference of the two Element class instances
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		return self.__neg__() + other
 
 	def __mul__(self, other):
+		""" Returens the product of the two Element class instances
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			value = self._val * other._val
 			derivative = self._der * other._val + self._val * other._der
@@ -638,9 +742,31 @@ class Element():
 				raise TypeError
 
 	def __rmul__(self, other):
+		""" Returens the sum of the two Element class instances
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		return self * other
 
 	def __truediv__(self, other):
+		""" Returens the quotient of self devided by other
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			val_other = other._val
 		except AttributeError:
@@ -657,6 +783,17 @@ class Element():
 				raise TypeError				
 
 	def __rtruediv__(self, other):
+		""" Returens the quotient of other devided by self
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			val_other = other._val 
 		except AttributeError:
@@ -667,10 +804,31 @@ class Element():
 			return other / self
 
 	def __repr__(self):
+		""" Returens representation of Element class
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+
+		RETURNS
+		========
+		a representation of the Element class
+		"""
 		representation = 'Vector Element with value {} and derivative {}'.format(self._val, self._der)
 		return representation
 
 	def __pow__(self, other):
+		""" Returens the other's th power of self
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			val_other = other._val
 		except AttributeError:
@@ -683,6 +841,17 @@ class Element():
 				print("Elements from different vectors are not allowed to go together")
 
 	def __rpow__(self, other):
+		""" Returens the self's th power of other
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+		other: constant or Element class instance, compulsory
+
+		RETURNS
+		========
+		Element class instance 
+		"""
 		try:
 			val_other = other._val
 		except AttributeError:
@@ -692,6 +861,16 @@ class Element():
 			return other.__pow__(self)
 
 	def eval(self):
+		""" Returens value and derivative of Element class instance
+
+		INPUTS
+		=======
+		self: this  class instance, compulsory
+
+		RETURNS
+		========
+		a tuple of value and derivative of this Element class instance
+		"""
 		return (self._val, list(self._der))
 
 class Counter(dict):
