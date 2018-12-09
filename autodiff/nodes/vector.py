@@ -645,21 +645,13 @@ class Element():
 			val_other = other._val
 		except AttributeError:
 			val_other = other
-			if(val_other != 0):
-				value = self._val / val_other
-				return Element(value, self._der / val_other, self._vector)
-			else:
-				raise ZeroDevisionError
-				print("Divisor could not be 0")
+			value = self._val / val_other
+			return Element(value, self._der / val_other, self._vector)
 		else:
 			if self._vector == other._vector:
 				val_other = other._val
-				if(val_other != 0):
-					value = self._val / val_other
-					return Element(value, self._der / val_other - other._der * self._val / (val_other * val_other), self._vector)
-				else:
-					raise ZeroDevisionError
-					print("Divisor could not be 0")
+				value = self._val / val_other
+				return Element(value, self._der / val_other - other._der * self._val / (val_other * val_other), self._vector)
 			else:
 				print('Elements from different vectors are not allowed to go together')
 				raise TypeError				
@@ -669,20 +661,12 @@ class Element():
 			val_other = other._val 
 		except AttributeError:
 			val_other = other
-			if(self._val != 0):
-				value = val_other / self._val
-				return Element(value, - val_other * self._der / (self._val * self._val), self._vector)
-			else:
-				raise ZeroDevisionError
-				print("Divisor could not be 0")
+			value = val_other / self._val
+			return Element(value, - val_other * self._der / (self._val * self._val), self._vector)
 		else:
 			if self._vector == other._vector:
-				if(0 not in self._val):
-					value = val_other / self._val
-					return Element(value, other._der / self._val - val_other * self._der / (self._val * self._val), self._vector)
-				else:
-					raise ZeroDevisionError
-					print("Divisor could not be 0")
+				value = val_other / self._val
+				return Element(value, other._der / self._val - val_other * self._der / (self._val * self._val), self._vector)
 			else:
 				print("Elements from different vectors are not allowed to go together")
 				raise TypeError		
