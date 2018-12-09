@@ -42,6 +42,8 @@ f_24 = f_12 / x
 f_25 = f_12 / f_15
 f_26 = f_12 / 2
 f_27 = x - y
+f_28 = 2 / f_12
+f_29 = - f_12
 
 
 def test_add():
@@ -90,6 +92,13 @@ def test_vector_divide():
 	assert(f_24.eval() == [2,0.5])
 	assert(f_25.eval() == [2,0.5])
 	assert(f_26.eval() == [1,0.5])
+	assert(f_28.eval() == [1,2])
+
+def test_neg():
+	assert(f_29.eval() == [-2,-1])
+
+def test_repr():
+	print(x)
 
 # Define a vector function and get a jacobian of the vector function to vector
 
