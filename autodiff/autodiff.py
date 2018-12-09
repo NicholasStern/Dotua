@@ -62,16 +62,14 @@ class AutoDiff():
         ======
         vals: list of lists of floats, compulsory
             Value of the list of Vector variables
-        num: int, compulsory, default value is 1
-            Number of vector variables in the list
+
         RETURNS
         ========
         A list of Vector variables
 
         NOTES
         =====
-        PRE:
-            - the length of vals sould be num
+
         POST:
             returns a list of vector variables with value defined in vals
         '''
