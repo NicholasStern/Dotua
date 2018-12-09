@@ -44,6 +44,12 @@ f_26 = f_12 / 2
 f_27 = x - y
 f_28 = 2 / f_12
 f_29 = - f_12
+f_30 = x ** 3
+f_31 = f_12 ** 2
+f_32 = x ** z
+f_33 = f_12 ** z
+f_34 = x ** f_12
+f_35 = f_11 ** f_12
 
 
 def test_add():
@@ -63,6 +69,15 @@ def test_pow():
 
 def test_rpow():
 	assert(f_6.eval() == (4, [0,4*np.log(2)]))
+
+def test_vector_pow():
+	assert(f_30.eval() == [1,8])
+	assert(f_31.eval() == [4,1])
+	assert(f_32.eval() == [1,2])
+	assert(f_33.eval() == [4,1])
+	assert(f_34.eval() == [1,2])
+	assert(f_35.eval() == [9,3])
+
 
 def test_vector_add():
 	assert(f_7.eval() == [2,4])
