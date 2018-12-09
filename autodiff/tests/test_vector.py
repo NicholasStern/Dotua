@@ -12,8 +12,6 @@ z = Vector([2,1])
 a = Vector([0,0])
 b = Vector([1,1])
 c = Vector([1,0])
-d = Vector([2,2])
-
 
 f_1 = x[0] + x[1]
 f_2 = x[0] - 3 - x[1] - x[1]
@@ -53,12 +51,18 @@ f_35 = f_11 ** f_12
 f_36 = 2 ** x
 f_37 = 2 ** f_11
 
+d = Vector([2,2])
+f_38 = 1 - d[0]
+f_39 = d[0] ** d[1]
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
+	assert(f_38.eval() == (-1, [-1,1]))
+	assert(f_39.eval() == (4, [4*np.log(2), 4]))
+	print(f_38)
 
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
