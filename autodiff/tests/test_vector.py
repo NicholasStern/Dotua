@@ -57,21 +57,27 @@ f_39 = d[0] ** d[1]
 
 def test_add():
 	assert(f_1.eval() == (3, [1,1]))
+	f = x[0] + y[0]
 
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
 	assert(f_38.eval() == (-1, [-1,0]))
 	assert(f_39.eval() == (4, [4,4*np.log(2)]))
+	f = x[0] - y[0]
 	print(f_38)
 
 def test_mul():
 	assert(f_3.eval() == (-3, [-3,0]))
+	f = x[0] * y[0]
 
 def test_devide():
+	f = x[0] / y[0]
 	assert(f_4.eval() == (-4, [-2,-3.5]))
+	f = x[0] / y[0]
 
 def test_pow():
 	assert(f_5.eval() == (3, [1,1]))
+	f = x[0] ** y[0]
 
 def test_rpow():
 	assert(f_6.eval() == (4, [0,4*np.log(2)]))
