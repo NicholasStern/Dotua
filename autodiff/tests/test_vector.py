@@ -50,6 +50,8 @@ f_32 = x ** z
 f_33 = f_12 ** z
 f_34 = x ** f_12
 f_35 = f_11 ** f_12
+f_36 = 2 ** x
+f_37 = 2 ** f_11
 
 
 def test_add():
@@ -77,6 +79,8 @@ def test_vector_pow():
 	assert(f_33.eval() == [4,1])
 	assert(f_34.eval() == [1,2])
 	assert(f_35.eval() == [9,3])
+	assert(f_36.eval() == [2,4])
+	assert(f_37.eval() == [8,8])
 
 
 def test_vector_add():
