@@ -61,7 +61,7 @@ def test_add():
 def test_sub():
 	assert(f_2.eval() == (-6, [1,-2]))
 	assert(f_38.eval() == (-1, [-1,0]))
-	assert(f_39.eval() == (4, [4*np.log(2), 4]))
+	assert(f_39.eval() == (4, [4,4*np.log(2)]))
 	print(f_38)
 
 def test_mul():
