@@ -6,21 +6,40 @@ from autodiff.nodes.vector import Vector
 
 class Operator:
     """Returns a new scalar object subject to the operator and propagates the
-    value and derivative according to the chain rule
+    value and derivative according to forward mode autodifferentiation
 
-    The example below pertains to an action on an autodiff scalar: x
+    The example below pertains to an action on an autodiff Scalar object: x
 
     Example Usage
     -------------
 
-        $ import autodiff as ad
+        $ import autodiff.autodiff as ad
         $ x = ad.create_scalar(0)
-        $ from autodiff.operators import Operator as op
+        $ from autodiff.operator import Operator as op
         $ y = op.sin(x)
 
     """
     @staticmethod
     def sin(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the sine of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian # To tell whether x is a constant or variable
         except AttributeError:
@@ -48,6 +67,25 @@ class Operator:
 
     @staticmethod
     def cos(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the cosine of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -76,6 +114,25 @@ class Operator:
 
     @staticmethod
     def tan(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the tangent of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -103,6 +160,25 @@ class Operator:
 
     @staticmethod
     def arcsin(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arcsine of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -131,6 +207,25 @@ class Operator:
 
     @staticmethod
     def arccos(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arccosine of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -158,6 +253,25 @@ class Operator:
 
     @staticmethod
     def arctan(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arctan of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -185,6 +299,25 @@ class Operator:
 
     @staticmethod
     def sinh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the sinh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -212,6 +345,25 @@ class Operator:
 
     @staticmethod
     def cosh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the cosh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -239,6 +391,25 @@ class Operator:
 
     @staticmethod
     def tanh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the tanh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -266,6 +437,25 @@ class Operator:
 
     @staticmethod
     def arcsinh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arcsinh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -293,6 +483,25 @@ class Operator:
 
     @staticmethod
     def arccosh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arccosh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -320,6 +529,25 @@ class Operator:
 
     @staticmethod
     def arctanh(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the arctanh of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -347,6 +575,25 @@ class Operator:
 
     @staticmethod
     def exp(x):
+        """
+        Returns a constant, Scalar, or Vector object that is the exponential of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
@@ -374,6 +621,25 @@ class Operator:
 
     @staticmethod
     def log(x, base=np.exp(1)):
+        """
+        Returns a constant, Scalar, or Vector object that is the log of the user specified value.
+
+        INPUTS
+        =======
+        val: real valued numeric type
+
+        RETURNS
+        =======
+        Scalar or Vector class instance
+
+        NOTES
+        ======
+        If the input value is a constant, each operator method returns a constant with the operation
+        applied. If the input value is a Scalar object, the operator method applies the operator to the value
+        and propagates the derivative through the chain rule, wrapping the results in a new Scalar object. If the
+        input value is a vector, the operator method updates the value of the element, and the jacobian of the vector,
+        returning a new vector object with these properties.
+        """
         try:
             j = x._jacobian
         except AttributeError:
