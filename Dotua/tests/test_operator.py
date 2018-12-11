@@ -1,6 +1,6 @@
 # This file serves to test the operator.py module
-from ..operator import Operator as op
-from ..autodiff import AutoDiff as ad
+from Dotua.operator import Operator as op
+from Dotua.autodiff import AutoDiff as ad
 import numpy as np
 
 x, z, n = tuple(ad.create_scalar([0, 1, 2048]))

@@ -1,5 +1,5 @@
-from ..roperator import rOperator as op
-from ..rautodiff import rAutoDiff
+from Dotua.roperator import rOperator as op
+from Dotua.rautodiff import rAutoDiff
 import numpy as np
 
 

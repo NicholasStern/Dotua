@@ -1,4 +1,4 @@
-from ..nodes.scalar import Scalar
+from Dotua.scalar import Scalar
 import numpy as np
 
 '''

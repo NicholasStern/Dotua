@@ -1,4 +1,4 @@
-from ..rnodes.rscalar import rScalar
+from Dotua.rscalar import rScalar
 import numpy as np
 
 '''

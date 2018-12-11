@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from rautodiff.rnodes.rscalar import rScalar
+from Dotua.rscalar import rScalar
 
 
 class rOperator:

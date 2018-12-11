@@ -2,7 +2,7 @@
 This file tests that the AutoDiff initializer functions defined in autodiff.py
 are correct.
 '''
-from ..autodiff import AutoDiff
+from Dotua.autodiff import AutoDiff
 
 
 # Test creating a single variable
