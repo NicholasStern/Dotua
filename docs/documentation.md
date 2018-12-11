@@ -1,4 +1,4 @@
-# AutoDiff Documentation (Milestone 2)
+# Dotua Documentation
 
 ### Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein
 
@@ -41,6 +41,8 @@ What this trivial example illustrates is that the derivative of a multivariate f
 
 [An intuitive way of understanding automatic differentiation is to think of any complicated function as ultimately a a graph of composite functions.](http://colah.github.io/posts/2015-08-Backprop/) Each node is a primitive operation -- one in which the derivative is readily known -- and the edges on this graph -- the relationship of change between any two variables -- are partial derivatives. The sum of the paths between any two nodes is thus the partial derivative between those two functions (this a graph restatement of the total derivative via the chain rule).
 
+###Forward Mode
+
 Forward mode automatic differentiation thus begins at an input to a graph and sums the source paths. The below diagrams (from Christopher Olah's blog) provide an intuition for this process. The relationship between three variables (X, Y, Z) is defined by a number of paths (<img src="https://latex.codecogs.com/gif.latex?\alpha,&space;\beta,&space;\gamma,&space;\delta,&space;\epsilon&space;,\zeta" title="\alpha, \beta, \gamma, \delta, \epsilon ,\zeta" />). Forward mode begins with a seed of 1, and then in each node derivative is the product of the sum of the previous steps.
 
 ![](images/chain-def-greek.png)
@@ -57,41 +59,36 @@ In our chain rule equation, there are two pieces to the computation: the derivat
 
 When one evaluates <img src="https://latex.codecogs.com/png.latex?f(x&space;&plus;&space;\epsilon)" title="f(x + \epsilon)" />, given that <img src="https://latex.codecogs.com/png.latex?\epsilon^2&space;=&space;0" title="\epsilon^2 = 0" />, then all the higher order terms drop out (they are 0) and one is left with <img src="https://latex.codecogs.com/png.latex?f(x)&space;&plus;f'(x)\epsilon" title="f(x) +f'(x)\epsilon" />
 
+###Reverse Mode
+
+**INSERT TEXT HERE**
 
 To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision).
 
-## How to Use AutoDiff
+## How to Use Dotua
 
 ### How to Install
-To install our package, clone the git repository using the following command line argument:
+To install our package, one can simply use pip install like so:
 
 ```bash
-$ git clone https://github.com/VV-NS-CY-ZW-CS-207-Organization/cs207-FinalProject.git
+$ pip install Dotua
 ```
 
-### Creating a Virtual Environment
-After cloning the git repository, create a virtual environment to install all the necessary dependencies through the following command line arguments:
-
-```bash
-$ virtualenv env
-$ source env/bin/activate
-$ pip install -r requirements.txt
-```
-
-### Import and Usage Example
-In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
+### Import and Usage Examples
+#### Forward Mode
+In order to instantiate a forward mode auto-differentiation object from our package, the user shall first import the AutoDiff function from the Dotua library as such:
 
 ```py
-from autodiff.autodiff import AutoDiff as ad
+from Dotua.autodiff import AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
 - Instantiate all variables as AutoDiff objects.
-- Input these variables into operators from the Operator class within the AutoDiff library to create more complex expressions that propagate the derivative.
+- Input these variables into operators from the Operator class within the Dotua library to create more complex expressions that propagate the derivative using forward mode.
 
 The AutoDiff class is the core constructor for all variables in the function that are to be differentiated. There are two options for instantiating variables: Scalar and Vector, generated with create_scalar and create_vector respectively. Scalar variables have a single value per variable, while Vector variables can have multiple associated values. The general schematic for how the user shall instantiate AutoDiff objects is outlined below:
 
-1. Create either a Scalar or Vector AutoDiff object to generate inputs to later pass into the function to be differentiated. The initialization works as follows:
+1. Create either a Scalar or Vector AutoDiff object to generate seed variables to later build the function to be differentiated. The initialization works as follows:
 
 ```python
 x, y = ad.create_scalar(vals = [1,2])
@@ -101,7 +98,7 @@ z = ad.create_vector(vals = [1,2,3])
 2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
 
 ```python
-from autodiff.operator import Operator as op
+from Dotua.operator import Operator as op
 result = op.sin(x*y)
 results = op.sin(z)
 ```
@@ -119,12 +116,36 @@ print(result.eval())
 ```
 For scalars, result.eval() will return a tuple of (value, jacobian) where the jacobian is an array of partial derivatives of the function with respect to each scalar variable that was intialized at the same time. For vectors, results.eval() returns a list of tuples (value, jacobian), with one tuple for each function in the vector.
 
-### Examples
-There are two files in the top level directory of the autodiff package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the autodiff package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+#### Reverse Mode
 
-The second file is an interactive jupyter notebook which contains an example use case where the autodiff package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
+The initialization for reverse mode variables is very similar to forward mode. The only difference is that there is an "r" in front of the
+module names. It is, however, important to note that there is no vector equivalent for the reverse mode implementation. 
+One can initialize a reverse mode scalar object as follows:
+
+```python
+from Dotua.rautodiff import rAutoDiff as rad
+x, y, z = rad.create_rscalar([1,2,3])
+```
+
+In reverse mode, when the user calls the gradient function, they must specify the variable they would like to differentiate with respect to. 
+This time, the gradient function simple returns a constant. An example of this is shown below:
+
+```python
+f = x + y + z 
+f_gradx = rad.partial(f, x)
+```
+
+### Examples
+There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the Dotua package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+
+The second file is an interactive jupyter notebook which contains an example use case where the Dotua package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
 
 ![](images/newton.png)
+
+A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called... 
+
+**INSERT TEXT HERE**
+
 
 ## Software Organization
 
@@ -409,24 +430,7 @@ a Python numeric type, then the method returns the evaluation of the
 corresponding NumPy method on the given argument
 (e.g., **op.sin(1) = np.sin(1)**).
 
-## Further Implementation
-
-At this point, the following features are in progress but not yet completed:
-1. Some operators still need to be overloaded for the *Vector* class (e.g., power)
-2. Full support for **create_vetor** is not yet complete.
-3. The *Operator* class currently only provides support for *Scalar* objects.
-We will provide support for *Vector* objects going forward.
-
 
 ## External Depencies
 
 This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
-
-
-## Future Plans
-
-Our group will implement two future developments. The first we will signpost as dynamic variable universes. The current build requires the user to create a single universe of all variables within a given function and then creates a data structure to hold the associated Jacobian matrix of partial derivatives. In the future, users will be able to create additional variables that will communicate with previously defined functions. This is useful for optimization projects which involve the creation of additional features.
-
-Speaking of optimization, we will also implement backwards auto-differentiation. Forward auto-differentiation computes the computational graph beginning with the input functions, while backpropagation (a special case of auto-differentiation) begins with the output and optimizes the function in reverse. In massively complex neural networks with many many inputs but only a few outputs, this greatly reduces computational time.
-
-Automatic differentiation in machine learning: a survey. Baydin et al. 2018. Available at https://arxiv.org/abs/1502.05767
