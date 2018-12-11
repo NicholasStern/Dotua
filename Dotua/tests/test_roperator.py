@@ -1,6 +1,6 @@
 # This file serves to test the operator.py module
-from ..roperator import rOperator as op
-from ..rnodes.rscalar import rScalar
+from Dotua.roperator import rOperator as op
+from Dotua.rscalar import rScalar
 import numpy as np
 import math
 

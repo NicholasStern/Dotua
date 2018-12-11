@@ -1,5 +1,5 @@
-from autodiff.nodes.scalar import Scalar
-from autodiff.nodes.vector import Vector
+from Dotua.scalar import Scalar
+from Dotua.vector import Vector
 
 
 class AutoDiff():

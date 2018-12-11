@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # [AutoDiff] Documentation
+=======
+# Dotua Documentation
+>>>>>>> 58b108a4b3c2ab469d0455487d9868e7d038d956
 
 ### Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein
 
@@ -41,6 +45,8 @@ What this trivial example illustrates is that the derivative of a multivariate f
 
 [An intuitive way of understanding automatic differentiation is to think of any complicated function as ultimately a a graph of composite functions.](http://colah.github.io/posts/2015-08-Backprop/) Each node is a primitive operation -- one in which the derivative is readily known -- and the edges on this graph -- the relationship of change between any two variables -- are partial derivatives. The sum of the paths between any two nodes is thus the partial derivative between those two functions (this a graph restatement of the total derivative via the chain rule).
 
+###Forward Mode
+
 Forward mode automatic differentiation thus begins at an input to a graph and sums the source paths. The below diagrams (from Christopher Olah's blog) provide an intuition for this process. The relationship between three variables (X, Y, Z) is defined by a number of paths (<img src="https://latex.codecogs.com/gif.latex?\alpha,&space;\beta,&space;\gamma,&space;\delta,&space;\epsilon&space;,\zeta" title="\alpha, \beta, \gamma, \delta, \epsilon ,\zeta" />). Forward mode begins with a seed of 1, and then in each node derivative is the product of the sum of the previous steps.
 
 ![](images/chain-def-greek.png)
@@ -57,41 +63,36 @@ In our chain rule equation, there are two pieces to the computation: the derivat
 
 When one evaluates <img src="https://latex.codecogs.com/png.latex?f(x&space;&plus;&space;\epsilon)" title="f(x + \epsilon)" />, given that <img src="https://latex.codecogs.com/png.latex?\epsilon^2&space;=&space;0" title="\epsilon^2 = 0" />, then all the higher order terms drop out (they are 0) and one is left with <img src="https://latex.codecogs.com/png.latex?f(x)&space;&plus;f'(x)\epsilon" title="f(x) +f'(x)\epsilon" />
 
+###Reverse Mode
+
+**INSERT TEXT HERE**
 
 To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision).
 
-## How to Use AutoDiff
+## How to Use Dotua
 
 ### How to Install
-To install our package, clone the git repository using the following command line argument:
+To install our package, one can simply use pip install like so:
 
 ```bash
-$ git clone https://github.com/VV-NS-CY-ZW-CS-207-Organization/cs207-FinalProject.git
+$ pip install Dotua
 ```
 
-### Creating a Virtual Environment
-After cloning the git repository, create a virtual environment to install all the necessary dependencies through the following command line arguments:
-
-```bash
-$ virtualenv env
-$ source env/bin/activate
-$ pip install -r requirements.txt
-```
-
-### Import and Usage Example
-In order to instantiate an auto-differentiation object from our package, the user shall first import the AutoDiff Driver from the AutoDiff library (see implementation section for more detail):
+### Import and Usage Examples
+#### Forward Mode
+In order to instantiate a forward mode auto-differentiation object from our package, the user shall first import the AutoDiff function from the Dotua library as such:
 
 ```py
-from autodiff.autodiff import AutoDiff as ad
+from Dotua.autodiff import AutoDiff as ad
 ```
 
 The general workflow for the user is as follows:
 - Instantiate all variables as AutoDiff objects.
-- Input these variables into operators from the Operator class within the AutoDiff library to create more complex expressions that propagate the derivative.
+- Input these variables into operators from the Operator class within the Dotua library to create more complex expressions that propagate the derivative using forward mode.
 
 The AutoDiff class is the core constructor for all variables in the function that are to be differentiated. There are two options for instantiating variables: Scalar and Vector, generated with create_scalar and create_vector respectively. Scalar variables have a single value per variable, while Vector variables can have multiple associated values. The general schematic for how the user shall instantiate AutoDiff objects is outlined below:
 
-1. Create either a Scalar or Vector AutoDiff object to generate inputs to later pass into the function to be differentiated. The initialization works as follows:
+1. Create either a Scalar or Vector AutoDiff object to generate seed variables to later build the function to be differentiated. The initialization works as follows:
 
 ```python
 x, y = ad.create_scalar(vals = [1,2])
@@ -101,7 +102,7 @@ z = ad.create_vector(vals = [1,2,3])
 2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
 
 ```python
-from autodiff.operator import Operator as op
+from Dotua.operator import Operator as op
 result = op.sin(x*y)
 results = op.sin(z)
 ```
@@ -119,12 +120,36 @@ print(result.eval())
 ```
 For scalars, result.eval() will return a tuple of (value, jacobian) where the jacobian is an array of partial derivatives of the function with respect to each scalar variable that was intialized at the same time. For vectors, results.eval() returns a list of tuples (value, jacobian), with one tuple for each function in the vector.
 
-### Examples
-There are two files in the top level directory of the autodiff package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the autodiff package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+#### Reverse Mode
 
-The second file is an interactive jupyter notebook which contains an example use case where the autodiff package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
+The initialization for reverse mode variables is very similar to forward mode. The only difference is that there is an "r" in front of the
+module names. It is, however, important to note that there is no vector equivalent for the reverse mode implementation. 
+One can initialize a reverse mode scalar object as follows:
+
+```python
+from Dotua.rautodiff import rAutoDiff as rad
+x, y, z = rad.create_rscalar([1,2,3])
+```
+
+In reverse mode, when the user calls the gradient function, they must specify the variable they would like to differentiate with respect to. 
+This time, the gradient function simple returns a constant. An example of this is shown below:
+
+```python
+f = x + y + z 
+f_gradx = rad.partial(f, x)
+```
+
+### Examples
+There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the Dotua package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+
+The second file is an interactive jupyter notebook which contains an example use case where the Dotua package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
 
 ![](images/newton.png)
+
+A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called... 
+
+**INSERT TEXT HERE**
+
 
 ## Software Organization
 
@@ -133,84 +158,81 @@ The second file is an interactive jupyter notebook which contains an example use
 Our project will adhere to the directory structure outlined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html). At a high level (with exact names subject to change), the project will have the following structure:
 
 ```python
-autodiff/
-    autodiff/
-        examples/
-            __init__.py
-            newton_demo.py
-            ...
-        nodes/
-            __init__.py
-            node.py
-            scalar.py
-            vector.py
-        operators/
-            __init__.py
-            operator.py
-        tests/
-            __init__.py
-            test_initializer.py
-            test_newton.py
-            test_opertor.py
-            test_scalar.py
-            test_vector.py
-            ...
-        autodiff.py  # driver for centralizing operator and node usage
-    LICENSE
-    MANIFEST.in
-    README.md
-    requirements.txt
-    setup.py
-    .gitignore
+Dotua/
+    __init__.py
+    autodiff.py
+    node.py
+    operator.py
+    rautodiff.py
+    roperator.py
+    rscalar.py
+    scalar.py
+    vector.py
+    tests/
+        __init__.py
+        test_initializer.py
+        test_operator.py
+        test_rautodiff.py
+        test_roperator.py
+        test_rscalar.py
+        test_scalar.py
+        test_vector.py
+docs/
+    documentation.md
+    milestone1.md
+    milestone2.md
+examples/
+    __init__.py
+    newton_demo.py
+    ...
+LICENSE
+MANIFEST.in
+README.md
+requirements.txt
+setup.py
+.gitignore
 ```
 
 ### Modules
 
+#### Dotua/
+The **Dotua** module contains the codes for forward mode implementation and reverse mode implementation.
+
+It contains *AutoDiff* (autodiff.py), which is the driver of the forward mode autodifferentiation. The driver helps the users with getting access to the *Node* superclass (node.py) and associated subclasses (i.e., *Vector* (vector.py) and *Scalar* (scalar.py)), and the *Operator* class (operator.py).
+
+It also contains *rAutoDiff* (rautodiff.py), which is the driver of the reverse mode autodifferentiation. The driver helps the users with getting access to the *rScalar* class (rscalar.py) and the *rOperator* class (roperator.py).
+
 #### examples/
-The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema.
-
-#### nodes/
-The **Nodes** module will contain the *Node* superclass and associated subclasses
-(i.e., *Vector* and *Scalar*).  Other packages and users will not use the
-*Node* class directly, instead they will work with its children through the
-*AutoDiff* driver.
-
-#### operators/
-The **Operators** module will contain the *Operator* class which will be
-imported by users directly.
+The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema and an implementation of Neural Network for prediction problems.
 
 #### tests/
-The **Tests** module will contain the project’s testing suite and will be formatted according to the pytest requirements for automatic test discovery.
+The **Tests** module contains the project’s testing suite and is formatted according to the pytest requirements for automatic test discovery.
 
 ### Testing
 
 #### Overview
-The majority of the testing in this project’s test suite will consist of unit testing. The aim is verifying the correctness of the application with thorough unit testing of all simple usages of the forward mode of automatic differentiation. Essentially, this will involve validating that our application produces correct calculations for all elementary functions. Additionally, a range of more complex unit testing will cover advanced scenarios such as functions with multidimensional domains and codomains as well as functions which created complexity via composition of elementary functions.
+The majority of the testing in this project’s test suite consists of unit testing. The aim is verifying the correctness of the application with thorough unit testing of all simple usages of the forward mode of automatic differentiation. Essentially, this involves validating that our application produces correct calculations for all elementary functions. Additionally, a range of more complex unit testing covers advanced scenarios such as functions with multidimensional domains and codomains as well as functions which created complexity via composition of elementary functions.
 
-Additionally, the test suite will contain benchmarking and performance tests to demonstrate the scalability and limitations of the application.
+Additionally, the test suite contains benchmarking and performance tests to demonstrate the scalability and limitations of the application.
 
 #### Test Automation
-In this project we will use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we will use **Coveralls** to validate the high code coverage of our testing suite (goal: 98-100%).
-We will embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
+In this project we use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we uses **Coveralls** to validate the high code coverage of our testing suite (now 100%).
+We embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
 
 #### Installation
-To install our package, you can download the whole project from our github organization. You will get a folder named 'cs207-FinalProject-master' once you download the zip file. You can go into the folder to start your own script and use our library now. You can find 'driver.py' here, which is actually a use case and you may follow that to build up your own functions. It is worth noting that you have to put your script out of the 'autodiff' folder to import classes and functions from our package. When your script and the 'autodiff' folder is at the same level in the directory tree, you can use these sentences to import from ourt package:
+To install our package, one can simply use pip install like so:
 
-```python
-from autodiff.autodiff import AutoDiff as ad
-from autodiff.operator import Operator as op
+```bash
+$ pip install Dotua
 ```
 
 #### User Verification
-We plan on including all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
+We include all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
 
 ### Distribution
 
-#### Overview
-Following the conventions defined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html), this project’s packaging structure has been designed in such a way as to allow users to perform installation through pip. Specifically, our package will be uploaded to PyPi using Twine.
-
 #### Licensing
-This project will be distributed under the GNU GPLv3 license to allow free “as is” usage while requiring all extensions to remain open source.
+This project is distributed under the GNU GPLv3 license to allow free “as is” usage while requiring all extensions to remain open source.
 
 
 ## Implementation
@@ -423,6 +445,7 @@ a Python numeric type, then the method returns the evaluation of the
 corresponding NumPy method on the given argument
 (e.g., **op.sin(1) = np.sin(1)**).
 
+<<<<<<< HEAD
 ## rOperator
 
 <!-- ## A Note on Reverse Mode
@@ -436,16 +459,9 @@ reverse mode is likely to suffer in such an implementation because of the
 overhead involved in ...  Thus, by separating the imlpementations of forward
 and reverse automatic differentiation, [AutoDiff] avoids these performance
 issues. -->
+=======
+>>>>>>> 58b108a4b3c2ab469d0455487d9868e7d038d956
 
 ## External Depencies
 
 This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
-
-
-## Future Plans
-
-Our group will implement two future developments. The first we will signpost as dynamic variable universes. The current build requires the user to create a single universe of all variables within a given function and then creates a data structure to hold the associated Jacobian matrix of partial derivatives. In the future, users will be able to create additional variables that will communicate with previously defined functions. This is useful for optimization projects which involve the creation of additional features.
-
-Speaking of optimization, we will also implement backwards auto-differentiation. Forward auto-differentiation computes the computational graph beginning with the input functions, while backpropagation (a special case of auto-differentiation) begins with the output and optimizes the function in reverse. In massively complex neural networks with many many inputs but only a few outputs, this greatly reduces computational time.
-
-Automatic differentiation in machine learning: a survey. Baydin et al. 2018. Available at https://arxiv.org/abs/1502.05767

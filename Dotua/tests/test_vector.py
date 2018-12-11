@@ -1,5 +1,5 @@
 import numpy as np
-from ..nodes.vector import Vector
+from Dotua.vector import Vector
 
 '''
 Test for vector variable basic functions and the jacobian of vector function to vector

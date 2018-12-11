@@ -1,5 +1,5 @@
-from autodiff.autodiff import AutoDiff as ad
-from autodiff.operator import Operator as op
+from Dotua.autodiff import AutoDiff as ad
+from Dotua.operator import Operator as op
 
 scalars = ad.create_scalar([1, 1, 1])
 
