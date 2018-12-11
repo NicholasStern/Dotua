@@ -1,4 +1,4 @@
-# AutoDiff Documentation (Milestone 2)
+# [AutoDiff] Documentation
 
 ### Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein
 
@@ -215,22 +215,31 @@ This project will be distributed under the GNU GPLv3 license to allow free “as
 
 ## Implementation
 
-The purpose of this library (AutoDiff) is to perform automatic differentation on
-user defined functions, where the domain and codomain may be single- or
-multi-dimensional.  At a high level, AutoDiff serves as a partial replacement
-for NumPy in the sense that rather than defining functions using NumPy methods
-such as *sin* and *cos*, the user can use the AutoDiff methods *sin* and *cos* that
-perform the same evaluation but also perform additional computation in the form of
-the derivative (i.e., thus implementing the forward mode of automatic differentiation).
+The purpose of the [AutoDiff] library is to perform automatic differentation
+on user defined functions, where the domain and codomain may be single- or
+multi-dimensional (*n.b. this library provides support for both the forward
+and reverse modes of automatic differentation, but for the reverse mode only
+functions with single-dimensional codomains are supported*).  At a high level,
+[AutoDiff] serves as a partial replacement for NumPy in the sense that
+[AutoDiff] provides methods for many of the mathematical functions
+(e.g., trigonometric, inverse trigonmetric, hyperbolic, etc.) that NumPy
+implements; however, while the NumPy versions of these methods can only provide function evaluation, the [AutoDiff] equivalents provide both evaluation and differentiation.
 
-To achieve this goal, the AutoDiff library implements the following
-abstract ideas:
-  1. Keeping track of the value and derivative of user defined expressions.
-  2. Allowing users to be as expressive as they would like by providing our own
-    versions of binary and unary opertors.
+To achieve this, the [AutoDiff] library implements the following abstract
+ideas:
+  1. Allowing users to be as expressive as they would like to be by providing
+     our own versions of binary and unary operators.
+  2. Forward AD: keeping track of the value and derivative of user defined
+     expressions and functions.
+  3. Reverse AD: constructing a computational graph from user defined functions
+     that can be used to quickly compute gradients.
 
-With these goals in mind, the AutoDiff implementation relies on the
-**Nodes** modules and the **Operator** class and allows user interface through the AutoDiff class which serves as a **Node** factory for initializing instances of *Scalar* and *Vector*.
+With these goals in mind, the [AutoDiff] forward mode implementation relies on
+the **Nodes** modules and the **Operator** class and allows user interface
+through the AutoDiff class which serves as a **Node** factory for initializing instances of *Scalar* and *Vector*.  Analogously, the [AutoDiff] reverse mode
+implementation relies on the **rNodes** module and the **rOperator** class
+and facilitates user interface through the rAutoDiff class which seres as a
+factory for initializing instances of *rScalar*.
 
 ## Nodes
 The **Nodes** module contains a *Node* superclass with the following basic design:
@@ -267,8 +276,8 @@ represent a node in the computational graph underlying the automatic differentia
 of the user defined expression) is to serve as an interface for the two other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses implements the required operator overloading as necessary for scalar and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.).
 This logic is separated into two separate classes to provide increased organization for higher dimensional functions and to allow class methods to use assumptions of specific properties of scalars and vectors to reduce implementation complexity.
 
-Both the *Scalar* class and the *Vector* class have *_val* and *_jacobian* class attributes which allow for automatic differentiation by keeping tarck of each
-node's value and derivative.
+Both the *Scalar* class and the *Vector* class have *_val* and *_jacobian* class attributes which allow for forward automatic differentiation by keeping track of
+each node's value and derivative.
 
 ### Scalar
 The *Scalar* class is used for user defined one-dimensional variables.  Specifically,
@@ -286,7 +295,7 @@ as the keys and real numbers as values.  Note that each *Scalar* object's
 **_jacobian** attribute has an entry for all scalar variables which the object
 might interact with (see AutoDiff Initializer section for more information).
 
-Users interact with *Scalar* object's in two ways:
+Users interact with *Scalar* objects in two ways:
 1. **eval(self)**: This method allows users to obtain the value and derivative
 for a *Scalar* object at the point of evaluation defined when the user first
 initialized their *Scalar* objects.  Specifically, this method returns a tuple
@@ -303,7 +312,10 @@ Note that these are the only methods that users should be calling for *Scalar*
 objects and that users should not be directly accessing any of the object's
 class attributes.
 
-Currently, *Scalar* objects support left- and right-sided addition, subtractionm multiplication, division, exponentiation, and negation.
+*Scalar* objects support left- and right-sided addition, subtraction,
+multiplication, division, exponentiation, and negation.
+
+### rScalar
 
 ### Vector
 *Vector* is a subclass of *Node*. Every vector variable consists of a 1-d numpy array to store the values and a 2-d numpy array to store the jacobian matrix.
@@ -377,6 +389,8 @@ and a.partial(z)** are all well defined and correct because **a** in this case
 is an instance of *Scalar*; however, it is not a "primitive" scalar variable and
 thus the user could not take a partial derivative with respect to **a**.
 
+## rAutoDiff Initializer
+
 ## Operator
 
 The *Operator* class defines static methods for elementary mathematical
@@ -409,14 +423,19 @@ a Python numeric type, then the method returns the evaluation of the
 corresponding NumPy method on the given argument
 (e.g., **op.sin(1) = np.sin(1)**).
 
-## Further Implementation
+## rOperator
 
-At this point, the following features are in progress but not yet completed:
-1. Some operators still need to be overloaded for the *Vector* class (e.g., power)
-2. Full support for **create_vetor** is not yet complete.
-3. The *Operator* class currently only provides support for *Scalar* objects.
-We will provide support for *Vector* objects going forward.
+<!-- ## A Note on Reverse Mode
 
+Given the similarities between the forward and reverse modes of automatic
+differentiation, it is possible to provide the functionality of both techniques
+with a "mixed mode" implementation.  Functionality for forward and reverse
+automatic differentiation has been purposefully separated in the [AutoDiff]
+library for performance considerations.  Specifically, the performance of
+reverse mode is likely to suffer in such an implementation because of the
+overhead involved in ...  Thus, by separating the imlpementations of forward
+and reverse automatic differentiation, [AutoDiff] avoids these performance
+issues. -->
 
 ## External Depencies
 
