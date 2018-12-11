@@ -61,30 +61,6 @@ def test_sub():
 	assert(f_39.partial(d[0]) == 4)
 	assert(f_39.partial(d[1]) == 4*np.log(2))
 
-	try:
-		f = x[0] - y[0]
-	except TypeError:
-		pass
-	print(f_38)
-
-def test_mul():
-	try:
-		f = x[0] * y[0]
-	except TypeError:
-		pass
-
-def test_devide():
-	try:
-		f = x[0] / y[0]
-	except TypeError:
-		pass
-
-def test_pow():
-	try:
-		f = x[0] ** y[0]
-	except TypeError:
-		pass
-
 def test_rpow():
 	assert(f_6.partial(x[0]) == 0)
 	assert(f_6.partial(x[1]) == 4*np.log(2))
