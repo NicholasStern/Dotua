@@ -56,16 +56,12 @@ class rAutoDiff():
         POST:
             returns a list of vector variables with value defined in vals
         '''
-        try:
-            rvectors = [None] * len(vals)
-            for i in range(len(vals)):
-                rvectors[i] = rVector(vals[i])
-            self._universe += rvectors
-            return rvectors
-        except TypeError:
-            rvector = rVector(vals)
-            self._universe += [rvector]
-            return rvector
+        rvectors = [None] * len(vals)
+        for i in range(len(vals)):
+            rvectors[i] = rVector(vals[i])
+            for j in range(len(vals[i])):
+                self._universe += [rvectors[i][j]]
+        return rvectors
 
 
     def partial(self, func, var):
