@@ -154,84 +154,81 @@ A third file is an example of how our reverse mode autodifferentiation package c
 Our project will adhere to the directory structure outlined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html). At a high level (with exact names subject to change), the project will have the following structure:
 
 ```python
-autodiff/
-    autodiff/
-        examples/
-            __init__.py
-            newton_demo.py
-            ...
-        nodes/
-            __init__.py
-            node.py
-            scalar.py
-            vector.py
-        operators/
-            __init__.py
-            operator.py
-        tests/
-            __init__.py
-            test_initializer.py
-            test_newton.py
-            test_opertor.py
-            test_scalar.py
-            test_vector.py
-            ...
-        autodiff.py  # driver for centralizing operator and node usage
-    LICENSE
-    MANIFEST.in
-    README.md
-    requirements.txt
-    setup.py
-    .gitignore
+Dotua/
+    __init__.py
+    autodiff.py
+    node.py
+    operator.py
+    rautodiff.py
+    roperator.py
+    rscalar.py
+    scalar.py
+    vector.py
+    tests/
+        __init__.py
+        test_initializer.py
+        test_operator.py
+        test_rautodiff.py
+        test_roperator.py
+        test_rscalar.py
+        test_scalar.py
+        test_vector.py
+docs/
+    documentation.md
+    milestone1.md
+    milestone2.md
+examples/
+    __init__.py
+    newton_demo.py
+    ...
+LICENSE
+MANIFEST.in
+README.md
+requirements.txt
+setup.py
+.gitignore
 ```
 
 ### Modules
 
+#### Dotua/
+The **Dotua** module contains the codes for forward mode implementation and reverse mode implementation.
+
+It contains *AutoDiff* (autodiff.py), which is the driver of the forward mode autodifferentiation. The driver helps the users with getting access to the *Node* superclass (node.py) and associated subclasses (i.e., *Vector* (vector.py) and *Scalar* (scalar.py)), and the *Operator* class (operator.py).
+
+It also contains *rAutoDiff* (rautodiff.py), which is the driver of the reverse mode autodifferentiation. The driver helps the users with getting access to the *rScalar* class (rscalar.py) and the *rOperator* class (roperator.py).
+
 #### examples/
-The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema.
-
-#### nodes/
-The **Nodes** module will contain the *Node* superclass and associated subclasses
-(i.e., *Vector* and *Scalar*).  Other packages and users will not use the
-*Node* class directly, instead they will work with its children through the
-*AutoDiff* driver.
-
-#### operators/
-The **Operators** module will contain the *Operator* class which will be
-imported by users directly.
+The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema and an implementation of Neural Network for prediction problems.
 
 #### tests/
-The **Tests** module will contain the project’s testing suite and will be formatted according to the pytest requirements for automatic test discovery.
+The **Tests** module contains the project’s testing suite and is formatted according to the pytest requirements for automatic test discovery.
 
 ### Testing
 
 #### Overview
-The majority of the testing in this project’s test suite will consist of unit testing. The aim is verifying the correctness of the application with thorough unit testing of all simple usages of the forward mode of automatic differentiation. Essentially, this will involve validating that our application produces correct calculations for all elementary functions. Additionally, a range of more complex unit testing will cover advanced scenarios such as functions with multidimensional domains and codomains as well as functions which created complexity via composition of elementary functions.
+The majority of the testing in this project’s test suite consists of unit testing. The aim is verifying the correctness of the application with thorough unit testing of all simple usages of the forward mode of automatic differentiation. Essentially, this involves validating that our application produces correct calculations for all elementary functions. Additionally, a range of more complex unit testing covers advanced scenarios such as functions with multidimensional domains and codomains as well as functions which created complexity via composition of elementary functions.
 
-Additionally, the test suite will contain benchmarking and performance tests to demonstrate the scalability and limitations of the application.
+Additionally, the test suite contains benchmarking and performance tests to demonstrate the scalability and limitations of the application.
 
 #### Test Automation
-In this project we will use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we will use **Coveralls** to validate the high code coverage of our testing suite (goal: 98-100%).
-We will embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
+In this project we use continuous integration testing through **Travis CI** to perform automated, machine independent testing. Additionally, we uses **Coveralls** to validate the high code coverage of our testing suite (now 100%).
+We embed the Travis CI and Coveralls badges into the project README to provide transparency for users interacting with our project through GitHub.
 
 #### Installation
-To install our package, you can download the whole project from our github organization. You will get a folder named 'cs207-FinalProject-master' once you download the zip file. You can go into the folder to start your own script and use our library now. You can find 'driver.py' here, which is actually a use case and you may follow that to build up your own functions. It is worth noting that you have to put your script out of the 'autodiff' folder to import classes and functions from our package. When your script and the 'autodiff' folder is at the same level in the directory tree, you can use these sentences to import from ourt package:
+To install our package, one can simply use pip install like so:
 
-```python
-from autodiff.autodiff import AutoDiff as ad
-from autodiff.operator import Operator as op
+```bash
+$ pip install Dotua
 ```
 
 #### User Verification
-We plan on including all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
+We include all tests in the project distribution, thus allowing users to verify correctness for themselves using pytest and pytest-cov locally after installing the project package.
 
 ### Distribution
 
-#### Overview
-Following the conventions defined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html), this project’s packaging structure has been designed in such a way as to allow users to perform installation through pip. Specifically, our package will be uploaded to PyPi using Twine.
-
 #### Licensing
-This project will be distributed under the GNU GPLv3 license to allow free “as is” usage while requiring all extensions to remain open source.
+This project is distributed under the GNU GPLv3 license to allow free “as is” usage while requiring all extensions to remain open source.
 
 
 ## Implementation
