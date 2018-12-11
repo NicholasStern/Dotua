@@ -18,6 +18,13 @@ def generate():
 c_1, c2, c5 = -1, 2, 5
 
 
+def test_eval():
+    x, y, z = generate()
+    assert x.eval() == x.val
+    assert y.eval() == y.val
+    assert z.eval() == z.val
+
+
 def test_add():
     x, y, z = generate()
     f = x + y + z

@@ -40,6 +40,28 @@ class rScalar():
         self.parents = []
         self.grad_val = None
 
+    def eval(self):
+        """
+        Return the value self rScalar object.
+
+        INPUTS
+        =======
+        self: rScalar class instance
+
+        RETURNS
+        =======
+        self._val: value of the user defined variable, user defined function,
+                   or intermediate node in the computational grpah represented
+                   by the self rScalar object
+
+        NOTES
+        ======
+        rScalar does not overload comparison operators so if users desire to
+        compare the values of different rScalar objects they should do so
+        by calling eval on each object to obtain the value.
+        """
+        return self.val
+
     def gradient(self):
         """
         Return the derivative of some function with respect to this rScalar.
