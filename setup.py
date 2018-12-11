@@ -4,12 +4,12 @@ with open("docs/documentation.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(name='Dotua',
-	version='0.1.4',
+	version='0.1.5',
 	description='Package for Forward/Reverse Autodifferentiation',
 	author='Nick Stern, Vincent Viego, Summer Yuan, Zach Wehrwein',
 	long_description=long_description,
 	long_description_content_type="text/markdown",
-	packages=['Dotua'],
+	packages=setuptools.find_packages(),
 	install_requires=[
 	  'numpy',
 	  'scipy'
