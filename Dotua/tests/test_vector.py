@@ -56,8 +56,11 @@ f_38 = 1 - d[0]
 f_39 = d[0] ** d[1]
 
 def test_sub():
-	assert(f_38.eval() == (-1, [-1,0]))
-	assert(f_39.eval() == (4, [4,4*np.log(2)]))
+	assert(f_38.partial(d[0]) == -1)
+	assert(f_38.partial(d[1]) == 0)
+	assert(f_39.partial(d[0]) == 4)
+	assert(f_39.partial(d[1]) == 4*np.log(2))
+
 	try:
 		f = x[0] - y[0]
 	except TypeError:
@@ -83,7 +86,8 @@ def test_pow():
 		pass
 
 def test_rpow():
-	assert(f_6.eval() == (4, [0,4*np.log(2)]))
+	assert(f_6.partial(x[0]) == 0)
+	assert(f_6.partial(x[1]) == 4*np.log(2))
 
 def test_vector_pow():
 	assert(f_30.eval() == [1,8])
