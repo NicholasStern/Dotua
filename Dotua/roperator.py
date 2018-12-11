@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from Dotua.rscalar import rScalar
+from Dotua.nodes.rscalar import rScalar
 
 
 class rOperator:
