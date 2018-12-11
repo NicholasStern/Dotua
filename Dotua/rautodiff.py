@@ -59,6 +59,7 @@ class rAutoDiff():
         rvectors = [None] * len(vals)
         for i in range(len(vals)):
             rvectors[i] = rVector(vals[i])
+            self._universe += [rvectors[i]]
             for j in range(len(vals[i])):
                 self._universe += [rvectors[i][j]]
         return rvectors
