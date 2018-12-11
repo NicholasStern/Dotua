@@ -57,6 +57,7 @@ class AutoDiff():
     @staticmethod
     def create_vector(vals):
         '''
+        Return a list of vector variables with values as defined in vals
 
         INPUTS
         ======
@@ -67,14 +68,8 @@ class AutoDiff():
         ========
         A list of Vector variables
 
-        NOTES
-        =====
-
-        POST:
-            returns a list of vector variables with value defined in vals
         '''
         vectors = [None] * len(vals)
         for i in range(len(vals)):
             vectors[i] = Vector(vals[i])
         return vectors
-
