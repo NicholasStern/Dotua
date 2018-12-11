@@ -1,4 +1,4 @@
-from Dotua.rscalar import rScalar
+from Dotua.nodes.rscalar import rScalar
 
 class rAutoDiff():
     def __init__(self):

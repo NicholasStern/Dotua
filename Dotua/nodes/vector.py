@@ -1,5 +1,5 @@
 import numpy as np
-from .node import Node
+from Dotua.nodes.node import Node
 
 
 class Vector(Node):

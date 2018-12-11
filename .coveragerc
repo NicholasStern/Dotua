@@ -3,10 +3,10 @@ branch = TRUE
 omit =
   */docs/*
   */tests/*
-  Dotua/node.py
+  Dotua/nodes/node.py
 
 [report]
 omit =
     */docs/*
     */tests/*
-    Dotua/node.py
+    Dotua/nodes/node.py
