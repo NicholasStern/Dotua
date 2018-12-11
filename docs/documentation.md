@@ -84,61 +84,83 @@ from Dotua.autodiff import AutoDiff as ad
 
 The general workflow for the user is as follows:
 - Instantiate all variables as AutoDiff objects.
-- Input these variables into operators from the Operator class within the Dotua library to create more complex expressions that propagate the derivative using forward mode.
+- Input these variables into operators from the **Operator** class within the
+Dotua library to create more complex expressions that propagate the derivative
+using forward mode automatic differentiation.
 
-The AutoDiff class is the core constructor for all variables in the function that are to be differentiated. There are two options for instantiating variables: Scalar and Vector, generated with create_scalar and create_vector respectively. Scalar variables have a single value per variable, while Vector variables can have multiple associated values. The general schematic for how the user shall instantiate AutoDiff objects is outlined below:
+The **AutoDiff** class is the core constructor for all variables in the function
+that are to be differentiated. There are two options for instantiating
+variables: **Scalar** and **Vector**, generated with *create_scalar()* and *create_vector()* respectively. **Scalar** variables have a single value per
+variable, while **Vector** variables can have multiple associated values. The
+general schematic for how the user shall instantiate **AutoDiff** objects is
+outlined below:
 
-1. Create either a Scalar or Vector AutoDiff object to generate seed variables to later build the function to be differentiated. The initialization works as follows:
+1. Create either a **Scalar** or **Vector AutoDiff** object to generate seed
+variables to later build the function to be differentiated. The initialization
+works as follows:
 
 ```python
-x, y = ad.create_scalar(vals = [1,2])
-z = ad.create_vector(vals = [1,2,3])
+x, y = ad.create_scalar(vals = [1, 2])
+z = ad.create_vector(vals = [1, 2, 3])
 ```
 
-2. Next, the user shall import the Operator class and pass in these variables into elementary functions as follows:
+2. Next, the user shall import the **Operator** class and pass in these
+variables into elementary functions as follows:
 
 ```python
 from Dotua.operator import Operator as op
-result = op.sin(x*y)
+result = op.sin(x * y)
 results = op.sin(z)
 ```
 
 Simple operators, such as sums and products, can be used normally:
 ```python
-result = 6*x
+result = 6 * x
 results = z + 4
 ```
 
-3. Finally, (as a continuation of the previous example), the user may access the value and derivative of a function using the .eval() method:
+3. Finally, (as a continuation of the previous example), the user may access the value and derivative of a function using the *eval()* method:
 
 ```python
 print(result.eval())
 ```
-For scalars, result.eval() will return a tuple of (value, jacobian) where the jacobian is an array of partial derivatives of the function with respect to each scalar variable that was intialized at the same time. For vectors, results.eval() returns a list of tuples (value, jacobian), with one tuple for each function in the vector.
+For **Scalar** variables, *result.eval()* will return a tuple of
+(value, jacobian) where the jacobian is a dictionary of partial derivatives of
+the function with respect to each scalar variable that was intialized at the
+same time. For **Vector** variables, *results.eval()* returns a list of tuples
+(value, jacobian), with one tuple for each function in the vector.
 
 #### Reverse Mode
 
-The initialization for reverse mode variables is very similar to forward mode. The only difference is that there is an "r" in front of the
-module names. It is, however, important to note that there is no vector equivalent for the reverse mode implementation.
+The initialization for reverse mode variables is very similar to forward mode.
+The only difference is that there is an "r" in front of the module names. It is, however, important to note that there is no vector equivalent for the reverse
+mode implementation. Additionally, for the initialization of reverse mode
+variables, the user must instatiate an initializer object.  This differs
+from the forward mode variables which can be initialized using statimethods.
 One can initialize a reverse mode scalar object as follows:
 
 ```python
 from Dotua.rautodiff import rAutoDiff as rad
-x, y, z = rad.create_rscalar([1,2,3])
+rad_initializer = rad()
+x, y, z = rad_initializer.create_rscalar([1, 2, 3])
 ```
 
-In reverse mode, when the user calls the gradient function, they must specify the variable they would like to differentiate with respect to.
-This time, the gradient function simple returns a constant. An example of this is shown below:
+In reverse mode, when the user calls the gradient function, they must specify
+the variable they would like to differentiate with respect to. This time, the
+gradient function simple returns a numeric constant. An example of this is shown
+below:
 
 ```python
 f = x + y + z
-f_gradx = rad.partial(f, x)
+f_gradx = rad_initializer.partial(f, x)  # f_gradx = 1
 ```
 
 ### Examples
-There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the Dotua package can be used, and also serves as a comparison to numpy functions to prove its efficacy.
+There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the Dotua package can be used, and also serves
+as a comparison to NumPy functions to prove its efficacy.
 
-The second file is an interactive jupyter notebook which contains an example use case where the Dotua package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
+The second file is an interactive jupyter notebook which contains an example use
+case where the Dotua package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
 
 ![](images/newton.png)
 
@@ -262,9 +284,9 @@ ideas:
 
 With these goals in mind, the Dotua forward mode implementation relies on
 the **Nodes** modules and the **Operator** class and allows user interface
-through the AutoDiff class which serves as a **Node** factory for initializing instances of *Scalar* and *Vector*.  Analogously, the Dotua reverse mode
+through the **AutoDiff** class which serves as a **Node** factory for initializing instances of *Scalar* and *Vector*.  Analogously, the Dotua reverse mode
 implementation relies on the **Nodes** module and the **rOperator** class
-and facilitates user interface through the rAutoDiff class which serves as a
+and facilitates user interface through the **rAutoDiff** class which serves as a
 factory for initializing instances of *rScalar*.
 
 ## Nodes
@@ -298,30 +320,33 @@ class Node():
 ```
 
 Essentially, the role of the *Node* class (which in abstract terms is meant to
-represent a node in the computational graph underlying forwwrd mode automatic differentiation
-of user defined expressions) is to serve as an interface for two other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses implements the required operator overloading as necessary for scalar and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.).
-This logic is separated into two separate classes to provide increased organization for higher dimensional functions and to allow class methods to use assumptions of specific properties of scalars and vectors to reduce implementation complexity.
+represent a node in the computational graph underlying forward mode automatic differentiation of user defined expressions) is to serve as an interface for two
+other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses implements the required operator overloading as necessary for scalar
+and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.). This logic is separated into two separate classes to
+provide increased organization for higher dimensional functions and to allow
+class methods to use assumptions of specific properties of scalars and vectors
+to reduce implementation complexity.
 
 Both the *Scalar* class and the *Vector* class have *_val* and *_jacobian* class attributes which allow for forward automatic differentiation by keeping track of
 each node's value and derivative.
 
-The **Nodes** package also contains tehe *rScalar* class which can be used for
-reverse mode automatic differentiation.
+The **Nodes** package also contains the *rScalar* class which can be used for
+reverse mode automatic differentiation.  However, it should be noted that
+*rScalar* does not inherit from or fulfill the *Node* class abstract interface.
 
 ### Scalar
-The *Scalar* class is used for user defined one-dimensional variables for which
-users intend to use forward mode automatic differentiation to calculate
-derivatives.  Specifically, users can define functions of scalar variables (i.e., functions defined over multiple scalar variables with a one-dimensional
-codomain) using instances of *Scalar* in order to simultaneously calculate the
-function value and first derivative at a pre-chosen point of evaluation.
-Objects of the *Scalar* class are initialized with a value (i.e., the point of evaluation) which is stored in the class attribute **self._val** (n.b., as the
-single underscore suggests, this attribute should not be directly accessed or
-modified by the user).  Additionally, *Scalar* objects – which could be either individual scalar variables or expressions of scalar variables – keep track of
-their own derivatives in the class attribute **self._jacobian**.
-This derivative is implemented as a dictionary with *Scalar* objects serving
-as the keys and real numbers as values.  Note that each *Scalar* object's
-**_jacobian** attribute has an entry for all scalar variables which the object
-might interact with (see AutoDiff Initializer section for more information).
+The *Scalar* class is used for user defined one-dimensional variables.
+Specifically, users can define functions of scalar variables (i.e., functions
+defined over multiple scalar variables with a one-dimensional codomain) using
+instances of *Scalar* in order to simultaneously calculate the function value
+and first derivative at a pre-chosen point of evaluation using forward mode
+automatic differentiation. Objects of the *Scalar* class are initialized with a
+value (i.e., the point of evaluation) which is stored in the class attribute **self._val** (n.b., as the single underscore suggests, this attribute should
+not be directly accessed or modified by the user).  Additionally, *Scalar*
+objects – which could be either individual scalar variables or expressions of
+scalar variables – keep track of their own derivatives in the class attribute **self._jacobian**. This derivative is implemented as a dictionary with *Scalar* objects serving as the keys and real numbers as values.  Note that each *Scalar* object's **_jacobian** attribute has an entry for all scalar variables which the
+object might interact with (see AutoDiff Initializer section for more
+information).
 
 Users interact with *Scalar* objects in two ways:
 1. **eval(self)**: This method allows users to obtain the value and derivative
@@ -346,40 +371,38 @@ multiplication, division, exponentiation, and negation.
 
 The *rScalar* class is the reverse mode automatic differentiation analog of
 the *Scalar* class.  That is to say, *rScalar* is used for user defined
-one-dimensional variables for which users intend to use reverse mode automatic differentiation to calculate
-derivatives.  Specifically, users can define functions of scalar variables (i.e., functions defined over multiple scalar variables with a one-dimensional
-codomain) using instances of *rScalar* in order to calculate the function value
-and later easily determine the gradient of this function (see rAutoDiff
-Initializer for more details).  Objects of the *rScalar* class are initialized
-with a value (i.e., the point of evaluation) which is stored in the class attribute **self._val** (n.b., as the
+one-dimensional variables with which users can define scalar functions (i.e.,
+functions defined over multiple scalar variables with a one-dimensional
+codomain) in order to calculate the function value and later easily determine
+the function's gradient reverse mode automatic differentiation (see the
+rAutoDiff Initializer section for more details).  Objects of the *rScalar*
+class are initialized with a value (i.e., the point of evaluation) which is
+stored in the class attribute **self._val** (n.b., as the
 single underscore suggests, this attribute should not be directly accessed or
-modified by the user).  Additionally, *rScalar* objects – which could be either individual scalar variables or expressions of scalar variables – keep
+modified by the user).  Additionally, *rScalar* objects – which could be either individual scalar variables or expressions of scalar variables – explicitly
+construct the computational graph used in automatic differentiation in the class
+attribute **self.parents()**.  This attribute represents the computational graph
+as a list of tuples of the form (parent, value) where parent is an *rScalar*
+object and value is the derivative of the function represented by parent
+with respect to the variable represented by the *rScalar* *self*.  This list
+is constructed implicitly through operator overloading whenever the user
+defines functions using *rScalar* objects.
 
+Users interact with *Scalar* objects in one way:
+1. **eval(self)**: This method allows users to obtain the value
+for an *rScalar* object at the point of evaluation defined when the user first
+initialized the *rScalar* object.  Specifically, this method returns the value
+of the attribute **self._val**.
 
-keep track of
-their own derivatives in the class attribute **self._jacobian**.
-This derivative is implemented as a dictionary with *Scalar* objects serving
-as the keys and real numbers as values.  Note that each *Scalar* object's
-**_jacobian** attribute has an entry for all scalar variables which the object
-might interact with (see AutoDiff Initializer section for more information).
-
-Users interact with *Scalar* objects in two ways:
-1. **eval(self)**: This method allows users to obtain the value and derivative
-for a *Scalar* object at the point of evaluation defined when the user first
-initialized their *Scalar* objects.  Specifically, this method returns a tuple
-of **self._val** and **self._jacobian**.
-2. **partial(self, var)**: This method allows users to obtain a partial
-derivative of the given *Scalar* object with respect to **var**.  If **self**
-is one of the *Scalar* objects directly initialized by the user (see AutoDiff Initializer section), then **partial()** returns 1 if **var == self** and 0
-otherwise.  If **self** is a *Scalar* object formed by an expression of other
-*Scalar* objects (e.g., **self = Scalar(1) + Scalar(2)**), then this method returns the correct partial
-derivative of **self** with respect to **var**.
-
-Note that these are the only methods that users should be calling for *Scalar*
+Note that this is the only method that users should be calling for *rScalar*
 objects and that users should not be directly accessing any of the object's
-class attributes.
+class attributes.  While the *rScalar* class contains a *gradient()* method,
+this method is for internal use only.  Users should only be obtaining the
+derivatives of functions represented by *rScalar* objects through the
+*partial()* method provided in the *rAutoDiff* initializer class (see rAutoDiff
+Initializer section for more details).
 
-*Scalar* objects support left- and right-sided addition, subtraction,
+*rScalar* objects support left- and right-sided addition, subtraction,
 multiplication, division, exponentiation, and negation.
 
 
@@ -392,10 +415,10 @@ For *Vector* class, the elementary functions such as exponential functions and t
 
 The AutoDiff class functions as a **Node** factory, allowing the user to initialize
 variables for the sake of constructing arbitray functions.  Because the **Node**
-class serves only as an interface for the *Scalar* and *Vector* classes, we do not
-want users to instantiate objects of the *Node* class directly.  Thus, we
-define the *AutoDiff* class in the following way to allow users only to
-initialize *Scalar* and *Vector* variables:
+class serves only as an interface for the *Scalar* and *Vector* classes, users
+should not instantiate objects of the *Node* class directly.  Thus, we
+define the *AutoDiff* class in the following way to allow users to initialize
+*Scalar* and *Vector* variables:
 
 ```Python
 from Dotua.nodes.scalar import Scalar
@@ -427,7 +450,7 @@ class AutoDiff():
 Using the *create_scalar* and *create_vector* methods, users are able to
 initialize variables for use in constructing arbitrary functions.  Additionally,
 users are able to specify initial values for these variables.  Creating variables
-in this way will ensure that users are able to use the AutoDiff defined
+in this way will ensure that users are able to use the Dotua defined
 operators to both evaluate functions and compute their derivatives.
 
 ### Variable Universes
@@ -442,24 +465,25 @@ being used by the user.  This greatly reduces implementation complexity.
 This design choice should not restrict users in their construction of arbitrary
 functions for the reason that in order to define a function, the user must
 know how many primitive scalar variables they need to use in advance.  Realize
-that this not mean that a user is prevented from defining new Python variables
-as functions of previously created *Scalar* objects, but only that a user, in
-defining a mathematical function **f(x, y, z)** must initialize **x, y, and z**
-with a single call to **create_scalar**.  It is perfectly acceptable that in the
-definition of **f(x, y, z)** a Python variable such as **a = x + y** is created.
-The user is guaranteed that **a.eval()** and **a.partial(x), a.partial(y),
-and a.partial(z)** are all well defined and correct because **a** in this case
-is an instance of *Scalar*; however, it is not a "primitive" scalar variable and
-thus the user could not take a partial derivative with respect to **a**.
+that this does not mean that a user is prevented from defining new Python
+variables as functions of previously created *Scalar* objects, but only that a
+user, in defining a mathematical function **f(x, y, z)** must initialize
+**x, y, and z** with a single call to **create_scalar**.  It is perfectly
+acceptable that in the definition of **f(x, y, z)** a Python variable such as
+**a = x + y** is created. The user is guaranteed that **a.eval()** and
+**a.partial(x), a.partial(y), and a.partial(z)** are all well defined and correct because **a** in this case is an instance of *Scalar*; however, it is not a
+"primitive" scalar variable and thus the user could not take a partial
+derivative with respect to **a**.
 
 ## rAutoDiff Initializer
 
-The rAutoDiff class functions as a **Node** factory, allowing the user to initialize
-variables for the sake of constructing arbitray functions.  Because the **Node**
-class serves only as an interface for the *Scalar* and *Vector* classes, we do not
-want users to instantiate objects of the *Node* class directly.  Thus, we
-define the *AutoDiff* class in the following way to allow users only to
-initialize *Scalar* and *Vector* variables:
+The rAutoDiff class functions as an **rScalar** factory, allowing the user to
+initialize variables for the sake of constructing arbitray functions of which
+they want to later determine the derivative using reverse mode automatic
+differentiation.  Because the same *rScalar* variables can be used to define
+multiple functions, users must instantiate an rAutoDiff object to manage
+the *rScalar* objects they create and calcuate the gradients of different
+functions of the same variables.  Thus, we define the *rAutoDiff* class in the following ways:
 
 ```Python
 from Dauto.nodes.rscalar import rScalar
@@ -469,55 +493,44 @@ class rAutoDiff():
         self.func = None
         self.universe = []
 
-    @staticmethod
     def create_rscalar(vals):
         '''
         @vals denotes the evaluation points of variables for which the user
-        would like to create Scalar variables.  If @vals is a list,
-        the function returns a list of Scalar variables with @vals
-        values.  If @vals is a single value, the user receives a single Scalar
-        variable (not as a list).  This function also initializes the jacobians
-        of all variables allocated.
+        would like to create rScalar variables.  If @vals is a list,
+        the function returns a list of rScalar variables with @vals
+        values.  If @vals is a single value, the user receives a single rScalar
+        variable (not as a list).  This function also adds the new rScalar
+        object(s) to the _universe of the rAutoDiff object.
         '''
         pass
 
-    @staticmethod
-    def create_vector(vals):
+    def partial(self, func, var):
         '''
-        The idea is similar to create_scalar.
-        This will allow the user to create vectors and specify initial
-        values for the elements of the vectors.
+        This method allows users to calculate the derivative of @func the
+        function of rScalar objects with respect to the variable represented
+        by the rScalar @var.  This method also sets the self.func attribute
+        of the rAutoDiff object to the given @func.
+        '''
+        pass
+
+    def _reset_universe(self, var):
+        '''
+        This method is for internal use only.  When a user calls partial(),
+        the rAutoDiff object will first call _reset_universe() to reset then
+        grad_val variables of the necessary rScalar objects before
+        calculating the desired derivative.
         '''
         pass
 ```
 
-Using the *create_scalar* and *create_vector* methods, users are able to
-initialize variables for use in constructing arbitrary functions.  Additionally,
-users are able to specify initial values for these variables.  Creating variables
-in this way will ensure that users are able to use the AutoDiff defined
-operators to both evaluate functions and compute their derivatives.
-
-### Variable Universes
-
-The implementaiton of the AutoDiff library makes the following assumption:
-for each environment in which the user uses autodifferentiable variables
-(i.e., *Scalar* and *Vector* objects), the user initializes all such variables
-with a single call to **create_scalar** or **create_vector**.  This assumption
-allows *Scalar* and *Vector* objects to fully initialize their jacobians before
-being used by the user.  This greatly reduces implementation complexity.
-
-This design choice should not restrict users in their construction of arbitrary
-functions for the reason that in order to define a function, the user must
-know how many primitive scalar variables they need to use in advance.  Realize
-that this not mean that a user is prevented from defining new Python variables
-as functions of previously created *Scalar* objects, but only that a user, in
-defining a mathematical function **f(x, y, z)** must initialize **x, y, and z**
-with a single call to **create_scalar**.  It is perfectly acceptable that in the
-definition of **f(x, y, z)** a Python variable such as **a = x + y** is created.
-The user is guaranteed that **a.eval()** and **a.partial(x), a.partial(y),
-and a.partial(z)** are all well defined and correct because **a** in this case
-is an instance of *Scalar*; however, it is not a "primitive" scalar variable and
-thus the user could not take a partial derivative with respect to **a**.
+By instantiating an *rAutoDiff* object and using the *create_rscalar* method,
+users are able to initialize varibales for use in constructing arbitrary
+functions. Additionally, users are able to specify initial values for these
+variables. Creating variables in this way will ensure that users are able to
+use the Dotua defined operators to both evaluate functions and compute their
+derivatives.  Furhtermore, using the *partial* method, users are able to
+determine the derivative of their constructed function with respect to
+a specified *rScalar* variable.
 
 ## Operator
 
@@ -565,6 +578,40 @@ overhead involved in ...  Thus, by separating the imlpementations of forward
 and reverse automatic differentiation, Dotua avoids these performance
 issues. -->
 
+## A Note on Comparisons
+
+It is important to note that the Dotua library intentionally does not overload
+comparison operators for its variables classs (i.e., *Scalar*, *rScalar*, and
+*Vector*).  Users should only use the the equality and inequality operators == and !=
+to determine object equivalence.  For users wishing to perform comparisons on
+the values of functions or variables composes of *Scalar*, *rScalar*, or
+*Vector* variables with the values of functions or variables of the same type,
+they can do so in the following manner:
+
+### Scalar Comparisons
+
+The values of *Scalar* variables should be compared by first obtaining the
+*Scalar* object's value with a call to **eval()** and then performing any
+desired numeric comparison on the first object in the tuple returned using the
+standard comparison operators for numeric types in Python.  The derivatives of functions of *Scalar* variables can be compared as any other dictionaries
+are compared in Python.
+
+### rScalar Comparisons
+
+The values of *rScalar* variables should be compared by first obtaining the
+*Scalar* object's value with a call to **eval()** and then performing any
+desired numeric comparison on the value returned using the
+standard comparison operators for numeric types in Python.  Users can compare
+the derivatives of functions defined using rScalars by using the rAutoDiff
+partial method to form any desired gradient and then performing comparisons
+using the standard numeric comparison operators.
+
+### Vector Comparisons
+
+
 ## External Depencies
 
-This project aims to restrict dependencies on third-party libraries to the necessary minimum. Thus, the application will be restricted to using NumPy as necessary for mathematical computation (e.g., trigonometric functions). The test suite will use pytest and pytest-cov to perform unit testing and coverage analysis of such testing.
+Dotua restricts dependencies on third-party libraries to the necessary
+minimum. Thus, the only external dependencies are NumPy, pytest, and pytest-cov.
+NumPy is used as necessary within the library for mathematical computation (e.g., trigonometric functions).  Additionally, pytest and pytest-cov are used to
+perform unit testing and coverage analysis of such testing.
