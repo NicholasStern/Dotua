@@ -917,7 +917,7 @@ class Element():
         ========
         a tuple of value and derivative of this Element class instance
         """
-        return (self._val, list(self._der))
+        return self._val
 
 
 class Counter(dict):

@@ -56,14 +56,14 @@ f_38 = 1 - d[0]
 f_39 = d[0] ** d[1]
 
 def test_add():
-	assert(f_1.eval() == (3, [1,1]))
+	assert(f_1.eval() == 3)
 	try:
 		f = x[0] + y[0]
 	except TypeError:
 		pass
 
 def test_sub():
-	assert(f_2.eval() == (-6, [1,-2]))
+	assert(f_2.eval() == -6)
 	assert(f_38.eval() == (-1, [-1,0]))
 	assert(f_39.eval() == (4, [4,4*np.log(2)]))
 	try:
@@ -73,7 +73,7 @@ def test_sub():
 	print(f_38)
 
 def test_mul():
-	assert(f_3.eval() == (-3, [-3,0]))
+	assert(f_3.eval() == -3)
 	try:
 		f = x[0] * y[0]
 	except TypeError:
@@ -84,10 +84,10 @@ def test_devide():
 		f = x[0] / y[0]
 	except TypeError:
 		pass
-	assert(f_4.eval() == (-4, [-2,-3.5]))
+	assert(f_4.eval() == -4)
 
 def test_pow():
-	assert(f_5.eval() == (3, [1,1]))
+	assert(f_5.eval() == 3)
 	try:
 		f = x[0] ** y[0]
 	except TypeError:
@@ -145,12 +145,12 @@ def test_repr():
 
 # Define a vector function and get a jacobian of the vector function to vector
 
-f = [f_1, f_2, f_3, f_4, f_5]
-jacobian = []
+#f = [f_1, f_2, f_3, f_4, f_5]
+#jacobian = []
 
-for function in f:
-	jacobian.append(function.eval()[1])
+#for function in f:
+	#jacobian.append(function.eval()[1])
 
-def test_jacobian():
-	assert(jacobian == [[1,1], [1,-2], [-3,0], [-2,-3.5], [1,1]])
+#def test_jacobian():
+	#assert(jacobian == [[1,1], [1,-2], [-3,0], [-2,-3.5], [1,1]])
 
