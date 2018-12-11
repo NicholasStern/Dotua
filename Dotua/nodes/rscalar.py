@@ -69,7 +69,7 @@ class rScalar():
             for parent, val in self.parents:
                 self.grad_val += parent.gradient() * val
         return self.grad_val
-
+        
     def __add__(self, other):
         """
         Return an rScalar object whose value is the sum of self and other.

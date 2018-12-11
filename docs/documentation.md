@@ -119,16 +119,17 @@ result = 6 * x
 results = z + 4
 ```
 
-3. Finally, (as a continuation of the previous example), the user may access the value and derivative of a function using the *eval()* method:
+3. Finally, (as a continuation of the previous example), the user may access the value and derivative of a function using the *eval()* and *partial()* methods:
 
 ```python
-print(result.eval())
+print(result.eval())  # 6
+print(result.partial(x))  # 6
+print(result.partial(y))  # 0
 ```
-For **Scalar** variables, *result.eval()* will return a tuple of
-(value, jacobian) where the jacobian is a dictionary of partial derivatives of
-the function with respect to each scalar variable that was intialized at the
-same time. For **Vector** variables, *results.eval()* returns a list of tuples
-(value, jacobian), with one tuple for each function in the vector.
+For **Scalar** variables, *result.eval()* will return the value of the function,
+while *result.partial(v)* will return the partial derivative with respect to any variable, *v*. For **Vector** variables, *results.eval()* returns a list of tuples
+(value, jacobian), with one tuple for each function in the vector. The jacobian is a dictionary that represents the 
+derivative of that element with respect to all of the elements in the vector.
 
 #### Reverse Mode
 
