@@ -1,5 +1,6 @@
 import numpy as np
 from Dotua.nodes.node import Node
+from Dotua.nodes.scalar import Scalar
 
 
 class Vector(Node):
@@ -28,9 +29,19 @@ class Vector(Node):
         """
         self._val = np.array(val)
         self._jacobian = der * np.eye(len(val))
+        scalars = [None] * len(val)
+        for i in range(len(val)):
+            scalars[i] = Scalar(val[i])
+
+            # Initialize the jacobians
+        for var in scalars:
+            var.init_jacobian(scalars)
+        self._scalars = scalars
 
     def __getitem__(self, idx):
-        return Element(self._val[idx], self._jacobian[idx], self)
+        #return Element(self._val[idx], self._jacobian[idx], self)
+        return self._scalars[idx]
+
 
     def __add__(self, other):
         """
@@ -615,294 +626,6 @@ class Vector(Node):
 
     def eval(self):
         return list(self._val)
-
-class Element():
-    def __init__(self, val, der, vector):
-        """
-        Returns Element class instance
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        val: values of Element class instnaces
-        der: derivatives of Element class instances
-        vector: vector to which the Element class instances belong
-
-        RETURNS
-        ========
-        a list of Element class instance
-        """
-
-        self._val = val
-        self._der = der
-        self._vector = vector
-
-    def __add__(self, other):
-        """
-        Returns the sum of the two Element class instances
-
-        INPUTS
-        =======
-        self: this class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        try:
-            value = self._val + other._val
-            derivative = self._der + other._der
-        except AttributeError:
-            value = self._val + other
-            derivative = self._der
-            return Element(value, derivative, self._vector)
-        else:
-            if self._vector == other._vector:
-                return Element(value, derivative, self._vector)
-            else:
-                print('Elements from different vectors are not allowed to go together')
-                raise TypeError
-
-    def __radd__(self, other):
-        """
-        Returns the sum of the two Element class instances
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        return self + other
-
-    def __neg__(self):
-        """
-        Returns the product of -1 and this Element class instance
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        return Element(- self._val, - self._der, self._vector)
-
-    def __sub__(self, other):
-        """
-        Returns the difference of the two Element class instances
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        try:
-            value  = self._val - other._val
-        except AttributeError:
-            return Element(self._val - other, self._der, self._vector)
-        else:
-            if self._vector == other._vector:
-                return self + other.__neg__()
-            else:
-                print('Elements from different vectors are not allowed to go together')
-                raise TypeError
-
-
-    def __rsub__(self, other):
-        """
-        Returns the difference of the two Element class instances
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        return self.__neg__() + other
-
-    def __mul__(self, other):
-        """
-        Returns the product of the two Element class instances
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        try:
-            value = self._val * other._val
-            derivative = self._der * other._val + self._val * other._der
-        except AttributeError:
-            value = self._val * other
-            derivative = self._der * other
-            return Element(value, derivative, self._vector)
-        else:
-            if self._vector == other._vector:
-                return Element(value, derivative, self._vector)
-            else:
-                print('Elements from different vectors are not allowed to go together')
-                raise TypeError
-
-    def __rmul__(self, other):
-        """
-        Returns the sum of the two Element class instances
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        return self * other
-
-    def __truediv__(self, other):
-        """
-        Returns the quotient of self devided by other
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        try:
-            val_other = other._val
-        except AttributeError:
-            val_other = other
-            value = self._val / val_other
-            return Element(value, self._der / val_other, self._vector)
-        else:
-            if self._vector == other._vector:
-                val_other = other._val
-                value = self._val / val_other
-                return Element(value, self._der / val_other - other._der * self._val / (val_other * val_other), self._vector)
-            else:
-                print('Elements from different vectors are not allowed to go together')
-                raise TypeError
-
-    def __rtruediv__(self, other):
-        """
-        Returns the quotient of other devided by self
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-
-        NOTES
-        ======
-        This method can assume that other is not an instance of Vector because
-        otherwise the division of other and self would be handled by the
-        overloading of __truediv__ for the other object.
-        """
-        val_other = other
-        value = val_other / self._val
-        return Element(value, - val_other * self._der / (self._val * self._val), self._vector)
-
-
-    def __repr__(self):
-        """
-        Returns representation of Element class
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-
-        RETURNS
-        ========
-        a representation of the Element class
-        """
-        representation = 'Vector Element with value {} and derivative {}'.format(self._val, self._der)
-        return representation
-
-    def __pow__(self, other):
-        """
-        Returns the other's th power of self
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-        """
-        try:
-            val_other = other._val
-        except AttributeError:
-            val_other  = other
-            return Element(self._val ** val_other, val_other * self._val ** (val_other - 1) * self._der, self._vector)
-        else:
-            if self._vector == other._vector:
-                return Element(self._val ** val_other, self._val ** val_other * (val_other / self._val * self._der + np.log(self._val) * other._der), self._vector)
-            else:
-                print("Elements from different vectors are not allowed to go together")
-
-    def __rpow__(self, other):
-        """
-        Returns the self's th power of other
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-        other: constant or Element class instance, compulsory
-
-        RETURNS
-        ========
-        Element class instance
-
-        NOTES
-        ======
-        This method can assume that other is not an instance of Vector because
-        otherwise the exponentiation of other and self would be handled by the
-        overloading of __pow__ for the other object.
-        """
-        val_other  = other
-        return Element(val_other ** self._val, val_other ** self._val * np.log(val_other) * self._der, self._vector)
-
-    def eval(self):
-        """
-        Returns value and derivative of Element class instance
-
-        INPUTS
-        =======
-        self: this  class instance, compulsory
-
-        RETURNS
-        ========
-        a tuple of value and derivative of this Element class instance
-        """
-        return (self._val, list(self._der))
-
 
 class Counter(dict):
     """

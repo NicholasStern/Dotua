@@ -61,7 +61,6 @@ class Scalar(Node):
         variables in the 'universe'.
         """
         self._jacobian = {node: int(id(self) == id(node)) for node in nodes}
-        print(self._jacobian)
 
     def eval(self):
         """
