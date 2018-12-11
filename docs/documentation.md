@@ -486,7 +486,7 @@ the *rScalar* objects they create and calcuate the gradients of different
 functions of the same variables.  Thus, we define the *rAutoDiff* class in the following ways:
 
 ```Python
-from Dauto.nodes.rscalar import rScalar
+from Dotua.nodes.rscalar import rScalar
 
 class rAutoDiff():
     def __init__(self):
@@ -542,7 +542,7 @@ return new *Scalar* or *Vector* variables as appropriate.  The design of the
 
 ```Python
 import numpy as np
-from autodiff.nodes.scalar import Scalar
+from Dotua.nodes.scalar import Scalar
 
 class Operator():
     @staticmethod
@@ -565,6 +565,36 @@ corresponding NumPy method on the given argument
 (e.g., **op.sin(1) = np.sin(1)**).
 
 ## rOperator
+
+Similarly, the *rOperator* class defines static methods for elementary mathematical
+functions and operators (specifically those that cannot be overloaded in the
+*rScalar* class) that can be called by users in constructing arbitrary functions.  The *rOperator* class only imports the
+rScalar class in order to return new *rScalar* variables as appropriate.  The design of the
+*rOperator* class is as follows:
+
+```Python
+import numpy as np
+from Dotua.nodes.rscalar import rScalar
+
+class rOperator():
+    @staticmethod
+    def sin(x):
+        pass
+
+    @staticmethod
+    def cos(x):
+        pass
+
+    ... # Other elementary functions
+```
+
+Once again, for each method defined in the *rOperator* class, our implementation uses
+ducktyping to return the necessary object.  If user passes an *rScalar* object
+to one of the methods, then a new *rScalar* object is returned to the user
+with the correct value and parent/child link.  On the other hand, if the user passes
+a Python numeric type, then the method returns the evaluation of the
+corresponding NumPy method on the given argument
+(e.g., **rop.sin(1) = np.sin(1)**).
 
 <!-- ## A Note on Reverse Mode
 
