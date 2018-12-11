@@ -1,7 +1,8 @@
 import numpy as np
+from Dotua.nodes.rscalar import rScalar
 
 
-class rScalar():
+class rVector():
     """
     Allow user defined variables capable of reverse audotmatic differentiation.
 
@@ -39,28 +40,15 @@ class rScalar():
         self.val = val
         self.parents = []
         self.grad_val = None
+        rscalars = [None] * len(val)
+        for i in range(len(val)):
+            rscalars[i] = rScalar(vals[i])
+        self._universe += rscalars
+        self._rscalars =  rscalars
 
-    def eval(self):
-        """
-        Return the value self rScalar object.
+    def __getitem__(self, idx):
+        return self._rscalars[idx]
 
-        INPUTS
-        =======
-        self: rScalar class instance
-
-        RETURNS
-        =======
-        self._val: value of the user defined variable, user defined function,
-                   or intermediate node in the computational grpah represented
-                   by the self rScalar object
-
-        NOTES
-        ======
-        rScalar does not overload comparison operators so if users desire to
-        compare the values of different rScalar objects they should do so
-        by calling eval on each object to obtain the value.
-        """
-        return self.val
 
     def gradient(self):
         """
@@ -91,7 +79,7 @@ class rScalar():
             for parent, val in self.parents:
                 self.grad_val += parent.gradient() * val
         return self.grad_val
-        
+
     def __add__(self, other):
         """
         Return an rScalar object whose value is the sum of self and other.

@@ -8,7 +8,7 @@ init_jacobian once the entire 'universe' of variables has been defined
 '''
 # Define scalar objects
 vars = x, y = Scalar(1), Scalar(2)
-a, b = x.eval()[0], y.eval()[0]
+a, b = x.eval(), y.eval()
 for var in vars:
     var.init_jacobian(vars)
 
@@ -34,74 +34,87 @@ h_3 = x ** y
 
 def test_jacobian():
     # Test jacobians of scalar primitives
-    assert x.eval()[1] == {x: 1, y: 0}
-    assert y.eval()[1] == {x: 0, y: 1}
+    assert x.partial(x) == 1
+    assert x.partial(y) == 0
+    assert y.partial(y) == 1
+    assert y.partial(x) == 0
 
     # Test jacobians of functions with addition
-    assert f_1.eval()[1] == {x: 1, y: 1}
-    assert f_2.eval()[1] == {x: 1, y: 1}
+    assert f_1.partial(x) == 1
+    assert f_1.partial(y) == 1
+    assert f_2.partial(x) == 1
+    assert f_2.partial(y) == 1
 
     # Test jacobians of functions with subtraction
-    assert f_3.eval()[1] == {x: 1, y: -1}
-    assert f_4.eval()[1] == {x: -1, y: 1}
+    assert f_3.partial(x) == 1
+    assert f_3.partial(y) == -1
+    assert f_4.partial(x) == -1
+    assert f_4.partial(y) == 1
 
     # Test jacobians of functions with multiplication
-    assert f_5.eval()[1] == {x: 2, y: 1}
-    assert f_6.eval()[1] == {x: 2, y: 1}
+    assert f_5.partial(x) == 2
+    assert f_5.partial(y) == 1
+    assert f_6.partial(x) == 2
+    assert f_6.partial(y) == 1
 
     # Test jacobians of functions with division
-    assert f_7.eval()[1] == {x: 1/2, y: -1/4}
-    assert f_8.eval()[1] == {x: -2, y: 1}
+    assert f_7.partial(x) == 1/2
+    assert f_7.partial(y) == -1/4
+    assert f_8.partial(x) == -2
+    assert f_8.partial(y) == 1
 
     # Test jacobians of more complicated functions
-    assert g_1.eval()[1] == {x: 10, y: 1/2}
-    assert g_2.eval()[1] == {x: -4, y: 1/4}
+    assert g_1.partial(x) == 10
+    assert g_1.partial(y) == 1/2
+    assert g_2.partial(x) == -4
+    assert g_2.partial(y) == 1/4
 
     # Test jacobians for exponentials and deg > 1 polynomials
-    assert h_1.eval()[1] == {x: 2 * a, y: 0}
-    assert h_2.eval()[1] == {x: (2 ** a) * np.log(2), y: 0}
-
+    assert h_1.partial(x) == 2*a
+    assert h_1.partial(y) == 0
+    assert h_2.partial(x) == (2 ** a) * np.log(2)
+    assert h_2.partial(y) == 0
 
 def test_add():
-    assert f_1.eval()[0] == a + b
-    assert f_2.eval()[0] == a + b
+    assert f_1.eval() == a + b
+    assert f_2.eval() == a + b
 
     # Directly check commutativity
     assert f_1.eval() == f_2.eval()
 
     # Check addition with a constant
     radd = 5 + x
-    assert radd.eval()[0] == 5 + a
+    assert radd.eval() == 5 + a
 
 
 def test_subtract():
-    assert f_3.eval()[0] == a - b
-    assert f_4.eval()[0] == b - a
+    assert f_3.eval() == a - b
+    assert f_4.eval() == b - a
 
     # Check subtraction from a constant
     radd = 5 - x
-    assert radd.eval()[0] == 5 - a
+    assert radd.eval() == 5 - a
 
 
 def test_multiply():
-    assert f_5.eval()[0] == a * b
-    assert f_6.eval()[0] == a * b
+    assert f_5.eval() == a * b
+    assert f_6.eval() == a * b
 
     # Directly check commutativity
     assert f_5.eval() == f_6.eval()
 
 
 def test_divide():
-    assert f_7.eval()[0] == a / b
-    assert f_8.eval()[0] == b / a
+    assert f_7.eval() == a / b
+    assert f_8.eval() == b / a
 
 
 def test_power():
-    assert h_1.eval()[0] == a ** 2
-    assert h_2.eval()[0] == 2 ** a
-    assert h_3.eval()[0] == a ** b
+    assert h_1.eval() == a ** 2
+    assert h_2.eval() == 2 ** a
+    assert h_3.eval() == a ** b
 
 
 def test_other():
-    assert g_1.eval()[0] == 10 * a + b / 2 + 1000
-    assert g_2.eval()[0] == -2 * (a ** 2) - 1 / b
+    assert g_1.eval() == 10 * a + b / 2 + 1000
+    assert g_2.eval() == -2 * (a ** 2) - 1 / b

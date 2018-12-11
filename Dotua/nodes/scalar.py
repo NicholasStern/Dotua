@@ -85,7 +85,7 @@ class Scalar(Node):
         compare the values of different Scalar objects they should do so
         by calling eval on each object to obtain the value.
         """
-        return self._val, self._jacobian
+        return self._val
 
     def partial(self, var):
         """Return the derivative of self with respect to var."""

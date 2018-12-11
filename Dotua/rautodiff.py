@@ -1,4 +1,5 @@
 from Dotua.nodes.rscalar import rScalar
+from Dotua.nodes.rvector import rVector
 
 
 class rAutoDiff():
@@ -35,6 +36,37 @@ class rAutoDiff():
             rscalar = rScalar(vals)
             self._universe += [rscalar]
             return rscalar
+
+    def create_rvector(self, vals):
+        '''
+        Return rScalar object(s) with user defined value(s).
+
+        INPUTS
+        ======
+        vals: list of lists of floats, compulsory
+            Value of the list of Vector variables
+
+        RETURNS
+        ========
+        A list of Vector variables
+
+        NOTES
+        =====
+
+        POST:
+            returns a list of vector variables with value defined in vals
+        '''
+        try:
+            rvectors = [None] * len(vals)
+            for i in range(len(vals)):
+                rvectors[i] = rVector(vals[i])
+            self._universe += rvectors
+            return rvectors
+        except TypeError:
+            rvector = rVector(vals)
+            self._universe += [rvector]
+            return rvector
+
 
     def partial(self, func, var):
         '''
