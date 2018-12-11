@@ -1,5 +1,6 @@
 import numpy as np
 from Dotua.nodes.node import Node
+from Dotua.nodes.scalar import Scalar
 
 
 class Vector(Node):
@@ -28,9 +29,24 @@ class Vector(Node):
         """
         self._val = np.array(val)
         self._jacobian = der * np.eye(len(val))
+        try:
+            scalars = [None] * len(val)
+            for i in range(len(val)):
+                scalars[i] = Scalar(val[i])
+
+            # Initialize the jacobians
+            for var in scalars:
+                var.init_jacobian(scalars)
+            self._scalars = scalars
+        except TypeError:
+            scalar = Scalar(val)
+            scalar.init_jacobian([scalar])
+            self._scalars = [scalar]
 
     def __getitem__(self, idx):
-        return Element(self._val[idx], self._jacobian[idx], self)
+        #return Element(self._val[idx], self._jacobian[idx], self)
+        return self._scalars[idx]
+
 
     def __add__(self, other):
         """
