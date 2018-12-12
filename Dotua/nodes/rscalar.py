@@ -95,6 +95,7 @@ class rScalar():
                     if child._grad_val == 0:
                         child._grad_val += self._grad_val * val
                     child.gradient(input_var)
+
         except KeyError:
             raise ValueError("User attempted to differentiate a function " +
                              "respect to a variable on which it is not " +
@@ -126,7 +127,7 @@ class rScalar():
         """
         new_child = rScalar(self._val)
         try:
-            new_child += other._val
+            new_child._val += other._val
             # For each input variable on which self is defined
             new_child._roots = {input_var: [(self, 1)]
                                 for input_var in self._roots.keys()}
@@ -136,7 +137,6 @@ class rScalar():
                     new_child._roots[input_var] += [(other, 1)]
                 except KeyError:
                     new_child._roots[input_var] = [(other, 1)]
-            return new_child
         except AttributeError:
             new_child._val += other
             new_child._roots = {input_var: [(self, 1)]
@@ -181,7 +181,7 @@ class rScalar():
         """
         new_child = rScalar(self._val)
         try:
-            new_child *= other._val
+            new_child._val *= other._val
             # For each input variable on which self is defined
             new_child._roots = {input_var: [(self, other._val)]
                                 for input_var in self._roots.keys()}
@@ -227,7 +227,7 @@ class rScalar():
         """
         new_child = rScalar(self._val)
         try:
-            new_child /= other._val
+            new_child._val /= other._val
             # For each input variable on which self is defined
             new_child._roots = {input_var: [(self, 1 / other._val)]
                                 for input_var in self._roots.keys()}
@@ -304,7 +304,7 @@ class rScalar():
         """
         new_child = rScalar(self._val)
         try:
-            new_child **= other._val
+            new_child._val **= other._val
             # For each input variable on which self is defined
             new_child._roots = {input_var: [(self, other._val *
                                 self._val ** (other._val - 1))]

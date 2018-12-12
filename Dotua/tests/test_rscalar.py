@@ -11,7 +11,7 @@ different function
 '''
 
 
-# Define rscalar objects and constants
+# Define rScalar objects
 def generate():
     vars = rScalar(10), rScalar(20), rScalar(30)
     for var in vars:
@@ -19,6 +19,7 @@ def generate():
     return tuple(vars)
 
 
+# Define constants
 c_1, c2, c5 = -1, 2, 5
 
 

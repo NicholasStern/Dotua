@@ -1,3 +1,4 @@
+import numpy as np
 from Dotua.nodes.rscalar import rScalar
 from Dotua.nodes.rvector import rVector
 
@@ -5,7 +6,6 @@ from Dotua.nodes.rvector import rVector
 class rAutoDiff():
     def __init__(self):
         self._func = None
-        self._universe = []
 
     def create_rscalar(self, vals):
         '''
@@ -30,11 +30,11 @@ class rAutoDiff():
             rscalars = [None] * len(vals)
             for i in range(len(vals)):
                 rscalars[i] = rScalar(vals[i])
-            self._universe += rscalars
+                rscalars[i]._init_roots()
             return rscalars
         except TypeError:
             rscalar = rScalar(vals)
-            self._universe += [rscalar]
+            rscalar._init_roots()
             return rscalar
 
     def create_rvector(self, vals):
@@ -56,14 +56,16 @@ class rAutoDiff():
         POST:
             returns a list of vector variables with value defined in vals
         '''
-        rvectors = [None] * len(vals)
-        for i in range(len(vals)):
-            rvectors[i] = rVector(vals[i])
-            self._universe += [rvectors[i]]
-            for j in range(len(vals[i])):
-                self._universe += [rvectors[i][j]]
-        return rvectors
-
+        try:
+            rvectors = [None] * len(vals)
+            for i in range(len(vals)):
+                rvectors[i] = rVector(vals[i])
+                rvectors[i]._init_roots()
+            return rvectors
+        except TypeError:
+            rvector = rVector(vals)
+            rvector._init_roots()
+            return rvector
 
     def partial(self, func, var):
         '''
@@ -79,23 +81,17 @@ class rAutoDiff():
         A constant, which is the gradient of func with regarding to var
         '''
         if (self._func != func):
-            for item in self._universe:
-                self._reset_universe(item)
-            func.grad_val = 1
+            if self._func is not None:
+                self._reset_universe(func)
             self._func = func
         try:
-            var._rscalars
-        except AttributeError:
-            return var.gradient()
-        else:
-            try:
-                len(var.gradient())
-            except TypeError:
-                return [var.gradient()] * len(var.val)
-            else:
-                return var.gradient()
+            func._grad_val = np.zeros(len(var._grad_val)) + 1
+        except TypeError:
+            func._grad_val = 1
+        func.gradient(var)
+        return var._grad_val
 
-    def _reset_universe(self, var):
+    def _reset_universe(self, func):
         '''
         Reset gradients of nodes in computational graph before next computation
 
@@ -103,6 +99,11 @@ class rAutoDiff():
         =====
         var: user defined input variable (rScalar)
         '''
-        var.grad_val = None
-        for parent, _ in var.parents:
-            self._reset_universe(parent)
+        try:
+            func._grad_val = np.zeros(len(func._grad_val))
+        except TypeError:
+            func._grad_val = 0
+        for val in func._roots.values():
+            for child, _ in val:
+                if child is not None:
+                    self._reset_universe(child)
