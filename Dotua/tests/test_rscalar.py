@@ -235,7 +235,8 @@ def test_power():
 
     h._grad_val = 1
     h.gradient(x)
-    assert x._grad_val == -c2 * y._val ** z._val * x._val ** (c2 * y._val ** z._val - 1)
+    assert x._grad_val == \
+        -c2 * y._val ** z._val * x._val ** (c2 * y._val ** z._val - 1)
     h.gradient(y)
     assert y._grad_val == (-c2 * z._val * np.log(x._val) * y._val **
                            (z._val - 1) * x._val ** (c2 * y._val ** z._val))
