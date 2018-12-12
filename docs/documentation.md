@@ -67,7 +67,7 @@ One intuition for reverse mode auto differentiation is to consider again our cha
 
 One intuitive motivation for this (h/t [Rufflewind](https://rufflewind.com/2016-12-30/reverse-mode-automatic-differentiation)) is to think of reverse mode as an inversion of the chain-rule.
 
-In this notation, the derivative for some output variable w to some variable $t$ is a linear combination of derivatives for each u_i that w is connected to.
+In this notation, the derivative for some output variable w to some variable *t* is a linear combination of derivatives for each u_i that w is connected to.
 
 ![](images/forward_cr.png)
 
@@ -148,38 +148,46 @@ derivative of that element with respect to all of the elements in the vector.
 #### Reverse Mode
 
 The initialization for reverse mode variables is very similar to forward mode.
-The only difference is that there is an "r" in front of the module names. It is, however, important to note that there is no vector equivalent for the reverse
-mode implementation. Additionally, for the initialization of reverse mode
-variables, the user must instatiate an initializer object.  This differs
-from the forward mode variables which can be initialized using statimethods.
+The only difference is that there is an "r" in front of the module names. Additionally, for the initialization of reverse mode
+variables, the user must instantiate an initializer object.  This differs
+from the forward mode variables which can be initialized using static methods.
 One can initialize a reverse mode scalar object as follows:
 
 ```python
-from Dotua.rautodiff import rAutoDiff as rad
-rad_initializer = rad()
-x, y, z = rad_initializer.create_rscalar([1, 2, 3])
+from Dotua.rautodiff import rAutoDiff 
+rad = rAutoDiff()
+x, y, z = rad.create_rscalar([1, 2, 3])
 ```
 
 In reverse mode, when the user calls the gradient function, they must specify
 the variable they would like to differentiate with respect to. This time, the
-gradient function simple returns a numeric constant. An example of this is shown
+gradient function simply returns a numeric constant. An example of this is shown
 below:
 
 ```python
 f = x + y + z
-f_gradx = rad_initializer.partial(f, x)  # f_gradx = 1
+f_gradx = rad.partial(f, x)  # f_gradx = 1
+```
+
+The following code shows how the user may interact with rVector. Note that rVector operates
+differently in reverse mode, as it is mainly an extension to allow one to compute rScalar 
+functions for a vector of values. 
+
+```python
+v = rad.create_rvector([1, 2 ,3])
+g = 2*v
+g_grad = rad.partial(g, v)  # g_grad = [2, 2, 2]
 ```
 
 ### Examples
-There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. The first is a file called "driver.py" which provides further examples on how the Dotua package can be used, and also serves
-as a comparison to NumPy functions to prove its efficacy.
+There are several files in the top level directory of the Dotua package that demonstrate the usage of the package. 
 
-The second file is an interactive jupyter notebook which contains an example use
+The first file is an interactive jupyter notebook which contains an example use
 case where the Dotua package performs well, namely, the Newton-Raphson method for approximating roots of functions. This notebook is titled "newton_demo.ipynb" and resides in "examples" folder in the top level directory of the package. The output of this demo is reproduced here for convenience:
 
 ![](images/newton.png)
 
-A third file is an example of how our reverse mode auto differentiation package can be used to do backpropagation in a neural network. The file is called "neuralnet_demo.ipynb"
+A second file is an example of how our reverse mode auto differentiation package can be used to do backpropagation in a neural network. The file is called "neuralnet_demo.ipynb"
 
 For some output y_hat and set of inputs X, the task of a neural network is to find a function which minimizes a loss function, like MSE:
 
@@ -199,7 +207,7 @@ Here we implement a toy neural network that has only one hidden layer. Using R.A
 
 ### Directory Structure
 
-Our project will adhere to the directory structure outlined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html). At a high level (with exact names subject to change), the project will have the following structure:
+Our project will adhere to the directory structure outlined in the [python-packaging documentation](https://python-packaging.readthedocs.io/en/latest/index.html). At a high level, the project has the following structure:
 
 ```python
 Dotua/
@@ -251,7 +259,7 @@ It contains *AutoDiff* (autodiff.py), which is the driver of the forward mode au
 It also contains *rAutoDiff* (rautodiff.py), which is the driver of the reverse mode autodifferentiation. The driver helps the users with getting access to the *rScalar* class (rscalar.py) and *rVector* class (rvector.py) in the *nodes* file and the *rOperator* class (roperator.py).
 
 #### examples/
-The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema and an implementation of Neural Network for prediction problems.
+The **Examples** module has Python files with documented use cases of the library. Examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema and an implementation of Neural Network for prediction problems.
 
 #### tests/
 The **Tests** module contains the project’s testing suite and is formatted according to the pytest requirements for automatic test discovery.
@@ -351,18 +359,17 @@ class Node():
 
 Essentially, the role of the *Node* class (which in abstract terms is meant to
 represent a node in the computational graph underlying forward mode automatic differentiation of user defined expressions) is to serve as an interface for two
-other classes in the **Nodes** package: *Scalar* and *Vector*.  Each of these subclasses implements the required operator overloading as necessary for scalar
-and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.). This logic is separated into two separate classes to
+other classes in the **Nodes** package: *Scalar*, *Vector*, *rScalar*, *rVector*.  Each of these subclasses implements the required operator overloading as necessary for scalar
+and vector functions respectively (i.e., addition, multiplication, subtraction, division, power, etc.). This logic is separated into four separate classes to
 provide increased organization for higher dimensional functions and to allow
 class methods to use assumptions of specific properties of scalars and vectors
 to reduce implementation complexity.
 
 Both the *Scalar* class and the *Vector* class have *_val* and *_jacobian* class attributes which allow for forward automatic differentiation by keeping track of
-each node's value and derivative.
+each node's value and derivative. Both the *rScalar* class and the *rVector* class have *_roots* and *_grad_val* class attributes which allow for
+reverse auto differentiation by storing the computational graph and intermediate gradient value.
 
-The **Nodes** package also contains the *rScalar* class which can be used for
-reverse mode automatic differentiation.  However, it should be noted that
-*rScalar* does not inherit from or fulfill the *Node* class abstract interface.
+
 
 ### Scalar
 The *Scalar* class is used for user defined one-dimensional variables.
@@ -379,10 +386,9 @@ object might interact with (see AutoDiff Initializer section for more
 information).
 
 Users interact with *Scalar* objects in two ways:
-1. **eval(self)**: This method allows users to obtain the value and derivative
+1. **eval(self)**: This method allows users to obtain the value
 for a *Scalar* object at the point of evaluation defined when the user first
-initialized their *Scalar* objects.  Specifically, this method returns a tuple
-of **self._val** and **self._jacobian**.
+initialized their *Scalar* objects.  Specifically, this method returns the float **self._val**.
 2. **partial(self, var)**: This method allows users to obtain a partial
 derivative of the given *Scalar* object with respect to **var**.  If **self**
 is one of the *Scalar* objects directly initialized by the user (see AutoDiff Initializer section), then **partial()** returns 1 if **var == self** and 0
@@ -411,14 +417,13 @@ stored in the class attribute **self._val** (n.b., as the
 single underscore suggests, this attribute should not be directly accessed or
 modified by the user).  Additionally, *rScalar* objects – which could be either individual scalar variables or expressions of scalar variables – explicitly
 construct the computational graph used in automatic differentiation in the class
-attribute **self.parents()**.  This attribute represents the computational graph
-as a list of tuples of the form (parent, value) where parent is an *rScalar*
-object and value is the derivative of the function represented by parent
-with respect to the variable represented by the *rScalar* *self*.  This list
-is constructed implicitly through operator overloading whenever the user
+attribute **self.roots()**.  This attribute represents the computational graph
+as a dictionary where keys represent the children and the values represent the derivatives of the children 
+with respect to *rScalar* *self*. This dictionary
+is constructed explicitly through operator overloading whenever the user
 defines functions using *rScalar* objects.
 
-Users interact with *Scalar* objects in one way:
+Users interact with *rScalar* objects in one way:
 1. **eval(self)**: This method allows users to obtain the value
 for an *rScalar* object at the point of evaluation defined when the user first
 initialized the *rScalar* object.  Specifically, this method returns the value
@@ -439,12 +444,11 @@ multiplication, division, exponentiation, and negation.
 ### Vector
 *Vector* is a subclass of *Node*. Every vector variable consists of a 1-d numpy array to store the values and a 2-d numpy array to store the jacobian matrix.
 User can use index to acess specific element in a *Vector* instance. And operations between elements in the same vector instance and operations between vectors are implemented by overloading the operators of the class.
-For *Vector* class, the elementary functions such as exponential functions and trig functions have not been implemented in the operator class yet. (But basic operations such as '+', '-', '*', '/', '**' are supported for *Vector* class now.)
 
 ## AutoDiff Initializer
 
 The AutoDiff class functions as a **Node** factory, allowing the user to initialize
-variables for the sake of constructing arbitray functions.  Because the **Node**
+variables for the sake of constructing arbitrary functions.  Because the **Node**
 class serves only as an interface for the *Scalar* and *Vector* classes, users
 should not instantiate objects of the *Node* class directly.  Thus, we
 define the *AutoDiff* class in the following way to allow users to initialize
@@ -508,7 +512,7 @@ derivative with respect to **a**.
 ## rAutoDiff Initializer
 
 The rAutoDiff class functions as an **rScalar** factory, allowing the user to
-initialize variables for the sake of constructing arbitray functions of which
+initialize variables for the sake of constructing arbitrary functions of which
 they want to later determine the derivative using reverse mode automatic
 differentiation.  Because the same *rScalar* variables can be used to define
 multiple functions, users must instantiate an rAutoDiff object to manage
@@ -521,7 +525,6 @@ from Dotua.nodes.rscalar import rScalar
 class rAutoDiff():
     def __init__(self):
         self.func = None
-        self.universe = []
 
     def create_rscalar(vals):
         '''
@@ -543,7 +546,7 @@ class rAutoDiff():
         '''
         pass
 
-    def _reset_universe(self, var):
+    def _reset_universe(self, func, var):
         '''
         This method is for internal use only.  When a user calls partial(),
         the rAutoDiff object will first call _reset_universe() to reset then
@@ -554,11 +557,11 @@ class rAutoDiff():
 ```
 
 By instantiating an *rAutoDiff* object and using the *create_rscalar* method,
-users are able to initialize varibales for use in constructing arbitrary
+users are able to initialize variables for use in constructing arbitrary
 functions. Additionally, users are able to specify initial values for these
 variables. Creating variables in this way will ensure that users are able to
 use the Dotua defined operators to both evaluate functions and compute their
-derivatives.  Furhtermore, using the *partial* method, users are able to
+derivatives.  Furthermore, using the *partial* method, users are able to
 determine the derivative of their constructed function with respect to
 a specified *rScalar* variable.
 
@@ -573,6 +576,7 @@ return new *Scalar* or *Vector* variables as appropriate.  The design of the
 ```Python
 import numpy as np
 from Dotua.nodes.scalar import Scalar
+from Dotua.nodes.vector import Vector
 
 class Operator():
     @staticmethod
@@ -589,7 +593,9 @@ class Operator():
 For each method defined in the *Operator* class, our implementation uses
 ducktyping to return the necessary object.  If user passes a *Scalar* object
 to one of the methods then a new *Scalar* object is returned to the user
-with the correct value and jacobian.  On the other hand, if the user passes
+with the correct value and jacobian. If user passes a *Vector* object
+to one of the methods then a new *Vector* object is returned to the user
+with the correct value and jacobian. On the other hand, if the user passes
 a Python numeric type, then the method returns the evaluation of the
 corresponding NumPy method on the given argument
 (e.g., **op.sin(1) = np.sin(1)**).
@@ -598,13 +604,13 @@ corresponding NumPy method on the given argument
 
 Similarly, the *rOperator* class defines static methods for elementary mathematical
 functions and operators (specifically those that cannot be overloaded in the
-*rScalar* class) that can be called by users in constructing arbitrary functions.  The *rOperator* class only imports the
-rScalar class in order to return new *rScalar* variables as appropriate.  The design of the
+*rScalar* class) that can be called by users in constructing arbitrary functions. The design of the
 *rOperator* class is as follows:
 
 ```Python
 import numpy as np
 from Dotua.nodes.rscalar import rScalar
+from Dotua.nodes.rvector import rVector
 
 class rOperator():
     @staticmethod
@@ -621,7 +627,9 @@ class rOperator():
 Once again, for each method defined in the *rOperator* class, our implementation uses
 ducktyping to return the necessary object.  If user passes an *rScalar* object
 to one of the methods, then a new *rScalar* object is returned to the user
-with the correct value and parent/child link.  On the other hand, if the user passes
+with the correct value and self/child link. If user passes an *rVector* object
+to one of the methods, then a new *rVector* object is returned to the user
+with the correct value and parent/child links. On the other hand, if the user passes
 a Python numeric type, then the method returns the evaluation of the
 corresponding NumPy method on the given argument
 (e.g., **rop.sin(1) = np.sin(1)**).
@@ -633,45 +641,25 @@ differentiation, it is possible to provide the functionality of both techniques
 with a "mixed mode" implementation.  Functionality for forward and reverse
 automatic differentiation has been purposefully separated in the Dotua
 library for performance considerations.  Specifically, the performance of
-reverse mode is likely to suffer in such an implementation because of the
-overhead involved in ...  Thus, by separating the imlpementations of forward
+reverse mode is likely to suffer in such an implementation involving many output functions, whereas
+forward mode is likely to suffer in an implementation involving many input variables. Thus, by separating the implementations of forward
 and reverse automatic differentiation, Dotua avoids these performance
 issues. -->
 
 ## A Note on Comparisons
 
 It is important to note that the Dotua library intentionally does not overload
-comparison operators for its variables classs (i.e., *Scalar*, *rScalar*, and
-*Vector*).  Users should only use the the equality and inequality operators == and !=
+comparison operators for its variables class (i.e., *Scalar*, *rScalar*,
+*Vector*, and *rVector*).  Users should only use the the equality and inequality operators == and !=
 to determine object equivalence.  For users wishing to perform comparisons on
-the values of functions or variables composes of *Scalar*, *rScalar*, or
-*Vector* variables with the values of functions or variables of the same type,
-they can do so in the following manner:
-
-### Scalar Comparisons
-
-The values of *Scalar* variables should be compared by first obtaining the
-*Scalar* object's value with a call to **eval()** and then performing any
-desired numeric comparison on the first object in the tuple returned using the
-standard comparison operators for numeric types in Python.  The derivatives of functions of *Scalar* variables can be compared as any other dictionaries
-are compared in Python.
-
-### rScalar Comparisons
-
-The values of *rScalar* variables should be compared by first obtaining the
-*Scalar* object's value with a call to **eval()** and then performing any
-desired numeric comparison on the value returned using the
-standard comparison operators for numeric types in Python.  Users can compare
-the derivatives of functions defined using rScalars by using the rAutoDiff
-partial method to form any desired gradient and then performing comparisons
-using the standard numeric comparison operators.
-
-### Vector Comparisons
+the values of functions or variables composed of *Scalar*, *rScalar*,
+*Vector*, or *rVector* variables with the values of functions or variables of the same type,
+they can do so by accessing the values with the **eval()** function.
 
 
 ## External Depencies
 
 Dotua restricts dependencies on third-party libraries to the necessary
-minimum. Thus, the only external dependencies are NumPy, pytest, and pytest-cov.
-NumPy is used as necessary within the library for mathematical computation (e.g., trigonometric functions).  Additionally, pytest and pytest-cov are used to
-perform unit testing and coverage analysis of such testing.
+minimum. Thus, the only external dependencies are NumPy, and SciPy
+NumPy is used as necessary within the library for mathematical computation (e.g., trigonometric functions). 
+SciPy is used within the Newton-Raphson Demo as a comparison.
