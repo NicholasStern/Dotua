@@ -5,7 +5,7 @@ from Dotua.nodes.rvector import rVector
 
 
 class rOperator:
-    """Returns a new rScalar object subject to the operator and propagates the
+    """Returns a new rScalar/rVector object subject to the operator and propagates the
     value and derivative according to reverse mode autodifferentiation.
 
     The example below pertains to an action on an autodiff rScalar object: x
@@ -22,7 +22,7 @@ class rOperator:
     @staticmethod
     def sin(x):
         """
-        Returns a constant or rScalar object that is the sine of the user specified value.
+        Returns a constant/rScalar/rVector object that is the sine of the user specified value.
 
         INPUTS
         =======
@@ -55,7 +55,7 @@ class rOperator:
     @staticmethod
     def cos(x):
         """
-        Returns a constant or rScalar object that is the cosine of the user specified value.
+        Returns a constant/rScalar/rVector object that is the cosine of the user specified value.
 
         INPUTS
         =======
@@ -88,7 +88,7 @@ class rOperator:
     @staticmethod
     def tan(x):
         """
-        Returns a constant or rScalar object that is the tangent of the user specified value.
+        Returns a constant/rScalar/rVector object that is the tangent of the user specified value.
 
         INPUTS
         =======
@@ -121,7 +121,7 @@ class rOperator:
     @staticmethod
     def arcsin(x):
         """
-        Returns a constant or rScalar object that is the arcsine of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arcsine of the user specified value.
 
         INPUTS
         =======
@@ -154,7 +154,7 @@ class rOperator:
     @staticmethod
     def arccos(x):
         """
-        Returns a constant or rScalar object that is the arccosine of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arccosine of the user specified value.
 
         INPUTS
         =======
@@ -187,7 +187,7 @@ class rOperator:
     @staticmethod
     def arctan(x):
         """
-        Returns a constant or rScalar object that is the arctan of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arctan of the user specified value.
 
         INPUTS
         =======
@@ -220,7 +220,7 @@ class rOperator:
     @staticmethod
     def sinh(x):
         """
-        Returns a constant or rScalar object that is the sinh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the sinh of the user specified value.
 
         INPUTS
         =======
@@ -254,7 +254,7 @@ class rOperator:
     @staticmethod
     def cosh(x):
         """
-        Returns a constant or rScalar object that is the cosh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the cosh of the user specified value.
 
         INPUTS
         =======
@@ -287,7 +287,7 @@ class rOperator:
     @staticmethod
     def tanh(x):
         """
-        Returns a constant or rScalar object that is the tanh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the tanh of the user specified value.
 
         INPUTS
         =======
@@ -320,7 +320,7 @@ class rOperator:
     @staticmethod
     def arcsinh(x):
         """
-        Returns a constant or rScalar object that is the arcsinh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arcsinh of the user specified value.
 
         INPUTS
         =======
@@ -353,7 +353,7 @@ class rOperator:
     @staticmethod
     def arccosh(x):
         """
-        Returns a constant or rScalar object that is the arccosh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arccosh of the user specified value.
 
         INPUTS
         =======
@@ -386,7 +386,7 @@ class rOperator:
     @staticmethod
     def arctanh(x):
         """
-        Returns a constant or rScalar object that is the arctanh of the user specified value.
+        Returns a constant/rScalar/rVector object that is the arctanh of the user specified value.
 
         INPUTS
         =======
@@ -419,7 +419,7 @@ class rOperator:
     @staticmethod
     def exp(x):
         """
-        Returns a constant or rScalar object that is the exponential of the user specified value.
+        Returns a constant/rScalar/rVector object that is the exponential of the user specified value.
 
         INPUTS
         =======
@@ -452,7 +452,7 @@ class rOperator:
     @staticmethod
     def log(x, base=np.exp(1)):
         """
-        Returns a constant or rScalar object that is the log of the user specified value.
+        Returns a constant/rScalar/rVector object that is the log of the user specified value.
 
         INPUTS
         =======

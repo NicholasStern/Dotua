@@ -19,6 +19,7 @@ def test_sin():
     f.grad_val = 1
     assert x.gradient() == np.cos(x.val)
     assert op.sin(c1) == np.sin(c1)
+
     y = generatey()
     g = op.sin(y)
     g.grad_val = 1
