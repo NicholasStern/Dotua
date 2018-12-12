@@ -44,9 +44,7 @@ class rVector():
         for i in range(len(val)):
             self._rscalars.append(rScalar(val[i]))
 
-    def __getitem__(self, idx):
-        for i in range(len(self.val)):
-            self._rscalars.append(rScalar(self.val[i]))       
+    def __getitem__(self, idx):       
         return self._rscalars[idx]
 
 
