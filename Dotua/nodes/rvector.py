@@ -102,13 +102,15 @@ class rVector():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rVector(self.val)
+        #new_parent = rVector(self.val)
         try:
-            new_parent.val += other.val
+            new_parent = rVector(self.val + other.val)
+            #new_parent.val += other.val
             self.parents.append((new_parent, 1))
             other.parents.append((new_parent, 1))
         except AttributeError:
-            new_parent.val += other
+            #new_parent.val += other
+            new_parent = rVector(self.val + other)
             self.parents.append((new_parent, 1))
         return new_parent
 
@@ -148,13 +150,14 @@ class rVector():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rVector(self.val)
+        #new_parent = rVector(self.val)
         try:
-            new_parent.val *= other.val
+            #new_parent.val *= other.val
+            new_parent = rVector(self.val * other.val)
             self.parents.append((new_parent, other.val))
             other.parents.append((new_parent, self.val))
         except AttributeError:
-            new_parent.val *= other
+            new_parent = rVector(self.val * other)
             self.parents.append((new_parent, other))
         return new_parent
 
@@ -224,7 +227,7 @@ class rVector():
         overloading of __truediv__ for the other object.
         """
         #new_parent = rVector(self.val)
-        new_parent = rVector(other / new_parent.val)
+        new_parent = rVector(other / self.val)
         self.parents.append((new_parent, -other / (self.val ** 2)))
         return new_parent
 
@@ -252,15 +255,16 @@ class rVector():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rVector(self.val)
+        #new_parent = rVector(self.val)
         try:
-            new_parent.val **= other.val
+            new_parent = rVector(self.val ** other.val)
+            #new_parent.val **= other.val
             self.parents.append((new_parent,
                                 other.val * self.val ** (other.val - 1)))
             other.parents.append((new_parent,
                                  self.val ** other.val * np.log(self.val)))
         except AttributeError:
-            new_parent.val **= other
+            new_parent = rVector(self.val ** other)
             self.parents.append((new_parent, other * self.val ** (other - 1)))
         return new_parent
 
@@ -291,8 +295,7 @@ class rVector():
         otherwise the exponentiation of other and self would be handled by the
         overloading of __pow__ for the other object.
         """
-        new_parent = rVector(self.val)
-        new_parent.val = other ** self.val
+        new_parent = rVector(other ** self.val)
         self.parents.append((new_parent, other ** self.val * np.log(other)))
         return new_parent
 
