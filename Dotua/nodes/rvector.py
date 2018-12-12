@@ -45,6 +45,8 @@ class rVector():
             self._rscalars.append(rScalar(val[i]))
 
     def __getitem__(self, idx):
+         for i in range(len(val)):
+            self._rscalars.append(rScalar(val[i]))       
         return self._rscalars[idx]
 
 
@@ -188,11 +190,11 @@ class rVector():
         """
         new_parent = rVector(self.val)
         try:
-            new_parent.val /= other.val
+            new_parent.val = self.val / other.val
             self.parents.append((new_parent, 1 / other.val))
             other.parents.append((new_parent, -self.val / (other.val ** 2)))
         except AttributeError:
-            new_parent.val /= other
+            new_parent.val = self.val / other
             self.parents.append((new_parent, 1 / other))
         return new_parent
 
@@ -321,3 +323,6 @@ class rVector():
         new_parent = rVector(-self.val)
         self.parents.append((new_parent, -1))
         return new_parent
+
+    def eval(self):
+        return self.val
