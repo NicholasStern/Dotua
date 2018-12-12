@@ -83,7 +83,17 @@ class rAutoDiff():
                 self._reset_universe(item)
             func.grad_val = 1
             self._func = func
-        return var.gradient()
+        try:
+            var._rscalars
+            try:
+                len(var.gradient())
+                if len(var.val) > len(var.gradient()):
+                    return [var.gradient()] * len(var.val)
+            except TypeError:
+                if (len(var.val) > 1):
+                    return [var.gradient()] * len(var.val)
+        except AttributeError:
+            return var.gradient()
 
     def _reset_universe(self, var):
         '''
