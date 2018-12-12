@@ -472,12 +472,12 @@ class rOperator:
         try:
             x._rscalars
             print('log function can only be used for scalars')
-            pass
+            return None
         except AttributeError:
             try:
                 new_parent = rScalar(math.log(x.val, base))
                 x.parents.append((new_parent, (x.val * math.log(base))**(-1)))
                 return new_parent
             except AttributeError:
-                return math.log(x.val, base)
+                return math.log(x, base)
 
