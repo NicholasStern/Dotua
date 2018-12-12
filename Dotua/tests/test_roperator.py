@@ -10,7 +10,7 @@ def generate(v=.75):
     return rScalar(v)
 
 def generatey():
-    return rVector([1,2])
+    return rVector([0.2,0.3])
 
 c1, c2 = .5, 1
 def test_sin():
