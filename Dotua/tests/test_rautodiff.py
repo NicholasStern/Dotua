@@ -70,3 +70,5 @@ def test_partial():
     x,y = rad.create_rvector([[1, 2, 3], [1,3,6]])
     h = x + 1
     assert list(rad.partial(h, x)) == list([1,1,1])
+    f = op.sin(x)
+    assert list(rad.partial(f,x) == list(np.sin(np.array([1,2,3]))))
