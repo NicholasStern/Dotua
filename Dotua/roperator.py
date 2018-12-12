@@ -426,4 +426,3 @@ class rOperator:
 
         except AttributeError:
             return math.log(x, base)
-
