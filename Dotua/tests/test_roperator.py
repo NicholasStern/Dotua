@@ -71,7 +71,7 @@ def test_arccos():
     y = generatey()
     g = op.arccos(y)
     g.grad_val = 1
-    assert y.gradient() == list(np.arccos(y.val)*np.tan(y.val))
+    assert list(y.gradient()) == list(np.arccos(y.val)*np.tan(y.val))
 
 
 def test_arctan():
