@@ -19,7 +19,6 @@ class Node():
                     new_child._roots[input_var] += [(x, np.cos(x._val))]
                 except KeyError:
                     new_child._roots[input_var] = [(x, np.cos(x._val))]
-            print("Got here")
             return new_child
         except AttributeError:
             return np.sin(x)
