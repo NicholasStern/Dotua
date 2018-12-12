@@ -77,11 +77,12 @@ Backwards autodifferentation is particularly useful means of accomplishing this.
 
 In this notation, the derivative for some output variable $w$ to some variable $t$ is a linear combination of derivatives for each $u_i$ that $w$ is connected to.
 
-$$\frac{\partial w}{\partial t} = \frac{\partial w}{\partial u_1} * \frac{\partial u_1}{\partial t} + \frac{\partial w}{\partial u_2} * \frac{\partial u_2}{\partial t} + ...  $$
+![](images/forward_cr.png)
+
 
 One way to think about reverse mode is to think of the inversion of this. By flipping the numerator and the denominator, this is the notation of the partial derivative of a new paramter $s$ with respect to $u$.
 
-$$\frac{\partial s}{\partial u} = \frac{\partial w_1}{\partial u} * \frac{\partial s}{\partial w_1} + \frac{\partial w_2}{\partial u} * \frac{\partial s}{\partial w_2} + ... $$
+![](images/backward_cr.png)
 
 The graph theory intuition is perhaps the most straightforward: just as a machine computes an equation in a series of steps, reverse mode is the traversal of that computational graph in reverse. In the context of a neural network in which we wish to minimize weights relatie to some loss function, this allows us to efficiently retrace our ''path.''
 
@@ -150,7 +151,7 @@ print(result.partial(y))  # 0
 ```
 For **Scalar** variables, *result.eval()* will return the value of the function,
 while *result.partial(v)* will return the partial derivative with respect to any variable, *v*. For **Vector** variables, *results.eval()* returns a list of tuples
-(value, jacobian), with one tuple for each function in the vector. The jacobian is a dictionary that represents the 
+(value, jacobian), with one tuple for each function in the vector. The jacobian is a dictionary that represents the
 derivative of that element with respect to all of the elements in the vector.
 
 #### Reverse Mode
