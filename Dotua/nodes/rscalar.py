@@ -96,8 +96,9 @@ class rScalar():
                         child._grad_val += self._grad_val * val
                     child.gradient(input_var)
         except KeyError:
-            raise ValueError("User attempted to differentiate a function " + \
-                            "respect to a variable on which it is not defined.")
+            raise ValueError("User attempted to differentiate a function " +
+                             "respect to a variable on which it is not " +
+                             "defined.")
 
     def __add__(self, other):
         """
