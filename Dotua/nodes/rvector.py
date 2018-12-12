@@ -4,13 +4,13 @@ from Dotua.nodes.rscalar import rScalar
 
 class rVector():
     """
-    Allow user defined variables capable of reverse audotmatic differentiation.
+    Allow user defined variables capable of reverse automatic differentiation.
 
     rVector objects have a single user defined value and 'private' class
     variables parents and grad_val corresponding to functions defined using
     the given rVector and the current gradient value of the rVector
     respectively.  The parents of rVector are defined via operator
-    overloading.  Each time the user crreates functions using rVector
+    overloading.  Each time the user creates functions using rVector
     variables, at least one new rVector object is created and assigned as the
     parent of the rVector objects used to create it.
     """

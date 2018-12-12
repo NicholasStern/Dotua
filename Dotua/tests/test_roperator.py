@@ -1,12 +1,16 @@
 # This file serves to test the operator.py module
 from Dotua.roperator import rOperator as op
 from Dotua.nodes.rscalar import rScalar
+from Dotua.nodes.rvector import rVector
 import numpy as np
 import math
 
 # initializations
 def generate(v=.75):
     return rScalar(v)
+
+def generate2(v=[.75, .65]):
+    return rVector(v)
 
 c1, c2 = .5, 1
 def test_sin():
@@ -15,7 +19,6 @@ def test_sin():
     f.grad_val = 1
     assert x.gradient() == np.cos(x.val)
     assert op.sin(c1) == np.sin(c1)
-
 
 
 def test_cos():
