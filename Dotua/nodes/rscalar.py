@@ -36,9 +36,12 @@ class rScalar():
         instance and val is the derivative of the rScalar par with respect
         to the rScalar self.
         """
-        self.val = val
-        self.parents = []
-        self.grad_val = None
+        self._val = val
+        self._roots = {}  # keys are input rScalars, vals are lists intemediary rScalars
+        self._grad_val = 0
+
+    def _init_roots(self):
+        self._roots[self] = [(None, 1)]
 
     def eval(self):
         """
@@ -51,7 +54,7 @@ class rScalar():
         RETURNS
         =======
         self._val: value of the user defined variable, user defined function,
-                   or intermediate node in the computational grpah represented
+                   or intermediate rScalar in the computational grpah represented
                    by the self rScalar object
 
         NOTES
@@ -60,9 +63,9 @@ class rScalar():
         compare the values of different rScalar objects they should do so
         by calling eval on each object to obtain the value.
         """
-        return self.val
+        return self._val
 
-    def gradient(self):
+    def gradient(self, input_var):
         """
         Return the derivative of some function with respect to this rScalar.
 
@@ -86,12 +89,16 @@ class rScalar():
         the rScalar objects that represent 'intermediary functions' in the
         implicit computational graph that are defined using the rScalar self.
         """
-        if self.grad_val is None:
-            self.grad_val = 0
-            for parent, val in self.parents:
-                self.grad_val += parent.gradient() * val
-        return self.grad_val
-        
+        try:
+            for child, val in self._roots[input_var]:
+                if child is not None:
+                    if child._grad_val == 0:
+                        child._grad_val += self._grad_val * val
+                    child.gradient(input_var)
+        except KeyError:
+            raise ValueError("User attempted to differentiate a function " + \
+                            "respect to a variable on which it is not defined.")
+
     def __add__(self, other):
         """
         Return an rScalar object whose value is the sum of self and other.
@@ -103,7 +110,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the sum of the value of
+        new_rScalar: a new rScalar object whose value is the sum of the value of
                   the rScalar self and the value of other
 
         NOTES
@@ -116,15 +123,24 @@ class rScalar():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rScalar(self.val)
+        new_child = rScalar(self._val)
         try:
-            new_parent.val += other.val
-            self.parents.append((new_parent, 1))
-            other.parents.append((new_parent, 1))
+            new_child += other._val
+            # For each input variable on which self is defined
+            new_child._roots = {input_var: [(self, 1)]
+                                for input_var in self._roots.keys()}
+
+            for input_var in other._roots.keys():
+                try:
+                    new_child._roots[input_var] += [(other, 1)]
+                except KeyError:
+                    new_child._roots[input_var] = [(other, 1)]
+            return new_child
         except AttributeError:
-            new_parent.val += other
-            self.parents.append((new_parent, 1))
-        return new_parent
+            new_child._val += other
+            new_child._roots = {input_var: [(self, 1)]
+                                for input_var in self._roots.keys()}
+        return new_child
 
     def __radd__(self, other):
         """Return an rScalar object with value self + other."""
@@ -149,7 +165,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the product of the value
+        new_rScalar: a new rScalar object whose value is the product of the value
                   of the rScalar self and the value of other
 
         NOTES
@@ -162,15 +178,23 @@ class rScalar():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rScalar(self.val)
+        new_child = rScalar(self._val)
         try:
-            new_parent.val *= other.val
-            self.parents.append((new_parent, other.val))
-            other.parents.append((new_parent, self.val))
+            new_child *= other._val
+            # For each input variable on which self is defined
+            new_child._roots = {input_var: [(self, other._val)]
+                                for input_var in self._roots.keys()}
+
+            for input_var in other._roots.keys():
+                try:
+                    new_child._roots[input_var] += [(other, self._val)]
+                except KeyError:
+                    new_child._roots[input_var] = [(other, self._val)]
         except AttributeError:
-            new_parent.val *= other
-            self.parents.append((new_parent, other))
-        return new_parent
+            new_child._val *= other
+            new_child._roots = {input_var: [(self, other)]
+                                for input_var in self._roots.keys()}
+        return new_child
 
     def __rmul__(self, other):
         """Return an rScalar object with value self * other."""
@@ -187,7 +211,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the quotient of the value
+        new_rScalar: a new rScalar object whose value is the quotient of the value
                   of the rScalar self and the value of other
 
         NOTES
@@ -200,15 +224,25 @@ class rScalar():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rScalar(self.val)
+        new_child = rScalar(self._val)
         try:
-            new_parent.val /= other.val
-            self.parents.append((new_parent, 1 / other.val))
-            other.parents.append((new_parent, -self.val / (other.val ** 2)))
+            new_child /= other._val
+            # For each input variable on which self is defined
+            new_child._roots = {input_var: [(self, 1 / other._val)]
+                                for input_var in self._roots.keys()}
+
+            for input_var in other._roots.keys():
+                try:
+                    new_child._roots[input_var] += \
+                        [(other, -self._val / (other._val ** 2))]
+                except KeyError:
+                    new_child._roots[input_var] = \
+                        [(other, -self._val / (other._val ** 2))]
         except AttributeError:
-            new_parent.val /= other
-            self.parents.append((new_parent, 1 / other))
-        return new_parent
+            new_child._val /= other
+            new_child._roots = {input_var: [(self, 1 / other)]
+                                for input_var in self._roots.keys()}
+        return new_child
 
     def __rtruediv__(self, other):
         """
@@ -221,7 +255,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the quotient of the value
+        new_rScalar: a new rScalar object whose value is the quotient of the value
                   of other nad the value of the rScalar self
 
         NOTES
@@ -237,10 +271,11 @@ class rScalar():
         otherwise the division of other and self would be handled by the
         overloading of __truediv__ for the other object.
         """
-        new_parent = rScalar(self.val)
-        new_parent.val = other / new_parent.val
-        self.parents.append((new_parent, -other / (self.val ** 2)))
-        return new_parent
+        new_child = rScalar(other / self._val)
+        new_child._roots = {input_var: [(self, -other / (self._val ** 2))]
+                            for input_var in self._roots.keys()}
+        return new_child
+
 
     def __pow__(self, other):
         """
@@ -253,7 +288,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the value of the rScalar
+        new_rScalar: a new rScalar object whose value is the value of the rScalar
                   self raised to the power of the value of other
 
         NOTES
@@ -266,17 +301,27 @@ class rScalar():
         Storing relationships in this way facilitates the computation of
         gradients through reverse automatic differentiation.
         """
-        new_parent = rScalar(self.val)
+        new_child = rScalar(self._val)
         try:
-            new_parent.val **= other.val
-            self.parents.append((new_parent,
-                                other.val * self.val ** (other.val - 1)))
-            other.parents.append((new_parent,
-                                 self.val ** other.val * np.log(self.val)))
+            new_child **= other._val
+            # For each input variable on which self is defined
+            new_child._roots = {input_var: [(self, other._val *
+                                self._val ** (other._val - 1))]
+                                for input_var in self._roots.keys()}
+
+            for input_var in other._roots.keys():
+                try:
+                    new_child._roots[input_var] += \
+                        [(other, self._val ** other._val * np.log(self._val))]
+                except KeyError:
+                    new_child._roots[input_var] = \
+                        [(other, self._val ** other._val * np.log(self._val))]
         except AttributeError:
-            new_parent.val **= other
-            self.parents.append((new_parent, other * self.val ** (other - 1)))
-        return new_parent
+            new_child._val **= other
+            new_child._roots = {input_var: [(self, other *
+                                self._val ** (other - 1))]
+                                for input_var in self._roots.keys()}
+        return new_child
 
     def __rpow__(self, other):
         """
@@ -289,7 +334,7 @@ class rScalar():
 
         RETURNS
         =======
-        new_node: a new rScalar object whose value is the value of other raised
+        new_rScalar: a new rScalar object whose value is the value of other raised
                   to the power of the value of the rScalar self
 
         NOTES
@@ -305,10 +350,11 @@ class rScalar():
         otherwise the exponentiation of other and self would be handled by the
         overloading of __pow__ for the other object.
         """
-        new_parent = rScalar(self.val)
-        new_parent.val = other ** self.val
-        self.parents.append((new_parent, other ** self.val * np.log(other)))
-        return new_parent
+        new_child = rScalar(other ** self._val)
+        new_child._roots = {input_var:
+                            [(self, other ** self._val * np.log(other))]
+                            for input_var in self._roots.keys()}
+        return new_child
 
     def __neg__(self):
         """
@@ -332,6 +378,7 @@ class rScalar():
         object.  Storing relationships in this way facilitates the computation
         of gradients through reverse automatic differentiation.
         """
-        new_parent = rScalar(-self.val)
-        self.parents.append((new_parent, -1))
-        return new_parent
+        new_child = rScalar(-self._val)
+        new_child._roots = {input_var: [(self, -1)]
+                            for input_var in self._roots.keys()}
+        return new_child
