@@ -188,10 +188,13 @@ case where the Dotua package performs well, namely, the Newton-Raphson method fo
 
 ![](images/newton.png)
 
-A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called...
+A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called "neuralnet_demo.ipynb"
 
-**INSERT TEXT HERE**
+Here we implement a toy neural network that has only one hidden layer. Using R.A. Fischer's well-known Iris dataset -- a collection of measurements of flowers and their respective species -- we fit a neural network to predict species based on their characteristics. As the first image indicates, there is a clear separation boundary between one of the species and
 
+![](images/iris_pca.png)
+
+![](images/cm_nnexample.png)
 
 ## Software Organization
 
