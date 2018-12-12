@@ -1,4 +1,5 @@
 from Dotua.nodes.rscalar import rScalar
+from Dotua.nodes.rvector import rVector
 import numpy as np
 
 '''
@@ -12,7 +13,7 @@ different function
 
 # Define rscalar objects and constants
 def generate():
-    return rScalar([10,20]), rScalar([20,50]), rScalar([30,10])
+    return rVector([10,20]), rVector([20,50]), rVector([30,10])
 
 
 c_1, c2, c5 = -1, 2, 5
@@ -30,23 +31,23 @@ def test_add():
     f = x + y + z
 
     f.grad_val = 1
-    assert x.gradient() == [1,1]
-    assert y.gradient() == [1,1]
-    assert z.gradient() == [1,1]
+    assert x.gradient() == 1
+    assert y.gradient() == 1
+    assert z.gradient() == 1
 
     x, y, z = generate()
     g = z + x + y
     g.grad_val = 1
-    assert x.gradient() == [1,1]
-    assert y.gradient() == [1,1]
-    assert z.gradient() == [1,1]
+    assert x.gradient() == 1
+    assert y.gradient() == 1
+    assert z.gradient() == 1
 
     x, y, z = generate()
     h = c_1 + x + y + z + c2
     h.grad_val = 1
-    assert x.gradient() == [1,1]
-    assert y.gradient() == [1,1]
-    assert z.gradient() == [1,1]
+    assert x.gradient() == 1
+    assert y.gradient() == 1
+    assert z.gradient() == 1
 
 
 def test_subtract():
@@ -54,23 +55,23 @@ def test_subtract():
     f = x - y - z
 
     f.grad_val = 1
-    assert x.gradient() == [1,1]
-    assert y.gradient() == [-1,-1]
-    assert z.gradient() == [-1,-1]
+    assert x.gradient() == 1
+    assert y.gradient() == -1
+    assert z.gradient() == -1
 
     x, y, z = generate()
     g = z - x - y
     g.grad_val = 1
-    assert x.gradient() == [-1,-1]
-    assert y.gradient() == [-1,-1]
-    assert z.gradient() == [1,1]
+    assert x.gradient() == -1
+    assert y.gradient() == -1
+    assert z.gradient() == 1
 
     x, y, z = generate()
     h = c_1 - x - y - z - c2
     h.grad_val = 1
-    assert x.gradient() == [-1,-1]
-    assert y.gradient() == [-1,-1]
-    assert z.gradient() == [-1,-1]
+    assert x.gradient() == -1
+    assert y.gradient() == -1
+    assert z.gradient() == -1
 
 
 def test_multiply():
@@ -123,7 +124,7 @@ def test_divide():
     x, y, z = generate()
     w = x / c5
     w.grad_val = 1
-    assert x.gradient() == [1 / c5]*len(x.val)
+    assert x.gradient() == 1 / c5
     assert y.gradient() == 0
     assert z.gradient() == 0
 
