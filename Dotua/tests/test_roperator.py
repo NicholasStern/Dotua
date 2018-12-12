@@ -22,7 +22,7 @@ def test_sin():
     y = generatey()
     g = op.sin(y)
     g.grad_val = 1
-    assert y.gradient() == np.cos(y.val)
+    assert list(y.gradient()) == list(np.cos(y.val))
 
 def test_cos():
     x = generate()
@@ -33,7 +33,7 @@ def test_cos():
     y = generatey()
     g = op.cos(y)
     g.grad_val = 1
-    assert y.gradient() == -np.sin(y.val)
+    assert list(y.gradient()) == list(-np.sin(y.val))
 
 
 
@@ -46,7 +46,7 @@ def test_tan():
     y = generatey()
     g = op.tan(y)
     g.grad_val = 1
-    assert y.gradient() == np.arccos(y.val)**2
+    assert list(y.gradient()) == list(np.arccos(y.val)**2)
 
 
 
@@ -59,7 +59,7 @@ def test_arcsin():
     y = generatey()
     g = op.arcsin(y)
     g.grad_val = 1
-    assert y.gradient() == -np.arcsin(y.val)*np.arctan(y.val)
+    assert list(y.gradient()) == list(-np.arcsin(y.val)*np.arctan(y.val))
 
 
 def test_arccos():
@@ -71,7 +71,7 @@ def test_arccos():
     y = generatey()
     g = op.arccos(y)
     g.grad_val = 1
-    assert g.gradient() == np.arccos(y.val)*np.tan(y.val)
+    assert g.gradient() == list(np.arccos(y.val)*np.tan(y.val))
 
 
 def test_arctan():
@@ -83,7 +83,7 @@ def test_arctan():
     y = generatey()
     g = op.arctan(y)
     g.grad_val = 1
-    assert y.gradient() == -np.arcsin(y.val)**2
+    assert list(y.gradient()) == list(-np.arcsin(y.val)**2)
 
 
 def test_sinh():
@@ -95,7 +95,7 @@ def test_sinh():
     y = generatey()
     g = op.sinh(y)
     g.grad_val = 1
-    assert y.gradient() == np.cosh(y.val)
+    assert list(y.gradient()) == list(np.cosh(y.val))
 
 
 def test_cosh():
@@ -107,7 +107,7 @@ def test_cosh():
     y = generatey()
     g = op.cosh(y)
     g.grad_val = 1
-    assert y.gradient() == np.sinh(y.val)
+    assert list(y.gradient()) == list(np.sinh(y.val))
 
 
 def test_tanh():
@@ -119,7 +119,7 @@ def test_tanh():
     y = generatey()
     g = op.tanh(y)
     g.grad_val = 1
-    assert y.gradient() == 1-np.tanh(y.val)**2
+    assert list(y.gradient()) == list(1-np.tanh(y.val)**2)
 
 
 def test_arcsinh():
@@ -131,7 +131,7 @@ def test_arcsinh():
     y = generatey()
     g = op.arcsinh(y)
     g.grad_val = 1
-    assert y.gradient() == -np.arcsinh(y.val)*np.arctanh(y.val)
+    assert list(y.gradient()) == list(-np.arcsinh(y.val)*np.arctanh(y.val))
 
 
 def test_arccosh():
@@ -143,7 +143,7 @@ def test_arccosh():
     y = generatey()
     g = op.arccosh(y)
     g.grad_val = 1
-    assert y.gradient() == -np.arccosh(y.val)*np.tanh(y.val)
+    assert list(y.gradient()) == list(-np.arccosh(y.val)*np.tanh(y.val))
 
 
 def test_arctanh():
@@ -155,7 +155,7 @@ def test_arctanh():
     y = generatey()
     g = op.arctanh(y)
     g.grad_val = 1
-    assert y.gradient() == 1-np.arctanh(y.val)**2
+    assert list(y.gradient()) == list(1-np.arctanh(y.val)**2)
 
 
 def test_exp():
@@ -167,7 +167,7 @@ def test_exp():
     y = generatey()
     g = op.exp(y)
     g.grad_val = 1
-    assert y.gradient() == np.exp(y.val)
+    assert list(y.gradient()) == list(np.exp(y.val))
 
 
 def test_log():
