@@ -82,6 +82,7 @@ def test_vector_add():
 	assert(f_12.eval() == [2,1])
 	assert(f_13.eval() == [5,4])
 	assert(f_22.eval() == [4,2])
+	assert(x.getDerivative(y) == 0)
 
 def test_vector_sub():
 	assert(f_8.eval() == [-5,-7])

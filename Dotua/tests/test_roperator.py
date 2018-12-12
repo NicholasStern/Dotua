@@ -9,8 +9,8 @@ import math
 def generate(v=.75):
     return rScalar(v)
 
-def generate2(v=[.75, .65]):
-    return rVector(v)
+def generatey():
+    return rVector([0.2,0.3])
 
 c1, c2 = .5, 1
 def test_sin():
@@ -20,6 +20,10 @@ def test_sin():
     assert x.gradient() == np.cos(x.val)
     assert op.sin(c1) == np.sin(c1)
 
+    y = generatey()
+    g = op.sin(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.cos(y.val))
 
 def test_cos():
     x = generate()
@@ -27,6 +31,11 @@ def test_cos():
     f.grad_val = 1
     assert x.gradient() == -np.sin(x.val)
     assert op.cos(c1) == np.cos(c1)
+    y = generatey()
+    g = op.cos(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(-np.sin(y.val))
+
 
 
 def test_tan():
@@ -35,6 +44,11 @@ def test_tan():
     f.grad_val = 1
     assert x.gradient() == np.arccos(x.val)**2
     assert op.tan(c1) == np.tan(c1)
+    y = generatey()
+    g = op.tan(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.arccos(y.val)**2)
+
 
 
 def test_arcsin():
@@ -43,6 +57,10 @@ def test_arcsin():
     f.grad_val = 1
     assert x.gradient() == -np.arcsin(x.val)*np.arctan(x.val)
     assert op.arcsin(c1) == np.arcsin(c1)
+    y = generatey()
+    g = op.arcsin(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(-np.arcsin(y.val)*np.arctan(y.val))
 
 
 def test_arccos():
@@ -51,6 +69,10 @@ def test_arccos():
     f.grad_val = 1
     assert x.gradient() == np.arccos(x.val)*np.tan(x.val)
     assert op.arccos(c2) == np.arccos(c2)
+    y = generatey()
+    g = op.arccos(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.arccos(y.val)*np.tan(y.val))
 
 
 def test_arctan():
@@ -59,6 +81,10 @@ def test_arctan():
     f.grad_val = 1
     assert x.gradient() == -np.arcsin(x.val)**2
     assert op.arctan(c1) == np.arctan(c1)
+    y = generatey()
+    g = op.arctan(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(-np.arcsin(y.val)**2)
 
 
 def test_sinh():
@@ -67,6 +93,10 @@ def test_sinh():
     f.grad_val = 1
     assert x.gradient() == np.cosh(x.val)
     assert op.sinh(c1) == np.sinh(c1)
+    y = generatey()
+    g = op.sinh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.cosh(y.val))
 
 
 def test_cosh():
@@ -75,6 +105,10 @@ def test_cosh():
     f.grad_val = 1
     assert x.gradient() == np.sinh(x.val)
     assert op.cosh(c1) == np.cosh(c1)
+    y = generatey()
+    g = op.cosh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.sinh(y.val))
 
 
 def test_tanh():
@@ -83,6 +117,10 @@ def test_tanh():
     f.grad_val = 1
     assert x.gradient() == 1-np.tanh(x.val)**2
     assert op.tanh(c1) == np.tanh(c1)
+    y = generatey()
+    g = op.tanh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(1-np.tanh(y.val)**2)
 
 
 def test_arcsinh():
@@ -91,6 +129,10 @@ def test_arcsinh():
     f.grad_val = 1
     assert x.gradient() == -np.arcsinh(x.val)*np.arctanh(x.val)
     assert op.arcsinh(c1) == np.arcsinh(c1)
+    y = generatey()
+    g = op.arcsinh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(-np.arcsinh(y.val)*np.arctanh(y.val))
 
 
 def test_arccosh():
@@ -99,6 +141,10 @@ def test_arccosh():
     f.grad_val = 1
     assert x.gradient() == -np.arccosh(x.val)*np.tanh(x.val)
     assert op.arccosh(c2) == np.arccosh(c2)
+    y = rVector([1,1])
+    g = op.arccosh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(-np.arccosh(y.val)*np.tanh(y.val))
 
 
 def test_arctanh():
@@ -107,6 +153,10 @@ def test_arctanh():
     f.grad_val = 1
     assert x.gradient() == 1-np.arctanh(x.val)**2
     assert op.arctanh(c1) == np.arctanh(c1)
+    y = generatey()
+    g = op.arctanh(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(1-np.arctanh(y.val)**2)
 
 
 def test_exp():
@@ -115,6 +165,10 @@ def test_exp():
     f.grad_val = 1
     assert x.gradient() == np.exp(x.val)
     assert op.exp(c1) == np.exp(c1)
+    y = generatey()
+    g = op.exp(y)
+    g.grad_val = 1
+    assert list(y.gradient()) == list(np.exp(y.val))
 
 
 def test_log():

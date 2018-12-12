@@ -13,6 +13,11 @@ def test_create_rscalar():
     x = rad.create_rscalar(10)
     assert x.val == 10
 
+def test_create_rvector():
+    rad = rAutoDiff()
+    x,y = rad.create_rvector([[1, 2, 3], [1,3,6]])
+    assert list(x.val) == list([1,2,3])
+    assert list(y.val) == list([1,3,6])
 
 def test__reset_universe():
     rad = rAutoDiff()
@@ -61,3 +66,9 @@ def test_partial():
     assert rad.partial(h, x) == 3 * 6 * np.cos(1 * 3 * 6)
     assert rad.partial(h, y) == 1 * 6 * np.cos(1 * 3 * 6) + np.sin(3)
     assert rad.partial(h, z) == 1 * 3 * np.cos(1 * 3 * 6)
+
+    x,y = rad.create_rvector([[1, 2, 3], [1,3,6]])
+    h = x + 1
+    assert list(rad.partial(h, x)) == list([1,1,1])
+    f = op.sin(x)
+    assert list(rad.partial(f,x) == list(np.sin(np.array([1,2,3]))))

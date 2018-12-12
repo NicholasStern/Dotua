@@ -10,6 +10,8 @@ One incredibly important application of the derivative is varieties of optimizat
 
 So, one might think that a career in ML thus requires an extensive calculus background, but, Ryan P Adams, formerly of Twitter (and Harvard IACS), now of Princeton CS, describes automatic differentiation as ["getting rid of the math that gets in the way of solving a [ML] problem."](https://www.youtube.com/watch?v=sq2gPzlrM0g) What we ultimately care about is tuning the hyperparameters of a machine learning algorithm, so if we can get a machine to do this for us, that is ultimately what we care about. What is implemented in this package is automatic differentiation which allows us to calculate derivatives of complex functions to machine precision 'without the math getting in the way.'
 
+One of the most cruicial applications of auto-differentiation is backpropagation in neural networks. Backpropagation is the process by which weights are optimized relative to a loss function. These steps are illustrated through a simple netural network example, but the core of this package is the auto-differentiation -- Tensor and Pytorch are otehr useful neural network specific packages.
+
 ## Background
 The most important calculus derivative rule for automatic differentiation is the multivariate chain rule.
 
@@ -61,9 +63,30 @@ When one evaluates <img src="https://latex.codecogs.com/png.latex?f(x&space;&plu
 
 ### Reverse Mode
 
-**INSERT TEXT HERE**
+One of the most crucial applications of auto-differentation is backpropagation in neural networks. For some output $\hat{y}$ and set of inputs X, we wish to fix a function $f(x,\theta)$ that is optimized by minimizing a loss function, like MSE:
 
-To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision).
+$$E(w;x;y) = \frac{1}{N}\Sigma_{i=1}^{N}(f_i - y_i)^2 $$
+
+Where N is the number of data points, $f_i$ the value returned by the model and $y_i$ the true value for y at a given observation $i$.
+
+The architecture of a neural network, at the most basic level, is formed by an input layer, a hidden layer, and an output layer. A 'dense' neural network will involve connections between every parameter and these edges each contain a weight value. The task is to paramterize the weights such that a linear combination minimizes the distance between $\hat{y}$ and $y$.
+
+This is accomplished through a linear composition of parameters as a dense network whereby each parameter has a weight relative to every other. This captures non-linearities as certain paramters may be more expressive than others.
+
+Backwards autodifferentation is particularly useful means of accomplishing this. This is a subspecies of reverse mode auto-differentiation. One intuitive motivation for this (h/t [Rufflewind](https://rufflewind.com/2016-12-30/reverse-mode-automatic-differentiation)) is to think of reverse mode as an inversion of the chain-rule. The chain rule is symmetric and therefore invereting the numerator and the denominator from our forward mode allows us to find the 'inner' derivative.
+
+In this notation, the derivative for some output variable $w$ to some variable $t$ is a linear combination of derivatives for each $u_i$ that $w$ is connected to.
+
+![](images/forward_cr.png)
+
+
+One way to think about reverse mode is to think of the inversion of this. By flipping the numerator and the denominator, this is the notation of the partial derivative of a new paramter $s$ with respect to $u$.
+
+![](images/backward_cr.png)
+
+The graph theory intuition is perhaps the most straightforward: just as a machine computes an equation in a series of steps, reverse mode is the traversal of that computational graph in reverse. In the context of a neural network in which we wish to minimize weights relatie to some loss function, this allows us to efficiently retrace our ''path.''
+
+To recap: automatic differentiation is an algorithmic means of computing complicated derivatives by parsing those functions as a graph structures to be traversed. Dual numbers are used as a sort of mathematical data structure which allows the machine to analytically compute the derivative at any given node. It is superior to analytic or symbolic differentiation because it is actually computationally feasible on modern machines! And it is superior to numerical methods because automatic differentiation is far more accurate (it achieves machine precision). It is therefore extremely useful for applications like backpropagation on neutral networks.
 
 ## How to Use Dotua
 
@@ -128,7 +151,7 @@ print(result.partial(y))  # 0
 ```
 For **Scalar** variables, *result.eval()* will return the value of the function,
 while *result.partial(v)* will return the partial derivative with respect to any variable, *v*. For **Vector** variables, *results.eval()* returns a list of tuples
-(value, jacobian), with one tuple for each function in the vector. The jacobian is a dictionary that represents the 
+(value, jacobian), with one tuple for each function in the vector. The jacobian is a dictionary that represents the
 derivative of that element with respect to all of the elements in the vector.
 
 #### Reverse Mode
@@ -165,10 +188,13 @@ case where the Dotua package performs well, namely, the Newton-Raphson method fo
 
 ![](images/newton.png)
 
-A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called...
+A third file is an example of how our reverse mode autodifferentiation package can be used to do backpropagation in a neural network. The file is called "neuralnet_demo.ipynb"
 
-**INSERT TEXT HERE**
+Here we implement a toy neural network that has only one hidden layer. Using R.A. Fischer's well-known Iris dataset -- a collection of measurements of flowers and their respective species -- we fit a neural network to predict species based on their characteristics. As the first image indicates, there is a clear separation boundary between one of the setosa and versicolor and virginica. On our simple neural network, however, as the confusion matrix indicates, we can capture that difference. This is not a neural networks package, but an auto-differentation package and this clearly indicates one incredibly useful application.
 
+![](images/iris_pca.png)
+
+![](images/cm_nnexample.png)
 
 ## Software Organization
 
