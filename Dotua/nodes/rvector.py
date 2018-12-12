@@ -43,8 +43,6 @@ class rVector():
         self._rscalars = []
         for i in range(len(val)):
             self._rscalars.append(rScalar(val[i]))
-        print('LENGTH OF ATTRIBUTES', len(self._rscalars))
-        print('Whats in vector', self._rscalars)
 
     def __getitem__(self, idx):
         return self._rscalars[idx]
