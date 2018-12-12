@@ -206,13 +206,16 @@ Our project will adhere to the directory structure outlined in the [python-packa
 Dotua/
     __init__.py
     autodiff.py
-    node.py
     operator.py
     rautodiff.py
     roperator.py
-    rscalar.py
-    scalar.py
-    vector.py
+    nodes/
+        __init__.py
+        node.py
+        rscalar.py
+        rvector.py
+        scalar.py
+        vector.py
     tests/
         __init__.py
         test_initializer.py
@@ -229,6 +232,7 @@ docs/
 examples/
     __init__.py
     newton_demo.py
+    neural_network_demo.py
     ...
 LICENSE
 MANIFEST.in
@@ -243,9 +247,9 @@ setup.py
 #### Dotua/
 The **Dotua** module contains the codes for forward mode implementation and reverse mode implementation.
 
-It contains *AutoDiff* (autodiff.py), which is the driver of the forward mode autodifferentiation. The driver helps the users with getting access to the *Node* superclass (node.py) and associated subclasses (i.e., *Vector* (vector.py) and *Scalar* (scalar.py)), and the *Operator* class (operator.py).
+It contains *AutoDiff* (autodiff.py), which is the driver of the forward mode autodifferentiation. The driver helps the users with getting access to the *Node* superclass (node.py) and associated subclasses (i.e., *Vector* (vector.py) and *Scalar* (scalar.py)) in the *nodes* file, and the *Operator* class (operator.py).
 
-It also contains *rAutoDiff* (rautodiff.py), which is the driver of the reverse mode autodifferentiation. The driver helps the users with getting access to the *rScalar* class (rscalar.py) and the *rOperator* class (roperator.py).
+It also contains *rAutoDiff* (rautodiff.py), which is the driver of the reverse mode autodifferentiation. The driver helps the users with getting access to the *rScalar* class (rscalar.py) and *rVector* class (rvector.py) in the *nodes* file and the *rOperator* class (roperator.py).
 
 #### examples/
 The **Examples** module will contain Python files with documented use cases of the library. Potential examples include an implementation of Newton’s Method for approximating the roots of a non-linear function and a module which computes local extrema and an implementation of Neural Network for prediction problems.
